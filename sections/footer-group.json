@@ -7,14 +7,9 @@
       "settings": {
         "show_payment_icons": true
       }
-    },
-    "overlays": {
-      "type": "np-overlays",
-      "settings": {}
     }
   },
   "order": [
-    "footer",
-    "overlays"
+    "footer"
   ]
 }
