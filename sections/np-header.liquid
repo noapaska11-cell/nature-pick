@@ -1,14 +1,22 @@
 {%- liquid
+  # Only trust a menu as "the categories menu" when the merchant explicitly picked one in Theme
+  # settings > Navigation AND it actually lists several real categories (not just a generic "all
+  # products" link mixed into the main site nav). Otherwise fall back to the store's real
+  # collections directly further down - most stores never set this up.
   assign shop_menu = linklists[settings.menu_categories]
+  assign shop_menu_category_count = 0
+  for shop_link in shop_menu.links
+    if shop_link.type == 'collection_link' and shop_link.object.handle != 'all' and shop_link.object.handle != 'frontpage'
+      assign shop_menu_category_count = shop_menu_category_count | plus: 1
+    endif
+  endfor
+  assign shop_menu_has_categories = false
+  if shop_menu_category_count >= 2
+    assign shop_menu_has_categories = true
+  endif
   if shop_menu == blank
     assign shop_menu = linklists['main-menu']
   endif
-  assign shop_menu_has_categories = false
-  for shop_link in shop_menu.links
-    if shop_link.type == 'collection_link'
-      assign shop_menu_has_categories = true
-    endif
-  endfor
   assign nav_menu = linklists[section.settings.nav_menu]
 
   assign wishlist_href = section.settings.wishlist_url
