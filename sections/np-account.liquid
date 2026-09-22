@@ -9,8 +9,8 @@
     <div>
       <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'customer.account.title' | t }}</h1>
       {%- if is_b2b -%}
-        <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-olive)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
-          {% render 'icon', name: 'building', class: 'h-3.5 w-3.5 text-[var(--color-gold-on-dark)]' %} {{ 'np.common.b2b_badge' | t }}
+        <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-olive)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[var(--color-charcoal)]">
+          {% render 'icon', name: 'building', class: 'h-3.5 w-3.5 text-[var(--color-charcoal)]' %} {{ 'np.common.b2b_badge' | t }}
         </p>
       {%- endif -%}
     </div>

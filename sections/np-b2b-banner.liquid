@@ -26,16 +26,16 @@
     assign banner_text = 'np.b2b_page.description' | t
   endif
 -%}
-<section class="bg-[var(--color-olive)] text-white" data-b2b-banner>
+<section class="bg-[var(--color-olive)] text-[var(--color-charcoal)]" data-b2b-banner>
   <div class="container-page flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
     <div class="flex items-start gap-4">
-      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-[var(--color-gold-on-dark)]">
+      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white text-[var(--color-charcoal)]">
         {% render 'icon', name: 'building', class: 'h-6 w-6' %}
       </span>
       <div>
-        <span class="section-label text-[var(--color-gold-on-dark)]">{{ 'np.b2b_page.eyebrow' | t }}</span>
+        <span class="section-label text-[var(--color-charcoal)]">{{ 'np.b2b_page.eyebrow' | t }}</span>
         <h2 class="mt-1 font-display text-2xl font-semibold sm:text-3xl">{{ banner_title }}</h2>
-        <p class="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
+        <p class="mt-2 max-w-xl text-sm leading-relaxed text-[var(--color-charcoal-soft)]">
           {%- if b2b_active -%}
             {{ 'np.b2b_auth.active_text' | t: company: b2b_company }}
           {%- else -%}
@@ -48,7 +48,7 @@
     <div class="flex flex-shrink-0 flex-wrap gap-3">
       {%- if b2b_active -%}
         <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'np.b2b_auth.browse_cta' | t }}</a>
-        <a href="{{ routes.account_logout_url }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">{{ 'np.b2b_auth.logout' | t }}</a>
+        <a href="{{ routes.account_logout_url }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-charcoal)] px-6 py-3 text-sm font-semibold text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ 'np.b2b_auth.logout' | t }}</a>
       {%- else -%}
         {%- if b2b_page_url != blank -%}
           <a href="{{ b2b_page_url }}#register" class="btn-primary">
@@ -57,7 +57,7 @@
         {%- endif -%}
         {%- assign login_href = routes.account_login_url -%}
         {%- if b2b_page_url != blank -%}{%- assign login_href = b2b_page_url | append: '#login' -%}{%- endif -%}
-        <a href="{{ login_href }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+        <a href="{{ login_href }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-charcoal)] px-6 py-3 text-sm font-semibold text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">
           {% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.tab_login' | t }}
         </a>
       {%- endif -%}

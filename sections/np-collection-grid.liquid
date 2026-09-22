@@ -28,7 +28,7 @@
     <div class="mb-6 flex flex-wrap gap-2">
       <a
         href="{{ routes.all_products_collection_url }}"
-        class="rounded-full border px-4 py-1.5 text-sm {% if collection.handle == 'all' %}border-[var(--color-olive)] bg-[var(--color-olive)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
+        class="rounded-full border px-4 py-1.5 text-sm {% if collection.handle == 'all' %}border-[var(--color-charcoal)] bg-[var(--color-olive)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
       >{{ 'np.collection.filter_all' | t }}</a>
       {%- for link in categories_menu.links -%}
         {%- assign is_current = false -%}
@@ -38,7 +38,7 @@
         <a
           href="{{ link.url }}"
           {% if is_current %}aria-current="page"{% endif %}
-          class="rounded-full border px-4 py-1.5 text-sm {% if is_current %}border-[var(--color-olive)] bg-[var(--color-olive)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
+          class="rounded-full border px-4 py-1.5 text-sm {% if is_current %}border-[var(--color-charcoal)] bg-[var(--color-olive)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
         >{{ link.title }}</a>
       {%- endfor -%}
     </div>
