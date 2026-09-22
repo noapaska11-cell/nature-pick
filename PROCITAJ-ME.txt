@@ -1,0 +1,124 @@
+NATURE PICK — NOVA SHOPIFY TEMA (naturenew)
+============================================
+
+VAZNO — NE PRAVITE SAMI ZIP OD OVE MAPE!
+Desni klik na mapu naturenew -> Compress/Send to compressed (zip) NE RADI
+ispravno: Windows tada u zip doda dodatnu mapu "naturenew" oko svega, pa
+Shopify ne prepozna gdje su assets/config/layout/... i tema ispadne
+polovična ili izgleda kao stara (bez B2B trake, sa starim jezicima/
+valutom) iako je upload "uspio".
+
+UMJESTO TOGA koristite VEC GOTOV, ispravno zapakiran zip koji stoji
+jednu razinu iznad ove mape:
+  C:\Users\Cyphert\Desktop\newdesignnazure\naturenew-za-upload.zip
+U tom zipu su assets, blocks, config, layout, locales, sections, snippets,
+templates ODMAH u korijenu (bez dodatne "naturenew" mape) — točno kako
+Shopify očekuje.
+
+Ako ste u Shopify Theme library već uploadali svoj vlastiti zip:
+  1. Online Store -> Themes -> Theme library -> pored te (krive) teme
+     klikni ... -> Remove (obriši je, nije dobra).
+  2. Add theme -> Upload zip file -> odaberi naturenew-za-upload.zip
+     (NE naturenew.zip koji ste sami napravili).
+  3. Pored nove teme klikni ... -> Preview. Trebali biste vidjeti:
+     - tamnozelenu traku sa "B2B" oznakom odmah ispod headera/hero videa
+     - tamnozeleni header sa zlatnim akcentima (ne stari izgled)
+  4. Tek kad je Preview dobar: Publish.
+
+ŠTO JE OVO
+Ova mapa (naturenew) je izvorni kod nove Shopify teme — mape assets,
+blocks, config, layout, locales, sections, snippets, templates su
+identične onima u pravoj Shopify temi. To NIJE gotova web stranica koju
+možete otvoriti dvoklikom ili ubaciti u preglednik — Liquid datoteke se
+renderiraju tek kad ih Shopify servira iz vaše trgovine. Ako želite samo
+"pogledati" izgled bez uploada, to je poseban Next.js prototip na drugoj
+lokaciji (Desktop\naturepick) koji se pokreće lokalno (npm run dev) — to
+je dizajn-referenca, ne ista tehnologija kao Shopify tema.
+
+Stara tema je odvojeno u ..\natureold i nije dirana, tako da se ništa ne
+može pomiješati.
+
+JEZICI I VALUTA — TO NIJE U TEMI
+Broj jezika i valuta koje vidite NE dolazi iz teme nego iz postavki same
+trgovine:
+  Settings -> Languages -> Add language: Polish, German, Croatian, English
+  (Swedish je već primarni) -> svakome Publish.
+  Settings -> Markets -> svako tržište -> Languages -> uključi jezike.
+Bez ovog koraka, čak i s ispravno objavljenom novom temom, vidjet ćete
+samo jezike/valute koje je trgovina već imala prije.
+
+STA JE REDIZAJNIRANO
+Dizajn (Fraunces/Manrope fontovi, header, hero, kategorije, kartice
+proizvoda, košarica u ladici, quick view, pretraga, wishlist, gift box
+builder, FAQ, o nama, podrijetlo s QR kodom...) napravljen je po uzoru na
+Desktop\naturepick (moderan, pregledan, premium izgled za B2B kupce), ali
+kao prava Shopify tema — Liquid sekcije + JSON predlošci, ne poseban sajt.
+
+BOJE — VRACENE NA VASE ORIGINALNE
+Tema sada koristi vaše stvarne boje iz stare teme (natureold), očitane iz
+njenih color schemes:
+  tamnozelena  #2f4a33   (glavna brand boja — pozadine, gumbi, naslovi)
+  zlatna       #e9a824   (accent — CTA gumbi, oznake, zvjezdice)
+  krem         #f6f1e7   (svijetla pozadina)
+  smeđa        #5a3a2e   (tercijarni accent)
+  svijetlozelena #b8cbb4 (svijetli ton zelene)
+Sve boje su i dalje Theme setting (Customize -> Theme settings -> Colors),
+pa ih možete naknadno fino podesiti bez ikakvog koda.
+
+B2B PRIJAVA I ODOBRAVANJE (najbitniji dio)
+Na stranici B2B firma ispuni 4 OBAVEZNA polja: naziv firme, e-mail, OIB
+(matični broj) i VAT broj. Tema provjerava format (kontrolna znamenka OIB-a,
+prefiks države kod VAT-a) prije slanja.
+Dva načina rada — oba već ugrađena, biraš u Theme settings -> B2B:
+  1) Bez servera (zadano): zahtjev ide Shopify kontakt formom na e-mail
+     trgovine. Vi (šef) ručno provjerite firmu (VIES za VAT, sudski/trgovački
+     registar za OIB) i u Shopify adminu (Customers) dodate kupcu tag "b2b".
+     To je i "admin panel" — sam Shopify admin, jer samo on smije upisivati
+     tagove na kupce (teorija: tema ne smije nositi Admin API token).
+  2) Automatska provjera (opcionalno): mala besplatna služba u
+     Desktop\naturepick\b2b-verify-service — sama provjerava VAT+naziv+OIB
+     preko EU VIES-a; kad se sve poklapa, firma se odmah odobri; kad ne,
+     zahtjev ide u poseban admin panel (/admin/) gdje šef klikne Odobri ili
+     Odbij. Upute za postavljanje (Netlify, ~15 min) su u tom folderu,
+     README.md. Ako je ne postavite, sve i dalje radi preko opcije 1.
+Nakon odobrenja firma se prijavljuje svojom e-mail adresom i vidi B2B
+oznake/cijene. Testirajte jednom s jednim kupcem kojem ručno dodate tag b2b.
+VAŽNO: B2B traka i gumb u headeru pojavljuju se automatski čim je NOVA tema
+aktivna u Previewu — ako ih ne vidite, gledate ili staru temu, ili je zip
+bio krivo zapakiran (vidi gore).
+
+PROIZVODI — ISTI KODOVI, NIŠTA SE NE LOMI
+Tema ne sadrži nikakve proizvode, cijene ni šifre — sve (naziv, cijena,
+zalihe, slike, varijante, SKU) dolazi uživo iz vaše Shopify trgovine, isto
+kao i sada. Zato postojeći linkovi za kupnju i šifre proizvoda ostaju
+potpuno netaknuti; tema samo drugačije prikazuje iste podatke.
+
+STO JE JOŠ PROVJERENO
+- Shopifyjev strogi Liquid parser: 85 datoteka, 2282 taga, 0 grešaka.
+- Prijevodi: 0 nedostajućih ključeva ni miješanja jezika između verzija.
+- Nema tvrdo upisanih (placeholder) proizvoda ni šifri iz razvojne verzije.
+
+STO NIJE DIO OVOG PAKETA (poslovne, ne razvojne zadaće)
+Iz analize stare stranice (Desktop\website_audit_naturepick_fin.docx,
+ocjena 5.8/10) veći dio tehničkih točaka je riješen kroz ovaj redizajn
+(jezik, valute/tržišta preko Shopify Marketsa, dostava, brand priča o
+podrijetlu, FAQ, trust elementi, gift setovi, progress bar do besplatne
+dostave...). Ono što ostaje i nije nešto što se rješava kodom teme:
+profesionalne fotografije proizvoda, prikupljanje pravih recenzija kupaca,
+i automatizacije e-mail marketinga (welcome/abandoned cart/post-purchase) —
+te se postavljaju u Shopify adminu / dodatnim aplikacijama kad budete
+spremni.
+
+STO NAPRAVITI U SHOPIFY ADMINU NAKON UPLOADA
+Stranice (Online Store -> Pages, s pripadajućim predloškom):
+  O nama/origin: about (page.about), origin (page.origin)
+  FAQ: faq (page.faq)   Kontakt: contact (page.contact)
+  B2B: b2b (page.b2b)   Klub okusa: spice-club (page.club)
+  Dostava i povrat: shipping-returns (page.shipping-returns)
+  Omiljeno: wishlist (page.wishlist)
+Header/footer sami pronađu te stranice po handleu. Kolekcija za gift setove
+neka ima predložak collection.gift. Sve ostalo (logo, boje, prag besplatne
+dostave po zemlji, podaci o firmi/VAT) je u Customize -> Theme settings.
+
+Ako nešto ne radi kod uploada ili u pregledu — pošaljite mi cijelu poruku
+greške ili screenshot, pa rješavamo.

@@ -1,0 +1,185 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.brand_story.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.brand_story.title' | t
+  endif
+  assign text = section.settings.text
+  if text == blank
+    assign text = 'np.brand_story.text' | t
+  endif
+  assign cta_label = section.settings.cta_label
+  if cta_label == blank
+    assign cta_label = 'np.brand_story.cta' | t
+  endif
+  assign cta_link = section.settings.cta_link
+  if cta_link == blank
+    assign cta_link = pages.about.url
+  endif
+
+  assign p1 = section.settings.point_1
+  if p1 == blank
+    assign p1 = 'np.brand_story.point1' | t
+  endif
+  assign p2 = section.settings.point_2
+  if p2 == blank
+    assign p2 = 'np.brand_story.point2' | t
+  endif
+  assign p3 = section.settings.point_3
+  if p3 == blank
+    assign p3 = 'np.brand_story.point3' | t
+  endif
+
+  assign image_1 = section.settings.image_1
+  if image_1 == blank
+    assign image_1 = section.settings.collection_1.image
+  endif
+  if image_1 == blank
+    assign image_1 = section.settings.collection_1.products.first.featured_media
+  endif
+
+  assign image_2 = section.settings.image_2
+  if image_2 == blank
+    assign image_2 = section.settings.product_2.featured_media
+  endif
+  if image_2 == blank
+    assign image_2 = section.settings.collection_2.products.first.featured_media
+  endif
+-%}
+<div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+  <section class="bg-[var(--color-olive)] text-white">
+    <div class="container-page grid gap-10 py-16 md:grid-cols-2 md:items-center">
+      <div class="order-2 grid grid-cols-2 gap-4 md:order-1">
+        {%- render 'np-product-image', image: image_1, alt: '', class: 'aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 3, icon: 'leaf' -%}
+        {%- render 'np-product-image', image: image_2, alt: '', class: 'mt-8 aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 0, icon: 'nut' -%}
+      </div>
+      <div class="order-1 md:order-2">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+          {% render 'icon', name: 'map-pin', class: 'h-3.5 w-3.5' %} {{ label }}
+        </span>
+        <h2 class="mt-4 font-display text-3xl font-semibold leading-tight sm:text-4xl">{{ title }}</h2>
+        <p class="mt-4 max-w-lg leading-relaxed text-white/85">{{ text }}</p>
+        <ul class="mt-6 flex flex-col gap-3">
+          {%- for point in (1..3) -%}
+            {%- case point -%}
+              {%- when 1 -%}{%- assign point_text = p1 -%}
+              {%- when 2 -%}{%- assign point_text = p2 -%}
+              {%- else -%}{%- assign point_text = p3 -%}
+            {%- endcase -%}
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-white/15">
+                {% render 'icon', name: 'check', class: 'h-3.5 w-3.5' %}
+              </span>
+              <span class="text-sm leading-relaxed text-white/90">{{ point_text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+        {%- if cta_link != blank -%}
+          <a href="{{ cta_link }}" class="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[var(--color-olive-dark)] hover:bg-white/90">
+            {{ cta_label }} {% render 'icon', name: 'arrow-right', class: 'h-4 w-4' %}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Brand story",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pictures"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Picture 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Or: collection for picture 1",
+      "info": "Used when no picture is uploaded."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Picture 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Or: product for picture 2",
+      "info": "Used when no picture is uploaded."
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Or: collection for picture 2",
+      "info": "Used when there is no picture and no product."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "point_1",
+      "label": "Point 1"
+    },
+    {
+      "type": "text",
+      "id": "point_2",
+      "label": "Point 2"
+    },
+    {
+      "type": "text",
+      "id": "point_3",
+      "label": "Point 3"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Leave empty to link to the page with the handle 'about'."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand story"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,397 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'product-form-' | append: section.id
+  assign qty_id = 'Quantity-' | append: section.id
+  assign product_title = product.title | escape
+
+  assign badge = ''
+  if product.tags contains 'bestseller'
+    assign badge = 'bestseller'
+  elsif product.tags contains 'new' or product.tags contains 'nowosc'
+    assign badge = 'new'
+  elsif product.compare_at_price > product.price
+    assign badge = 'sale'
+  endif
+
+  assign title_class = ''
+  if settings.soften_uppercase_titles
+    assign title_upper = product.title | upcase
+    if product.title == title_upper
+      assign title_class = 'np-soft-case'
+    endif
+  endif
+
+  assign crumb_collection = collection
+  if crumb_collection == blank
+    assign categories_menu = linklists[settings.menu_categories]
+    for c in product.collections
+      if c.handle == 'frontpage' or c.handle == 'all'
+        continue
+      endif
+      for link in categories_menu.links
+        if link.type == 'collection_link' and link.object.handle == c.handle
+          assign crumb_collection = c
+          break
+        endif
+      endfor
+      if crumb_collection != blank
+        break
+      endif
+    endfor
+  endif
+  if crumb_collection == blank
+    for c in product.collections
+      unless c.handle == 'frontpage' or c.handle == 'all'
+        assign crumb_collection = c
+        break
+      endunless
+    endfor
+  endif
+
+  assign b2b_active = false
+  if customer and settings.b2b_discount_percent > 0
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+    endif
+  endif
+  assign unit_cents = current_variant.price
+  if b2b_active
+    assign b2b_multiplier = 100 | minus: settings.b2b_discount_percent
+    assign unit_cents = unit_cents | times: b2b_multiplier | divided_by: 100
+  endif
+  assign unit_price_text = unit_cents | money_without_trailing_zeros
+
+  capture weight_label
+    render 'np-weight', grams: current_variant.weight
+  endcapture
+  assign weight_label = weight_label | strip
+
+  assign per_kg = ''
+  if current_variant.unit_price_measurement and current_variant.unit_price
+    assign ref_value = current_variant.unit_price_measurement.reference_value
+    assign per_kg = current_variant.unit_price | money_without_trailing_zeros | append: ' / '
+    if ref_value != 1
+      assign per_kg = per_kg | append: ref_value | append: ' '
+    endif
+    assign per_kg = per_kg | append: current_variant.unit_price_measurement.reference_unit
+  elsif current_variant.weight > 0
+    assign per_kg_cents = current_variant.price | times: 1000 | divided_by: current_variant.weight
+    assign per_kg = per_kg_cents | money_without_trailing_zeros | append: ' / kg'
+  endif
+
+  assign how_to_use = product.metafields.custom.how_to_use.value
+  assign ingredients = product.metafields.custom.ingredients | metafield_tag
+  assign origin = product.metafields.custom.origin | metafield_tag
+  if origin == blank and settings.show_default_origin
+    assign origin = settings.default_origin
+    if origin == blank
+      assign origin = 'np.product.default_origin' | t
+    endif
+  endif
+  assign storage = product.metafields.custom.storage | metafield_tag
+  assign allergens = product.metafields.custom.allergens | metafield_tag
+  if current_variant.available
+    assign availability_text = 'np.product.available_text' | t
+  else
+    assign availability_text = 'np.common.out_of_stock' | t
+  endif
+  assign has_nutrition = false
+  if product.metafields.custom.nutrition_energy != blank or product.metafields.custom.nutrition_fat != blank or product.metafields.custom.nutrition_carbs != blank or product.metafields.custom.nutrition_protein != blank
+    assign has_nutrition = true
+  endif
+-%}
+
+<np-product class="block" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" data-money-currency="{{ cart.currency.iso_code }}">
+  <div class="container-page py-10 pb-24 lg:pb-10">
+    <nav class="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-[var(--color-charcoal-soft)]" aria-label="{{ 'np.common.breadcrumb' | t }}">
+      <a href="{{ routes.root_url }}" class="hover:text-[var(--color-paprika-dark)]">{{ 'np.common.home' | t }}</a>
+      {% render 'icon', name: 'chevron-right', class: 'h-3 w-3' %}
+      {%- if crumb_collection != blank -%}
+        <a href="{{ crumb_collection.url }}" class="hover:text-[var(--color-paprika-dark)]">{{ crumb_collection.title | escape }}</a>
+        {% render 'icon', name: 'chevron-right', class: 'h-3 w-3' %}
+      {%- endif -%}
+      <span>{{ product_title }}</span>
+    </nav>
+
+    <div class="grid gap-10 lg:grid-cols-2">
+      {%- comment -%} Gallery {%- endcomment -%}
+      <div data-gallery>
+        <div class="relative aspect-square w-full overflow-hidden rounded-3xl bg-white">
+          {%- for media in product.media -%}
+            {%- assign media_alt = media.alt | default: product.title | escape -%}
+            <div data-gallery-item data-media-id="{{ media.id }}" {% unless media.id == current_variant.featured_media.id or forloop.first and current_variant.featured_media == blank %}hidden{% endunless %} class="absolute inset-0">
+              {%- case media.media_type -%}
+                {%- when 'image' -%}
+                  {%- if forloop.first -%}
+                    {{ media | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-cover' }}
+                  {%- else -%}
+                    {{ media | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-cover' }}
+                  {%- endif -%}
+                {%- when 'video' -%}
+                  {{ media | video_tag: controls: true, image_size: '1200x', class: 'h-full w-full object-cover' }}
+                {%- when 'external_video' -%}
+                  {{ media | external_video_tag: class: 'h-full w-full' }}
+                {%- else -%}
+                  {{ media.preview_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: media_alt, class: 'h-full w-full object-cover' }}
+              {%- endcase -%}
+            </div>
+          {%- else -%}
+            {%- render 'np-product-image', image: blank, alt: product.title, class: 'absolute inset-0', index: product.id -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if product.media.size > 1 -%}
+          <ul class="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" role="list">
+            {%- for media in product.media -%}
+              <li>
+                <button
+                  type="button"
+                  data-gallery-thumb
+                  data-media-id="{{ media.id }}"
+                  aria-label="{{ 'np.product.gallery_thumb_aria' | t: index: forloop.index }}"
+                  aria-current="{% if media.id == current_variant.featured_media.id or forloop.first and current_variant.featured_media == blank %}true{% else %}false{% endif %}"
+                  class="relative block aspect-square w-full overflow-hidden rounded-xl border-2 border-transparent bg-white transition-colors hover:border-[var(--color-line)] aria-[current=true]:border-[var(--color-paprika)]"
+                >
+                  {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 180, 240', sizes: '120px', alt: '', class: 'h-full w-full object-cover' }}
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Product info {%- endcomment -%}
+      <div>
+        {%- if badge != '' -%}
+          <span class="mb-3 inline-block rounded-full bg-[var(--color-charcoal)] px-3 py-1 text-xs font-semibold text-white">
+            {%- case badge -%}
+              {%- when 'bestseller' -%}{{ 'np.common.bestseller' | t }}
+              {%- when 'new' -%}{{ 'np.common.badge_new' | t }}
+              {%- else -%}{{ 'np.common.badge_sale' | t }}
+            {%- endcase -%}
+          </span>
+        {%- endif -%}
+
+        <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl {{ title_class }}">{{ product_title }}</h1>
+        <p data-swap="weight" class="mt-1 text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
+
+        <div class="mt-3">{% render 'np-stars', product: product, class: 'h-4 w-4', show_label: 'full' %}</div>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}
+            <div class="np-app-embed mt-3" {{ block.shopify_attributes }}>{% render block %}</div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        <div data-swap="price">
+          <p class="mt-5 font-display text-3xl font-semibold text-[var(--color-charcoal)]">
+            {% render 'np-price', product: product, variant: current_variant, class: '' %}
+          </p>
+          {%- if per_kg != '' -%}
+            <p class="text-sm text-[var(--color-charcoal-soft)]">{{ per_kg }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="np-prose mt-5">{{ product.description }}</div>
+        {%- endif -%}
+
+        {%- if how_to_use != blank and how_to_use.size > 0 -%}
+          <div class="mt-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ 'np.product.how_to_use' | t }}</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {%- for use in how_to_use -%}
+                <span class="rounded-full border border-[var(--color-line)] bg-[var(--color-cream-soft)] px-3 py-1.5 text-xs font-medium text-[var(--color-charcoal)]">{{ use }}</span>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Purchase form: everything here talks to Shopify's own /cart/add {%- endcomment -%}
+        {%- form 'product', product, id: product_form_id, class: 'mt-6', novalidate: 'novalidate', data-ajax-cart: 'true', data-cart-feedback: 'label' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+          {%- unless product.has_only_default_variant -%}
+            <div class="mb-5 flex flex-col gap-4" data-variant-picker>
+              {%- for option in product.options_with_values -%}
+                {%- assign option_index = forloop.index0 -%}
+                <fieldset class="flex flex-col gap-2">
+                  <legend class="text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ option.name | escape }}</legend>
+                  <div class="flex flex-wrap gap-2">
+                    {%- for value in option.values -%}
+                      {%- assign value_name = value.name | default: value -%}
+                      {%- assign input_id = section.id | append: '-opt' | append: option_index | append: '-' | append: forloop.index -%}
+                      <div>
+                        <input
+                          type="radio"
+                          id="{{ input_id }}"
+                          name="{{ option.name | escape }}"
+                          value="{{ value_name | escape }}"
+                          data-option-index="{{ option_index }}"
+                          class="peer sr-only"
+                          {% if option.selected_value == value_name %}checked{% endif %}
+                        >
+                        <label
+                          for="{{ input_id }}"
+                          class="block cursor-pointer rounded-full border border-[var(--color-line)] px-4 py-1.5 text-sm text-[var(--color-charcoal-soft)] transition-colors hover:border-[var(--color-charcoal)] peer-checked:border-[var(--color-charcoal)] peer-checked:bg-[var(--color-charcoal)] peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--color-paprika)] {% if value.available == false %}opacity-50{% endif %}"
+                        >{{ value_name }}</label>
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </fieldset>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <div data-swap="buy" data-unit-price="{{ unit_cents }}">
+            {%- if current_variant.available -%}
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                {% render 'np-quantity', size: 'md', id: qty_id %}
+                <button type="submit" name="add" data-add-button data-label-added="{{ 'np.common.added' | t }}" class="btn-primary flex-1">
+                  <span data-add-icon>{% render 'icon', name: 'cart', class: 'h-4 w-4' %}</span>
+                  <span data-add-label>{{ 'np.common.add_to_cart' | t }}</span>
+                  <span data-add-separator aria-hidden="true">·</span>
+                  <span data-add-total>{{ unit_price_text }}</span>
+                </button>
+              </div>
+              {%- if section.settings.show_dynamic_checkout -%}
+                <div class="mt-3">{{ form | payment_button }}</div>
+              {%- endif -%}
+              <p data-cart-error hidden role="alert" class="mt-3 rounded-xl bg-[var(--color-paprika-light)] px-3 py-2 text-sm text-[var(--color-paprika-dark)]"></p>
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+
+        <div data-swap="notify" class="mt-6">
+          {%- unless current_variant.available -%}
+            <p class="mb-2 flex items-center gap-1.5 text-sm font-medium text-[var(--color-charcoal-soft)]">
+              {% render 'icon', name: 'clock', class: 'h-4 w-4' %} {{ 'np.common.out_of_stock' | t }}
+            </p>
+            {% render 'np-notify-form', product: product, form_id: 'NotifyForm' %}
+          {%- endunless -%}
+        </div>
+
+        {%- if section.settings.show_trust -%}
+          <div class="mt-6 flex flex-wrap gap-4 text-sm text-[var(--color-charcoal-soft)]">
+            <span class="flex items-center gap-1.5">{% render 'icon', name: 'truck', class: 'h-4 w-4' %} {{ 'np.product.shipping_time' | t }}</span>
+            <span class="flex items-center gap-1.5">{% render 'icon', name: 'shield', class: 'h-4 w-4' %} {{ 'np.product.return_days' | t }}</span>
+          </div>
+        {%- endif -%}
+
+        <div data-swap="specs">
+          {%- capture spec_html -%}
+            {%- assign l_weight = 'np.product.spec_weight' | t -%}
+            {%- assign l_per_kg = 'np.product.price_per_kg' | t -%}
+            {%- assign l_ingredients = 'np.product.spec_ingredients' | t -%}
+            {%- assign l_origin = 'np.product.spec_origin' | t -%}
+            {%- assign l_storage = 'np.product.spec_storage' | t -%}
+            {%- assign l_allergens = 'np.product.spec_allergens' | t -%}
+            {%- assign l_availability = 'np.product.spec_availability' | t -%}
+            {%- render 'np-spec-row', label: l_weight, value: weight_label -%}
+            {%- render 'np-spec-row', label: l_per_kg, value: per_kg -%}
+            {%- render 'np-spec-row', label: l_ingredients, value: ingredients -%}
+            {%- render 'np-spec-row', label: l_origin, value: origin -%}
+            {%- render 'np-spec-row', label: l_storage, value: storage -%}
+            {%- render 'np-spec-row', label: l_allergens, value: allergens -%}
+            {%- render 'np-spec-row', label: l_availability, value: availability_text -%}
+          {%- endcapture -%}
+          {%- if spec_html contains '<dt' -%}
+            <dl class="mt-8 divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)]">{{ spec_html }}</dl>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    {%- if has_nutrition -%}
+      <section class="mt-14 max-w-xl">
+        <h2 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.product.nutrition_title' | t }}</h2>
+        <p class="mt-1 text-xs text-[var(--color-charcoal-soft)]">{{ 'np.product.nutrition_note' | t }}</p>
+        <dl class="mt-4 divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)]">
+          {%- assign nutrition_keys = 'energy,fat,saturates,carbs,sugars,fiber,protein,salt' | split: ',' -%}
+          {%- for key in nutrition_keys -%}
+            {%- capture nutrition_lookup -%}nutrition_{{ key }}{%- endcapture -%}
+            {%- assign meta_value = product.metafields.custom[nutrition_lookup] | metafield_tag -%}
+            {%- if meta_value != blank -%}
+              {%- assign row_label_key = 'np.product.nutrition_' | append: key -%}
+              <div class="flex items-center justify-between px-4 py-2.5 text-sm">
+                <dt class="text-[var(--color-charcoal-soft)]">{{ row_label_key | t }}</dt>
+                <dd class="font-medium tabular-nums text-[var(--color-charcoal)]">{{ meta_value }}</dd>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </dl>
+      </section>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Sticky add-to-cart bar (mobile) {%- endcomment -%}
+  {%- if section.settings.show_sticky_bar -%}
+    <div data-swap="sticky">
+      {%- if current_variant.available -%}
+        <div class="fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] lg:hidden">
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium text-[var(--color-charcoal)]">{{ product_title }}</p>
+            <p class="text-sm font-semibold text-[var(--color-paprika-dark)]" data-sticky-total>{{ unit_price_text }}</p>
+          </div>
+          <button type="submit" form="{{ product_form_id }}" name="add" data-add-button data-label-added="{{ 'np.common.added' | t }}" class="btn-primary flex-shrink-0">
+            <span data-add-icon>{% render 'icon', name: 'cart', class: 'h-4 w-4' %}</span>
+            <span data-add-label>{{ 'np.common.add_to_cart' | t }}</span>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <script type="application/json" data-variants>{{ product.variants | json }}</script>
+  <script type="application/ld+json">{{ product | structured_data }}</script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": {{ 'np.common.home' | t | json }}, "item": {{ shop.url | json }} }
+        {%- if crumb_collection != blank -%}
+          , { "@type": "ListItem", "position": 2, "name": {{ crumb_collection.title | json }}, "item": {{ crumb_collection.url | prepend: request.origin | json }} }
+          , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ product.url | prepend: request.origin | json }} }
+        {%- else -%}
+          , { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ product.url | prepend: request.origin | json }} }
+        {%- endif -%}
+      ]
+    }
+  </script>
+</np-product>
+
+{% schema %}
+{
+  "name": "Product",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout buttons",
+      "info": "Shop Pay, Apple Pay, Google Pay... Only shown for payment methods enabled in your store.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sticky_bar",
+      "label": "Sticky add-to-cart bar on mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show shipping and returns notes",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

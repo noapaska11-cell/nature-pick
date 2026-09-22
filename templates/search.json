@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-search",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

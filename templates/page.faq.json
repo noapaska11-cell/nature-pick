@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "faq"
+      }
+    },
+    "main": {
+      "type": "np-faq",
+      "settings": {
+        "layout": "page",
+        "item_count": 8,
+        "first_open": true,
+        "reveal": false
+      }
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

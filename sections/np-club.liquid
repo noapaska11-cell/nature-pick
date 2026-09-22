@@ -1,0 +1,85 @@
+{%- liquid
+  assign image_1 = section.settings.image_1
+  if image_1 == blank
+    assign image_1 = section.settings.collection_1.products.first.featured_media
+  endif
+  assign image_2 = section.settings.image_2
+  if image_2 == blank
+    assign image_2 = section.settings.collection_2.products.first.featured_media
+  endif
+-%}
+<section class="container-page grid gap-10 py-14 md:grid-cols-2 md:items-center">
+  <div class="grid grid-cols-2 gap-4">
+    {%- render 'np-product-image', image: image_1, alt: '', class: 'aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 1, icon: 'spice' -%}
+    {%- render 'np-product-image', image: image_2, alt: '', class: 'mt-8 aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 2, icon: 'fruit' -%}
+  </div>
+  <div>
+    <h2 class="font-display text-2xl font-semibold text-[var(--color-charcoal)]">{{ 'np.spice_club_page.how_title' | t }}</h2>
+    <ul class="mt-5 flex flex-col gap-4">
+      {%- for i in (1..3) -%}
+        {%- liquid
+          assign step_title_key = 'np.spice_club_page.step' | append: i | append: '_title'
+          assign step_text_key = 'np.spice_club_page.step' | append: i | append: '_text'
+        -%}
+        <li class="flex items-start gap-3">
+          <span class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">
+            {% render 'icon', name: 'check', class: 'h-3.5 w-3.5' %}
+          </span>
+          <div>
+            <p class="text-sm font-semibold text-[var(--color-charcoal)]">{{ step_title_key | t }}</p>
+            <p class="text-sm text-[var(--color-charcoal-soft)]">{{ step_text_key | t }}</p>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+<section class="bg-[var(--color-cream-soft)]">
+  <div class="container-page flex flex-col items-center gap-4 py-16 text-center">
+    <span class="section-label text-[var(--color-paprika-dark)]">
+      {% render 'icon', name: 'mail', class: 'h-3.5 w-3.5' %} {{ 'np.spice_club_page.waitlist_label' | t }}
+    </span>
+    <h2 class="font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ 'np.spice_club_page.waitlist_title' | t }}</h2>
+    <p class="max-w-md text-sm text-[var(--color-charcoal-soft)]">{{ 'np.spice_club_page.waitlist_text' | t }}</p>
+    <div class="w-full max-w-sm">
+      {% render 'np-waitlist-form', form_id: 'SpiceClubWaitlist' %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spice Club",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Picture 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Or: collection for picture 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Picture 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Or: collection for picture 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spice Club"
+    }
+  ]
+}
+{% endschema %}

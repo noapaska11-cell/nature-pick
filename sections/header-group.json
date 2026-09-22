@@ -1,0 +1,20 @@
+{
+  "name": "Header group",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "np-header",
+      "settings": {
+        "show_announcement": true,
+        "show_b2b": true,
+        "show_language": true,
+        "show_country": true,
+        "show_account": true,
+        "show_wishlist": true
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

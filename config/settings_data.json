@@ -1,0 +1,108 @@
+{
+  "current": {
+    "logo_size": 56,
+    "color_cream": "#f6f1e7",
+    "color_cream_soft": "#e6dfd5",
+    "color_paper": "#fcfaf7",
+    "color_paprika": "#e9a824",
+    "color_paprika_dark": "#bf8a1e",
+    "color_paprika_light": "#faeccf",
+    "color_olive": "#2f4a33",
+    "color_olive_dark": "#273e2b",
+    "color_olive_light": "#b8cbb4",
+    "color_charcoal": "#2f4a33",
+    "color_charcoal_soft": "#83907f",
+    "color_line": "#e1dcd9",
+    "color_gold": "#e9a824",
+    "color_gold_on_dark": "#edb647",
+    "company_name": "NP Market AB",
+    "company_address": "Fibergatan 3, 267 73 Billesholm, Sweden",
+    "company_vat": "SE559315126801",
+    "contact_email": "info@naturepick.se",
+    "contact_phone": "+46 76 045 81 40",
+    "cart_type": "drawer",
+    "free_shipping_thresholds": "SE:599:SEK\nDE:59:EUR\nPL:59:EUR\nDK:90:EUR\nNO:90:EUR\nBE:150:EUR\nFI:150:EUR\nFR:150:EUR\nLU:150:EUR\nNL:150:EUR\nIT:150:EUR\nAT:150:EUR\nPT:150:EUR\nCH:150:EUR\nSI:150:EUR\nCZ:150:EUR\nHU:150:EUR\nES:150:EUR",
+    "enable_cart_note": false,
+    "b2b_customer_tag": "b2b",
+    "b2b_discount_percent": 0,
+    "social_instagram_link": "https://www.instagram.com/naturepickmarket/",
+    "social_facebook_link": "https://www.facebook.com/profile.php?id=61567376463484",
+    "enable_cookie_banner": true,
+    "enable_quick_contact": true,
+    "show_wishlist": true,
+    "show_quick_view": true,
+    "soften_uppercase_titles": true,
+    "show_default_origin": true,
+    "logo": "shopify://shop_images/S_FFAF_PNG.png",
+    "favicon": "shopify://shop_images/S_FFAF_PNG.png",
+    "menu_categories": "kategorier-1",
+    "sections": {},
+    "blocks": {
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      },
+      "15557474716127144420": {
+        "type": "shopify://apps/kaching-bundles/blocks/app-embed-block/6c637362-a106-4a32-94ac-94dcfd68cdb8",
+        "disabled": false,
+        "settings": {}
+      },
+      "6478312753674380289": {
+        "type": "shopify://apps/gempages-builder/blocks/embed-gp-script-head/20b379d4-1b20-474c-a6ca-665c331919f3",
+        "disabled": false,
+        "settings": {}
+      },
+      "6544682535036668446": {
+        "type": "shopify://apps/pumper-bundles/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270",
+        "disabled": false,
+        "settings": {}
+      },
+      "13768625480086291342": {
+        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
+        "disabled": false,
+        "settings": {}
+      }
+    }
+  },
+  "presets": {
+    "Nature Pick": {
+      "logo_size": 56,
+      "color_cream": "#f6f1e7",
+      "color_cream_soft": "#e6dfd5",
+      "color_paper": "#fcfaf7",
+      "color_paprika": "#e9a824",
+      "color_paprika_dark": "#bf8a1e",
+      "color_paprika_light": "#faeccf",
+      "color_olive": "#2f4a33",
+      "color_olive_dark": "#273e2b",
+      "color_olive_light": "#b8cbb4",
+      "color_charcoal": "#2f4a33",
+      "color_charcoal_soft": "#83907f",
+      "color_line": "#e1dcd9",
+      "color_gold": "#e9a824",
+      "color_gold_on_dark": "#edb647",
+      "company_name": "NP Market AB",
+      "company_address": "Fibergatan 3, 267 73 Billesholm, Sweden",
+      "company_vat": "SE559315126801",
+      "contact_email": "info@naturepick.se",
+      "contact_phone": "+46 76 045 81 40",
+      "cart_type": "drawer",
+      "free_shipping_thresholds": "SE:599:SEK\nDE:59:EUR\nPL:59:EUR\nDK:90:EUR\nNO:90:EUR\nBE:150:EUR\nFI:150:EUR\nFR:150:EUR\nLU:150:EUR\nNL:150:EUR\nIT:150:EUR\nAT:150:EUR\nPT:150:EUR\nCH:150:EUR\nSI:150:EUR\nCZ:150:EUR\nHU:150:EUR\nES:150:EUR",
+      "enable_cart_note": false,
+      "b2b_customer_tag": "b2b",
+      "b2b_discount_percent": 0,
+      "social_instagram_link": "https://www.instagram.com/naturepickmarket/",
+      "social_facebook_link": "https://www.facebook.com/profile.php?id=61567376463484",
+      "enable_cookie_banner": true,
+      "enable_quick_contact": true,
+      "show_wishlist": true,
+      "show_quick_view": true,
+      "soften_uppercase_titles": true,
+      "show_default_origin": true,
+      "logo": "shopify://shop_images/S_FFAF_PNG.png",
+      "favicon": "shopify://shop_images/S_FFAF_PNG.png",
+      "menu_categories": "kategorier-1"
+    }
+  }
+}

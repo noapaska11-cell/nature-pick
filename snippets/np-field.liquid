@@ -1,0 +1,19 @@
+{%- comment -%}
+  Labelled form field used by the customer account pages.
+  Params: id, name, type (default text), label_key (translation key), value, autocomplete,
+          required (bool), autofocus (bool), invalid (bool)
+{%- endcomment -%}
+<div>
+  <label for="{{ id }}" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ label_key | t }}</label>
+  <input
+    id="{{ id }}"
+    name="{{ name }}"
+    type="{{ type | default: 'text' }}"
+    {% if value != blank %}value="{{ value | escape }}"{% endif %}
+    {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+    {% if required %}required aria-required="true"{% endif %}
+    {% if autofocus %}autofocus{% endif %}
+    {% if invalid %}aria-invalid="true"{% endif %}
+    class="input-field"
+  >
+</div>

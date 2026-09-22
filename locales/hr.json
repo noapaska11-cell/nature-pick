@@ -1,0 +1,1090 @@
+{
+  "general": {
+    "password_page": {
+      "login_form_heading": "Uđite u trgovinu pomoću lozinke:",
+      "login_password_button": "Uđite pomoću lozinke",
+      "login_form_password_label": "Lozinka",
+      "login_form_password_placeholder": "Vaša lozinka",
+      "login_form_error": "Pogrešna lozinka!",
+      "login_form_submit": "Unesi",
+      "admin_link_html": "Jeste li vlasnik/vlasnica trgovine? <a href=\"/admin\" class=\"link underlined-link\">Prijavite se ovdje</a>",
+      "powered_by_shopify_html": "Ovu trgovinu pokreće {{ shopify }}"
+    },
+    "social": {
+      "alt_text": {
+        "share_on_facebook": "Podijeli na Facebooku",
+        "share_on_twitter": "Podijeli na mreži X",
+        "share_on_pinterest": "Prikvači na Pinterest"
+      },
+      "links": {
+        "twitter": "X (Twitter)",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok"
+      }
+    },
+    "continue_shopping": "Nastavite s kupovinom",
+    "pagination": {
+      "label": "Numeriranje stranica",
+      "page": "Stranica {{ number }}",
+      "next": "Sljedeća stranica",
+      "previous": "Prethodna stranica"
+    },
+    "search": {
+      "search": "Traži",
+      "reset": "Izbriši pojam za pretraživanje"
+    },
+    "cart": {
+      "view": "Prikaži košaricu ({{ count }})",
+      "item_added": "Artikl je dodan u vašu košaricu",
+      "view_empty_cart": "Prikaži košaricu"
+    },
+    "share": {
+      "copy_to_clipboard": "Kopiraj poveznicu",
+      "share_url": "Poveznica",
+      "success_message": "Poveznica je kopirana u međuspremnik",
+      "close": "Zatvori dijeljenje"
+    },
+    "slider": {
+      "of": "od",
+      "next_slide": "Klizno pomakni udesno",
+      "previous_slide": "Klizno pomakni ulijevo",
+      "name": "Kliznik"
+    }
+  },
+  "newsletter": {
+    "label": "Adresa e-pošte",
+    "success": "Hvala što ste se pretplatili",
+    "button_label": "Pretplatite se"
+  },
+  "accessibility": {
+    "skip_to_text": "Preskoči na sadržaj",
+    "close": "Zatvori",
+    "unit_price_separator": "po",
+    "vendor": "Prodavač:",
+    "error": "Pogreška",
+    "refresh_page": "Odabirom rezultata osvježava se cijela stranica.",
+    "loading": "Učitavanje...",
+    "link_messages": {
+      "new_window": "Otvara se u novom prozoru.",
+      "external": "Otvara vanjsko web-mjesto."
+    },
+    "skip_to_product_info": "Preskoči do informacija o proizvodu",
+    "total_reviews": "ukupan broj pregleda",
+    "star_reviews_info": "{{ rating_value }} od sljedećeg broja zvjezdica: {{ rating_max }}",
+    "collapsible_content_title": "Sadržaj koji se može sažeti",
+    "complementary_products": "Komplementarni proizvodi"
+  },
+  "blogs": {
+    "article": {
+      "blog": "Blog",
+      "read_more_title": "Pročitajte više: {{ title }}",
+      "moderated": "Napominjemo da komentari moraju biti odobreni prije objave.",
+      "comment_form_title": "Ostavite komentar",
+      "name": "Ime",
+      "email": "Adresa e-pošte",
+      "message": "Komentar",
+      "post": "Objavi komentar",
+      "back_to_blog": "Natrag na blog",
+      "share": "Podijeli ovaj članak",
+      "success": "Vaš je komentar uspješno objavljen! Hvala!",
+      "success_moderated": "Vaš je komentar uspješno objavljen. Uskoro ćemo ga objaviti jer se naš blog moderira.",
+      "comments": {
+        "one": "{{ count }} komentar",
+        "other": "{{ count }} komentara",
+        "few": "{{ count }} komentara"
+      }
+    }
+  },
+  "onboarding": {
+    "product_title": "Primjer naziva proizvoda",
+    "collection_title": "Naziv vaše kolekcije"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Dodaj u košaricu",
+      "description": "Opis",
+      "on_sale": "Rasprodaja",
+      "product_variants": "Varijante proizvoda",
+      "share": "Podijelite ovaj proizvod",
+      "sold_out": "Rasprodano",
+      "unavailable": "Nedostupno",
+      "vendor": "Prodavač",
+      "video_exit_message": "Za {{ title }} otvara se videozapis preko čitavog zaslona u istom prozoru.",
+      "xr_button": "Pogledajte u svojem prostoru",
+      "xr_button_label": "Značajka Pogledajte u svojem prostoru učitava artikl u prozor proširene stvarnosti",
+      "quantity": {
+        "label": "Količina",
+        "input_label": "Količina proizvoda {{ product }}",
+        "increase": "Povećaj količinu proizvoda {{ product }}",
+        "decrease": "Smanji količinu proizvoda {{ product }}",
+        "minimum_of": "Minimalno {{ quantity }}",
+        "maximum_of": "Maksimalno {{ quantity }}",
+        "multiples_of": "Povećanje od {{ quantity }}",
+        "in_cart_html": "<span class=\"quantity-cart\">{{ quantity }}</span> u košarici",
+        "note": "Prikaži pravila o količini",
+        "min_of": "Min. {{ quantity }}",
+        "max_of": "Maks. {{ quantity }}",
+        "in_cart_aria_label": "Količina ({{ quantity }} u košarici)"
+      },
+      "price": {
+        "from_price_html": "Od {{ price }}",
+        "regular_price": "Redovna cijena",
+        "sale_price": "Prodajna cijena",
+        "unit_price": "Jedinična cijena"
+      },
+      "pickup_availability": {
+        "view_store_info": "Prikaži informacije o trgovini",
+        "check_other_stores": "Provjeri dostupnost u drugim trgovinama",
+        "pick_up_available": "Dostupno je preuzimanje",
+        "pick_up_available_at_html": "Preuzimanje je dostupno na lokaciji <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Preuzimanje trenutačno nije dostupno na lokaciji <span class=\"color-foreground\">{{ location_name }}</span>",
+        "unavailable": "Učitavanje dostupnosti preuzimanje nije moguće",
+        "refresh": "Osvježi"
+      },
+      "media": {
+        "open_media": "Otvori medij {{ index }} u dijaloškom okviru",
+        "play_model": "Pokreni 3D preglednik",
+        "play_video": "Reproduciraj videozapis",
+        "gallery_viewer": "Preglednik galerije",
+        "load_image": "Učitaj sliku {{ index }} za prikaz u galeriji",
+        "load_model": "Učitaj 3D model {{ index }} za prikaz u galeriji",
+        "load_video": "Reproduciraj videozapis {{ index }} u galerijskom prikazu",
+        "image_available": "Slika {{ index }} sada je dostupna za prikaz u galeriji"
+      },
+      "nested_label": "{{ title }} za {{ parent_title }}",
+      "view_full_details": "Prikaži sve pojedinosti",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Poštarina </a> se obračunava prilikom završetka kupnje.",
+      "choose_options": "Odaberite opcije",
+      "choose_product_options": "Odaberite željene opcije za {{ product_name }}",
+      "value_unavailable": "{{ option_value }} – nedostupno",
+      "variant_sold_out_or_unavailable": "Model je prodan ili nedostupan",
+      "inventory_in_stock": "Dostupno",
+      "inventory_in_stock_show_count": "Br. dostupnih komada: {{ quantity }}",
+      "inventory_low_stock": "Preostalo malo komada",
+      "inventory_low_stock_show_count": "Preostalo malo komada: samo {{ quantity }}",
+      "inventory_out_of_stock": "Nema na zalihama",
+      "inventory_out_of_stock_continue_selling": "Dostupno",
+      "sku": "Inventarna šifra proizvoda (SKU)",
+      "volume_pricing": {
+        "title": "Popust na količinu",
+        "note": "Dostupan je popust na količinu",
+        "minimum": "Više od {{ quantity }}",
+        "price_range": "{{ minimum }} – {{ maximum }}",
+        "price_at_each_html": "po cijeni od {{ price }}/ea"
+      },
+      "taxes_included": "Porezi su uključeni.",
+      "duties_included": "Carina je uključena.",
+      "duties_and_taxes_included": "Carina i porezi su uključeni."
+    },
+    "modal": {
+      "label": "Galerija medijskih zapisa"
+    },
+    "facets": {
+      "apply": "Primijeni",
+      "clear": "Očisti",
+      "clear_all": "Ukloni sve",
+      "from": "Od",
+      "filter_and_sort": "Filtriraj i razvrstaj",
+      "filter_by_label": "Filtriraj:",
+      "filter_button": "Filtriraj",
+      "max_price": "Najveća cijena iznosi {{ price }}",
+      "reset": "Resetiraj",
+      "sort_button": "Razvrstaj",
+      "sort_by_label": "Razvrstaj prema:",
+      "to": "Do",
+      "filters_selected": {
+        "one": "Odabrano ih je ovoliko: {{ count }}",
+        "other": "Odabrano ih je ovoliko: {{ count }}",
+        "few": "Odabrano ih je ovoliko: {{ count }}"
+      },
+      "product_count": {
+        "one": "{{ product_count }} od {{ count }} proizvoda",
+        "other": "{{ product_count }} od {{ count }} proizvoda",
+        "few": "{{ product_count }} od {{ count }} proizvoda"
+      },
+      "product_count_simple": {
+        "one": "{{ count }} proizvod",
+        "other": "Broj proizvoda: {{ count }}",
+        "few": "Broj proizvoda: {{ count }}"
+      },
+      "clear_filter": "Ukloni filtar",
+      "filter_selected_accessibility": "{{ type }} (broj odabranih filtra: {{ count }})",
+      "show_more": "Prikaži više",
+      "show_less": "Prikaži manje",
+      "filter_and_operator_subtitle": "Uskladi sve"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Stranica nije pronađena",
+      "subtext": "404"
+    },
+    "search": {
+      "no_results": "Nije pronađen nijedan rezultat za „{{ terms }}”. Provjerite pravopis ili upotrijebite drugu riječ ili izraz.",
+      "title": "Rezultati pretraživanja",
+      "results_with_count": {
+        "one": "{{ count }} rezultat",
+        "other": "Broj rezultata: {{ count }}",
+        "few": "Broj rezultata: {{ count }}"
+      },
+      "page": "Stranica",
+      "products": "Proizvodi",
+      "search_for": "Tražite „{{ terms }}”",
+      "results_with_count_and_term": {
+        "one": "Pronađen je {{ count }} rezultat za „{{ terms }}”",
+        "other": "Pronađeno je ovoliko rezultata: {{ count }} za „{{ terms }}”",
+        "few": "Pronađeno je ovoliko rezultata: {{ count }} za „{{ terms }}”"
+      },
+      "results_pages_with_count": {
+        "one": "{{ count }} stranica",
+        "other": "Broj stranica: {{ count }}",
+        "few": "Broj stranica: {{ count }}"
+      },
+      "results_suggestions_with_count": {
+        "one": "Broj prijedloga: {{ count }}",
+        "other": "Broj prijedloga: {{ count }}",
+        "few": "Broj prijedloga: {{ count }}"
+      },
+      "results_products_with_count": {
+        "one": "{{ count }} proizvod",
+        "other": "Broj proizvoda: {{ count }}",
+        "few": "Broj proizvoda: {{ count }}"
+      },
+      "suggestions": "Prijedlozi",
+      "pages": "Stranice"
+    },
+    "cart": {
+      "cart": "Košarica"
+    },
+    "contact": {
+      "form": {
+        "name": "Ime",
+        "email": "Adresa e-pošte",
+        "phone": "Broj telefona",
+        "comment": "Komentar",
+        "send": "Pošalji",
+        "post_success": "Hvala vam na javljanju. Odgovorit ćemo vam u najkraćem mogućem roku.",
+        "error_heading": "Prilagodite sljedeće:",
+        "title": "Obrazac za kontakt"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "announcement": "Objava",
+      "menu": "Izbornik",
+      "cart_count": {
+        "one": "{{ count }} artikl",
+        "other": "Broj artikala: {{ count }}",
+        "few": "Broj artikala: {{ count }}"
+      }
+    },
+    "cart": {
+      "title": "Vaša košarica",
+      "caption": "Artikli u kokšarici",
+      "remove_title": "Ukloni {{ title }}",
+      "note": "Ostale posebne upute",
+      "checkout": "Završi kupnju",
+      "empty": "Vaša je košarica prazna",
+      "cart_error": "Došlo je do pogreške prilikom ažuriranja košarice. Pokušajte ponovno.",
+      "cart_quantity_error_html": "U svoju košaricu možete dodati {{ quantity }} kom ovog artikla.",
+      "update": "Ažuriraj",
+      "headings": {
+        "product": "Proizvod",
+        "price": "Cijena",
+        "total": "Ukupno",
+        "quantity": "Količina",
+        "image": "Slika proizvoda"
+      },
+      "login": {
+        "title": "Imate li račun?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Prijavite se</a> za bržu provjeru."
+      },
+      "estimated_total": "Procijenjen ukupni iznos",
+      "new_estimated_total": "Novi procijenjeni ukupni iznos",
+      "duties_and_taxes_included_shipping_at_checkout_with_policy_html": "Carina i porezi su uključeni. Popusti i <a href=\"{{ link }}\">poštarina</a> obračunavaju se prilikom plaćanja.",
+      "duties_and_taxes_included_shipping_at_checkout_without_policy": "Carina i porezi su uključeni. Popusti i poštarina obračunavaju se prilikom plaćanja.",
+      "taxes_included_shipping_at_checkout_with_policy_html": "Porezi su uključeni. Popusti i <a href=\"{{ link }}\">poštarina</a> obračunavaju se prilikom plaćanja.",
+      "taxes_included_shipping_at_checkout_without_policy": "Porezi su uključeni. Popusti i poštarina obračunavaju se prilikom plaćanja.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html": "Carina je uključena. Porezi, popusti i <a href=\"{{ link }}\">poštarina</a> obračunavaju se prilikom plaćanja.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy": "Carina je uključena. Porezi, popusti i poštarina obračunavaju se prilikom plaćanja.",
+      "taxes_at_checkout_shipping_at_checkout_with_policy_html": "Porezi, popusti i <a href=\"{{ link }}\">poštarina</a> obračunavaju se prilikom plaćanja.",
+      "taxes_at_checkout_shipping_at_checkout_without_policy": "Porezi, popusti i poštarina obračunavaju se prilikom plaćanja."
+    },
+    "footer": {
+      "payment": "Načini plaćanja"
+    },
+    "featured_blog": {
+      "view_all": "Prikaži sve",
+      "onboarding_title": "Objava na blogu",
+      "onboarding_content": "Omogućite kupcima sažeti prikaz vaše objave na blogu"
+    },
+    "featured_collection": {
+      "view_all": "Prikaži sve",
+      "view_all_label": "Prikaži sve proizvode iz kolekcije {{ collection_name }}"
+    },
+    "collection_list": {
+      "view_all": "Prikaži sve"
+    },
+    "collection_template": {
+      "title": "Kolekcija",
+      "empty": "Nije pronađen nijedan proizvod",
+      "use_fewer_filters_html": "Upotrijebi manje filtara ili <a class=\"{{ class }}\" href=\"{{ link }}\">ukloni sve</a>"
+    },
+    "video": {
+      "load_video": "Učitaj videozapis: {{ description }}"
+    },
+    "slideshow": {
+      "load_slide": "Učitaj slajd",
+      "previous_slideshow": "Prethodni slajd",
+      "next_slideshow": "Sljedeći slajd",
+      "pause_slideshow": "Pauziraj prezentaciju",
+      "play_slideshow": "Reproduciraj prezentaciju",
+      "carousel": "Vrtuljak",
+      "slide": "Slajd"
+    },
+    "page": {
+      "title": "Naslov stranice"
+    },
+    "announcements": {
+      "previous_announcement": "Prethodna objava",
+      "next_announcement": "Sljedeća objava",
+      "carousel": "Vrtuljak",
+      "announcement": "Objava",
+      "announcement_bar": "Traka za objave"
+    },
+    "quick_order_list": {
+      "product_total": "Podzbroj proizvoda",
+      "view_cart": "Prikaži košaricu",
+      "each": "Jedinična cijena: {{ money }}",
+      "product": "Proizvod",
+      "variant": "Varijanta",
+      "variant_total": "Ukupno za varijantu",
+      "items_added": {
+        "one": "Broj dodanih artikala: {{ quantity }}",
+        "other": "Broj dodanih artikala: {{ quantity }}",
+        "few": "Broj dodanih artikala: {{ quantity }}"
+      },
+      "items_removed": {
+        "one": "Broj uklonjenih artikala: {{ quantity }}",
+        "other": "Broj uklonjenih artikala: {{ quantity }}",
+        "few": "Broj uklonjenih artikala: {{ quantity }}"
+      },
+      "product_variants": "Varijante proizvoda",
+      "total_items": "Ukupni broj artikala",
+      "remove_all_items_confirmation": "Želite li ukloniti sve artikle ({{ quantity }}) iz svoje košarice?",
+      "remove_all": "Ukloni sve",
+      "cancel": "Odustani",
+      "remove_all_single_item_confirmation": "Želite li ukloniti 1 artikl iz košarice?",
+      "min_error": "Minimum za ovaj artikl iznosi {{ min }}",
+      "max_error": "Maksimum za ovaj artikl iznosi {{ max }}",
+      "step_error": "Ovaj artikl možete dodavati samo u rasponima povećanja od {{ step }}"
+    }
+  },
+  "localization": {
+    "country_label": "Država/regija",
+    "language_label": "Jezik",
+    "update_language": "Ažuriraj jezik",
+    "update_country": "Ažuriraj državu/regiju",
+    "search": "Traži",
+    "popular_countries_regions": "Popularne zemlje/regije",
+    "country_results_count": "Pronađen je sljedeći broj zemalja/regija: {{ count }}"
+  },
+  "customer": {
+    "account": {
+      "title": "Račun",
+      "details": "Pojedinosti računa",
+      "view_addresses": "Prikaži adrese",
+      "return": "Povratak na pojedinosti o računu"
+    },
+    "account_fallback": "Račun",
+    "log_in": "Prijava",
+    "log_out": "Odjava",
+    "activate_account": {
+      "title": "Aktiviraj račun",
+      "subtext": "Stvorite svoju lozinku kako biste aktivirali račun.",
+      "password": "Lozinka",
+      "password_confirm": "Potvrdi lozinku",
+      "submit": "Aktiviraj račun",
+      "cancel": "Odbij pozivnicu"
+    },
+    "addresses": {
+      "title": "Adrese",
+      "default": "Zadano",
+      "add_new": "Dodaj novu adresu",
+      "edit_address": "Uredi adresu",
+      "first_name": "Ime",
+      "last_name": "Prezime",
+      "company": "Tvrtka",
+      "address1": "Adresa 1",
+      "address2": "Adresa 2",
+      "city": "Grad",
+      "country": "Država/regija",
+      "province": "Pokrajina",
+      "zip": "Poštanski broj",
+      "phone": "Telefon",
+      "set_default": "Postavi kao zadanu adresu",
+      "add": "Dodaj adresu",
+      "update": "Ažuriraj adresu",
+      "cancel": "Odustani",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "delete_confirm": "Jeste li sigurni da želite izbrisati ovu adresu?"
+    },
+    "login_page": {
+      "cancel": "Odustani",
+      "create_account": "Izradi račun",
+      "email": "Adresa e-pošte",
+      "forgot_password": "Zaboravili ste lozinku?",
+      "guest_continue": "Nastavi",
+      "guest_title": "Nastavi kao gost",
+      "password": "Lozinka",
+      "title": "Prijava",
+      "sign_in": "Registracija",
+      "submit": "Pošalji",
+      "alternate_provider_separator": "ili"
+    },
+    "orders": {
+      "title": "Povijest narudžbe",
+      "order_number": "Narudžba",
+      "order_number_link": "Broj narudžbe {{ number }}",
+      "date": "Datum",
+      "payment_status": "Status plaćanja",
+      "fulfillment_status": "Status izvršenja",
+      "total": "Ukupno",
+      "none": "Još niste ništa naručili."
+    },
+    "recover_password": {
+      "title": "Ponovno postavljanje lozinke",
+      "subtext": "Poslat ćemo vam poruku e-pošte za ponovno postavljanje lozinke",
+      "success": "Poslali smo vam poruku e-pošte s poveznicom za ažuriranje lozinke."
+    },
+    "register": {
+      "title": "Izradi račun",
+      "first_name": "Ime",
+      "last_name": "Prezime",
+      "email": "Adresa e-pošte",
+      "password": "Lozinka",
+      "submit": "Stvori"
+    },
+    "reset_password": {
+      "title": "Ponovno postavljanje lozinke računa",
+      "subtext": "Unesite novu lozinku",
+      "password": "Lozinka",
+      "password_confirm": "Potvrdi lozinku",
+      "submit": "Ponovno postavi lozinku"
+    },
+    "order": {
+      "title": "Narudžba {{ name }}",
+      "date_html": "Naručeno {{ date }}",
+      "cancelled_html": "Narudžba otkazana {{ date }}",
+      "cancelled_reason": "Razlog: {{ reason }}",
+      "billing_address": "Adresa za naplatu",
+      "payment_status": "Status plaćanja",
+      "shipping_address": "Adresa za dostavu",
+      "fulfillment_status": "Status izvršenja",
+      "discount": "Popust",
+      "shipping": "Dostava",
+      "tax": "Porez",
+      "product": "Proizvod",
+      "sku": "Inventarna šifra proizvoda (SKU)",
+      "price": "Cijena",
+      "quantity": "Količina",
+      "total": "Ukupno",
+      "fulfilled_at_html": "Izvršeno {{ date }}",
+      "track_shipment": "Praćenje pošiljke",
+      "tracking_url": "Poveznica za praćenje",
+      "tracking_company": "Dostavna služba",
+      "tracking_number": "Broj za praćenje",
+      "subtotal": "Podzbroj",
+      "total_duties": "Carina",
+      "total_refunded": "Povrat je izvršen"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Poklanjamo vam darovnu karticu u vrijednosti od {{ value }} za trgovinu {{ shop }}!",
+      "subtext": "Vaša poklon-kartica",
+      "gift_card_code": "Kod poklon-kartice",
+      "shop_link": "Posjeti internetsku trgovinu",
+      "add_to_apple_wallet": "Dodaj u Apple Wallet",
+      "qr_image_alt": "QR kod – skenirajte ga kako biste iskoristili poklon-karticu",
+      "copy_code": "Kopiraj kod poklon-kartice",
+      "expired": "Isteklo",
+      "copy_code_success": "Kod je uspješno kopiran",
+      "how_to_use_gift_card": "Upotrijebite kod poklon-kartice na internetu ili QR kod u trgovini",
+      "expiration_date": "Istječe {{ expires_on }}"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Želim ovo poslati kao poklon",
+      "email_label": "Adresa e-pošte primatelja",
+      "email": "Adresa e-pošte",
+      "name_label": "Ime primatelja (nije obavezno)",
+      "name": "Ime",
+      "message_label": "Poruka (nije obavezno)",
+      "message": "Poruka",
+      "max_characters": "Najveći dopušteni broj znakova: {{ max_chars }}",
+      "email_label_optional_for_no_js_behavior": "Adresa e-pošte primatelja (nije obavezno)",
+      "send_on": "YYYY-MM-DD",
+      "send_on_label": "Datum slanja (neobavezno)",
+      "expanded": "Obrazac primatelja poklon-kartice je povećan",
+      "collapsed": "Obrazac primatelja poklon-kartice je smanjen"
+    }
+  },
+  "np": {
+    "common": {
+      "skip_link": "Preskoči na glavni sadržaj",
+      "free_shipping_bar": "Besplatna dostava od {{ amount }}",
+      "add_to_cart": "Dodaj u košaricu",
+      "added": "Dodano u košaricu",
+      "out_of_stock": "Trenutno nedostupno",
+      "out_of_stock_badge": "Nema na zalihi",
+      "b2b_badge": "B2B",
+      "b2b_price_aria": "B2B cijena: {{ wholesale }} (redovna cijena {{ retail }})",
+      "notify_me": "Obavijesti me",
+      "notify_me_email_placeholder": "Tvoj e-mail",
+      "notify_me_confirmed": "Obavijestit ćemo te kad proizvod ponovno bude dostupan.",
+      "quick_view": "Brzi pregled",
+      "bestseller": "Bestseller",
+      "reviews": "recenzija",
+      "home": "Početna",
+      "see_all": "Pogledaj sve",
+      "all_products": "Svi proizvodi",
+      "badge_new": "Novo",
+      "badge_sale": "Akcija",
+      "add_to_wishlist_aria": "Dodaj {{ name }} u omiljene",
+      "remove_from_wishlist_aria": "Ukloni {{ name }} iz omiljenih",
+      "quick_view_aria": "Brzi pregled: {{ name }}",
+      "add_to_cart_aria": "Dodaj {{ name }} u košaricu",
+      "notify_me_aria": "Obavijesti me kad bude dostupno: {{ name }}",
+      "decrease_qty": "Smanji količinu",
+      "increase_qty": "Povećaj količinu",
+      "close_quick_view_aria": "Zatvori brzi pregled",
+      "close": "Zatvori",
+      "email": "Adresa e-pošte",
+      "dismiss_toast_aria": "Zatvori obavijest",
+      "breadcrumb": "Putanja",
+      "eu_vat": "OIB EU"
+    },
+    "nav": {
+      "shop": "Trgovina",
+      "bestsellers": "Bestseleri",
+      "recipes": "Recepti",
+      "origin": "Naše podrijetlo",
+      "contact": "Kontakt",
+      "wishlist": "Omiljeno",
+      "cart": "Otvori košaricu",
+      "search": "Pretraži",
+      "menu": "Izbornik",
+      "b2b": "B2B"
+    },
+    "footer": {
+      "tagline": "Prirodni začini, orašasti plodovi, suho voće i povrće sušeno na suncu provjerenog podrijetla. Švedska tvrtka s transparentnim lancem opskrbe.",
+      "categories_title": "Kategorije",
+      "help_title": "Korisnička podrška",
+      "newsletter_title": "Prirodni okusi u tvom sandučiću",
+      "newsletter_text": "Novosti, recepti i povremeni popusti. Bez spama.",
+      "company_line_html": "Nature Pick je brend u vlasništvu tvrtke <span class=\"np-em\">{{ company }}</span>, {{ address }} · OIB EU: {{ vat }}",
+      "copyright": "© {{ year }} Nature Pick. Sva prava pridržana.",
+      "link_contact": "Kontakt",
+      "link_shipping": "Dostava i povrati",
+      "link_recipes": "Recepti",
+      "link_origin": "Podrijetlo proizvoda",
+      "link_spice_club": "Klub okusa",
+      "link_faq": "Često postavljana pitanja",
+      "link_terms": "Uvjeti korištenja",
+      "link_privacy": "Politika privatnosti",
+      "link_b2b": "B2B suradnja"
+    },
+    "hero": {
+      "eyebrow": "From Sunny Eastern Fields",
+      "title": "Autentični okusi Srednje Azije",
+      "subtitle": "Začini, orašasti plodovi i suho voće pažljivo odabrani u Uzbekistanu i regiji Srednje Azije — dostavljeno izravno na tvoja vrata.",
+      "cta": "Pogledaj bestselere"
+    },
+    "trust_bar": {
+      "label": "Zašto Nature Pick",
+      "item1_title": "Pravo podrijetlo",
+      "item1_text": "Odabrano iz regija kojima ti okusi prirodno pripadaju.",
+      "item2_title": "Jednostavan sastav",
+      "item2_text": "Bez nepotrebne složenosti i umjetnih dodataka. Samo prava hrana.",
+      "item3_title": "Istočnjačka baština",
+      "item3_text": "Tradicionalni okusi Srednje Azije prilagođeni modernim europskim kuhinjama.",
+      "item4_title": "Pažljivo pakirano",
+      "item4_text": "Odabrano i pakirano uz brigu o kvaliteti prije nego što stigne do tebe."
+    },
+    "category_grid": {
+      "label": "Kategorije",
+      "title": "Odaberi svoju kategoriju"
+    },
+    "featured": {
+      "bestsellers_label": "Najčešće kupovano",
+      "bestsellers_title": "Bestseleri",
+      "more_label": "Otkrij više",
+      "more_title": "Vrijedi probati"
+    },
+    "origin_map": {
+      "label": "Put okusa",
+      "title": "Od Ferganske doline do tvoje kuhinje",
+      "hint": "Klikni na točku na ruti da vidiš tu fazu putovanja.",
+      "step1_place": "Uzbekistan",
+      "step1_title": "Tu sve počinje",
+      "step1_text": "Bademi, marelice i začini koji rastu na plodnoj zemlji Ferganske doline.",
+      "step2_place": "Berba",
+      "step2_title": "Zrenje pod suncem",
+      "step2_text": "Voće i povrće sušeno tradicionalnim metodama, bez žurbe.",
+      "step3_place": "Selekcija",
+      "step3_title": "Odabrano s našim lokalnim partnerom",
+      "step3_text": "Sara Europe Exim odbacuje svaku seriju koja ne zadovoljava naše standarde.",
+      "step4_place": "Pakiranje",
+      "step4_title": "Kontrola kvalitete u EU",
+      "step4_text": "Pakiranje i kontrola kvalitete odvijaju se unutar Europske unije.",
+      "step5_place": "Europa",
+      "step5_title": "Izravno do tvojih vrata",
+      "step5_text": "Slanje iz Švedske izravno na tvoja vrata."
+    },
+    "brand_story": {
+      "label": "Odakle dolazimo",
+      "title": "Iz Uzbekistana, s ljubavlju",
+      "text": "Naše putovanje počinje u Uzbekistanu — regiji poznatoj po bademima, marelicama, suhom voću i intenzivno aromatičnim začinima. Zajedno s našim lokalnim partnerom, Sara Europe Exim, odabiremo sirovine izravno na izvoru prije nego što se pažljivo pakiraju i šalju u tvoju kuhinju.",
+      "point1": "Sirovine odabrane izravno u regiji podrijetla",
+      "point2": "Suradnja s lokalnim partnerom, Sara Europe Exim, oko odabira i izvoza",
+      "point3": "Tradicionalni okusi Srednje Azije pakirani s mišlju na europsku kuhinju",
+      "cta": "Upoznaj naše podrijetlo"
+    },
+    "testimonials": {
+      "label": "Recenzije kupaca",
+      "title": "Omiljeno kod naših kupaca",
+      "quote1": "Bademi imaju potpuno drugačiji, intenzivniji okus od onih iz običnog dućana. Naručujem redovito.",
+      "author1": "Anna, Varšava",
+      "quote2": "Sušene rajčice savršene su za domaću pastu. Vidi se da su proizvodi kvalitetni, a ambalaža čvrsta.",
+      "author2": "Marek, Krakov",
+      "quote3": "Mljevena paprika miriše potpuno drugačije od one iz supermarketa. Narudžba je stigla brže nego što sam očekivao.",
+      "author3": "Kasia, Wrocław"
+    },
+    "recipes_teaser": {
+      "label": "Recepti s istoka",
+      "title": "Skuhaj nešto s Nature Pick",
+      "cta": "Svi recepti"
+    },
+    "faq_section": {
+      "label": "Pitanja i odgovori",
+      "title": "Najčešća pitanja",
+      "text": "Nisi pronašao odgovor? Piši nam — rado ćemo pomoći prije nego naručiš."
+    },
+    "newsletter_cta": {
+      "label": "-10% na prvu narudžbu",
+      "title": "Ostvari 10% popusta na prvu narudžbu",
+      "text": "Prijavi se za kod za popust te novosti o proizvodima, receptima i sezonskim artiklima.",
+      "placeholder": "Tvoja adresa e-pošte",
+      "submit": "Prijavi se",
+      "confirmed": "Hvala na prijavi!"
+    },
+    "collection": {
+      "all_products_title": "Svi proizvodi",
+      "all_products_description": "Cijela ponuda Nature Pick na jednom mjestu — od začina do gotovih poklon-setova. Svaki proizvod navodi zemlju podrijetla, sastojke i alergene.",
+      "product_count": {
+        "one": "{{ count }} proizvod",
+        "few": "{{ count }} proizvoda",
+        "other": "{{ count }} proizvoda"
+      },
+      "filter_all": "Sve",
+      "filter_in_stock_only": "Samo dostupno",
+      "sort_label": "Sortiraj",
+      "sort_popular": "Najpopularnije",
+      "sort_price_asc": "Cijena: od najniže",
+      "sort_price_desc": "Cijena: od najviše",
+      "sort_rating": "Najbolje ocijenjeno",
+      "no_results": "Nema proizvoda koji odgovaraju odabranim filterima.",
+      "empty_category": "Nema proizvoda u ovoj kategoriji."
+    },
+    "product": {
+      "price_per_kg": "Cijena po kg",
+      "how_to_use": "Kako koristiti",
+      "shipping_time": "Brza dostava iz Švedske",
+      "return_days": "14 dana za povrat",
+      "spec_weight": "Gramaža",
+      "spec_ingredients": "Sastav",
+      "spec_origin": "Zemlja podrijetla",
+      "spec_storage": "Čuvanje",
+      "spec_allergens": "Alergeni",
+      "spec_availability": "Dostupnost",
+      "available_text": "Dostupno, spremno za slanje",
+      "nutrition_title": "Nutritivne vrijednosti",
+      "nutrition_note": "Prosječne vrijednosti na 100 g proizvoda.",
+      "nutrition_energy": "Energetska vrijednost",
+      "nutrition_fat": "Masti",
+      "nutrition_saturates": "od čega zasićene masne kiseline",
+      "nutrition_carbs": "Ugljikohidrati",
+      "nutrition_sugars": "od čega šećeri",
+      "nutrition_fiber": "Vlakna",
+      "nutrition_protein": "Bjelančevine",
+      "nutrition_salt": "Sol",
+      "related_title": "Moglo bi te zanimati",
+      "view_full_details": "Pogledaj sve informacije o proizvodu",
+      "gallery_thumb_aria": "Prikaži sliku {{ index }}",
+      "default_origin": "Uzbekistan"
+    },
+    "gift_box": {
+      "your_box": "Tvoj set",
+      "products": {
+        "one": "{{ count }} proizvod",
+        "few": "{{ count }} proizvoda",
+        "other": "{{ count }} proizvoda"
+      },
+      "min_items_hint": "Odaberi najmanje {{ min }} proizvoda za izradu seta.",
+      "total": "Ukupno",
+      "add_box": "Dodaj set u košaricu",
+      "added": "Set dodan"
+    },
+    "wishlist": {
+      "title": "Omiljeno",
+      "empty_title": "Tvoj popis omiljenih je prazan",
+      "empty_text": "Klikni na srce na proizvodu da ga spremiš za kasnije.",
+      "browse": "Pregledaj proizvode",
+      "count": {
+        "one": "{{ count }} proizvod",
+        "few": "{{ count }} proizvoda",
+        "other": "{{ count }} proizvoda"
+      }
+    },
+    "cart": {
+      "title": "Košarica",
+      "summary": "Sažetak",
+      "your_cart": "Tvoja košarica",
+      "empty": "Tvoja košarica je prazna.",
+      "empty_title": "Tvoja košarica je prazna",
+      "browse": "Pregledaj proizvode",
+      "free_shipping_unlocked": "Ostvario/la si besplatnu dostavu!",
+      "free_shipping_remaining": "Dodaj još {{ amount }} za besplatnu dostavu",
+      "subtotal": "Međuzbroj",
+      "shipping": "Dostava",
+      "free": "Besplatno",
+      "total": "Ukupno",
+      "checkout": "Nastavi na plaćanje",
+      "view_cart": "Pogledaj košaricu",
+      "go_to_cart": "Idi na košaricu",
+      "secure": "Sigurno plaćanje, šifrirani podaci",
+      "shipping_note": "Brza dostava iz Švedske",
+      "returns_note": "14 dana za povrat bez navođenja razloga",
+      "remove": "Ukloni",
+      "close_aria": "Zatvori košaricu",
+      "remove_aria": "Ukloni iz košarice",
+      "calculated_at_checkout": "Izračunava se pri plaćanju",
+      "note_label": "Napomena uz narudžbu (neobavezno)"
+    },
+    "quick_contact": {
+      "title": "Imaš pitanje?",
+      "subtitle": "Ne nudimo chat uživo, ali brzo odgovaramo.",
+      "send_message": "Pošalji poruku",
+      "faq": "Česta pitanja",
+      "open_aria": "Otvori brzi kontakt",
+      "close_aria": "Zatvori brzi kontakt"
+    },
+    "contact_form": {
+      "name": "Ime i prezime",
+      "email": "Adresa e-pošte",
+      "order_number": "Broj narudžbe (neobavezno)",
+      "message": "Kako vam možemo pomoći?",
+      "submit": "Pošalji poruku",
+      "sent_title": "Poruka poslana",
+      "sent_text": "Hvala na poruci. Odgovaramo u roku od 24 sata radnim danima."
+    },
+    "cookie_consent": {
+      "text_html": "Koristimo kolačiće nužne za rad trgovine te, uz tvoj pristanak, analitičke i marketinške kolačiće. Više u našoj <a href=\"{{ privacy_url }}\" class=\"np-underline-link\">Politici privatnosti</a>.",
+      "reject_all": "Samo nužni",
+      "accept_all": "Prihvati sve"
+    },
+    "waitlist_form": {
+      "placeholder": "Tvoja adresa e-pošte",
+      "submit": "Prijavi me",
+      "confirmed": "Na listi si — javit ćemo ti se!"
+    },
+    "faq": {
+      "item1": {
+        "question": "Koje proizvode nudi Nature Pick?",
+        "answer": "Prirodne začine, orašaste plodove, sjemenke, suho voće i povrće sušeno na suncu te gotove poklon-setove. Cijeli popis pronaći ćeš pod \"Svi proizvodi\"."
+      },
+      "item2": {
+        "question": "Odakle dolaze vaši proizvodi?",
+        "answer": "Mnogi naši proizvodi — uključujući bademe — dolaze iz Uzbekistana, gdje ih biramo zajedno s našim lokalnim partnerom, Sara Europe Exim. Ostale sirovine dolaze od provjerenih regionalnih dobavljača — točnu zemlju podrijetla svakog proizvoda navodimo na njegovoj stranici. Pakiranje i kontrola kvalitete odvijaju se unutar Europske unije."
+      },
+      "item3": {
+        "question": "U koje države dostavljate?",
+        "answer": "Šaljemo iz Švedske u Švedsku, Njemačku, Poljsku i mnoge druge europske države. Troškove i vrijeme dostave za tvoju državu vidiš pri plaćanju, a cijeli pregled nalazi se na stranici „Dostava i povrati”."
+      },
+      "item4": {
+        "question": "Nudite li besplatnu dostavu?",
+        "answer": "Da — besplatna dostava vrijedi od minimalne vrijednosti narudžbe koja ovisi o tvojoj državi. Iznos vidiš u košarici, a trošak dostave uvijek se izračunava pri plaćanju, prije unosa podataka o plaćanju."
+      },
+      "item5": {
+        "question": "Mogu li vratiti proizvod?",
+        "answer": "Imaš 14 dana za odustajanje od ugovora sukladno pravima potrošača EU, bez navođenja razloga. Detalje i obrazac za povrat pronaći ćeš na stranici \"Dostava i povrati\"."
+      },
+      "item6": {
+        "question": "Koje metode plaćanja mogu koristiti?",
+        "answer": "Prihvaćamo načine plaćanja prikazane pri plaćanju — kartice i lokalne opcije za tvoju državu. Sva plaćanja su šifrirana i obrađuje ih vanjski pružatelj platnih usluga."
+      },
+      "item7": {
+        "question": "Kako mogu kontaktirati korisničku podršku?",
+        "answer": "Najbrže putem obrasca na stranici \"Kontakt\" ili e-mailom na {{ email }}. Odgovaramo u roku od 24 sata radnim danima."
+      },
+      "item8": {
+        "question": "Tko stoji iza brenda Nature Pick?",
+        "answer": "Nature Pick je brend švedske tvrtke {{ company }} ({{ address }}, OIB EU: {{ vat }}), koja se bavi odabirom i distribucijom prirodne hrane na nekoliko europskih tržišta, uključujući Poljsku."
+      },
+      "page_eyebrow": "FAQ",
+      "page_title": "Najčešća pitanja",
+      "page_description": "Odgovori na najčešća pitanja o narudžbama, dostavi i Nature Pick proizvodima.",
+      "all_questions_title": "Sva pitanja"
+    },
+    "currency_switcher": {
+      "label": "Država i valuta",
+      "note": "Cijene i valuta ovise o odabranoj državi."
+    },
+    "contact_page": {
+      "meta_title": "Kontakt",
+      "meta_description": "Kontaktiraj korisničku podršku Nature Pick — kontakt obrazac, e-mail i podaci tvrtke.",
+      "eyebrow": "Kontakt",
+      "title": "Kako ti možemo pomoći?",
+      "description": "Odgovaramo na poruke u roku od 24 sata radnim danima (pon.–pet.).",
+      "email_title": "E-mail",
+      "response_time_title": "Vrijeme odgovora",
+      "response_time_text": "U roku od 24 sata radnim danima",
+      "company_title": "Tvrtka",
+      "phone_title": "Telefon"
+    },
+    "about_page": {
+      "meta_title": "Naše podrijetlo",
+      "meta_description": "Upoznaj priču Nature Pick — od polja Uzbekistana, preko odabira i pakiranja, do dostave na tvoja vrata.",
+      "eyebrow": "Naše podrijetlo",
+      "title": "Autentični okusi Srednje Azije",
+      "description": "Nature Pick je brend koji donosi tradicionalne okuse Uzbekistana i regije Srednje Azije na europske stolove — s jasno navedenim podrijetlom svakog proizvoda.",
+      "section_label": "Iz Uzbekistana, s ljubavlju",
+      "section_title": "Priča koja počinje na izvoru",
+      "story_p1_html": "Naše putovanje počinje u Uzbekistanu — regiji poznatoj po iznimno kvalitetnim bademima, marelicama, suhom voću i začinima. Zajedno s našim lokalnim partnerom, <strong class=\"np-strong\">Sara Europe Exim</strong>, biramo sirovine izravno na izvoru, pazeći da u Europu stignu u nepromijenjenoj, autentičnoj kvaliteti.",
+      "story_p2": "Naša web-trgovina opskrbljuje kupce diljem Europe: šaljemo iz Švedske, a troškovi i vrijeme dostave za tvoju državu prikazuju se pri plaćanju.",
+      "cta_contact": "Kontaktiraj nas",
+      "journey1_title": "NAŠE PODRIJETLO",
+      "journey1_text": "Uzbekistan — regija poznata po bademima, marelicama, suhom voću i intenzivno aromatičnim začinima.",
+      "journey2_title": "NAŠI PROIZVODI",
+      "journey2_text": "Pažljivo odabrani začini, orašasti plodovi, suho voće i povrće sušeno na suncu.",
+      "journey3_title": "NAŠI LJUDI",
+      "journey3_text": "Tvrtka NP Market AB i naš lokalni partner u Uzbekistanu, Sara Europe Exim.",
+      "journey4_title": "NAŠE OBEĆANJE",
+      "journey4_text": "Transparentnost podrijetla, jednostavnog sastava i kvalitete — bez iznimki.",
+      "journey5_title": "NAŠ PUT",
+      "journey5_text": "S istoka na europske stolove: odabir, pakiranje i dostava izravno na tvoja vrata.",
+      "registration_title": "Registracijski podaci tvrtke",
+      "registration_text": "{{ company }} · {{ address }} · {{ vat_label }}: {{ vat }}",
+      "cta_privacy": "Politika privatnosti"
+    },
+    "origin_page": {
+      "meta_title": "Podrijetlo proizvoda",
+      "meta_description": "Odakle dolaze proizvodi Nature Pick i kako stižu iz Uzbekistana na tvoj stol.",
+      "eyebrow": "Podrijetlo",
+      "title": "Skeniraj i upoznaj priču",
+      "description": "Isti QR kod koji ćeš pronaći na pakiranju vodi upravo ovamo.",
+      "qr_caption": "Kod s pakiranja Nature Pick",
+      "why_title": "Zašto ovo pokazujemo",
+      "why_text": "Ne želimo da \"prirodno podrijetlo\" bude samo parola na etiketi. Ovaj QR kod vodi na ovu stranicu — opis regije, partnera i procesa kroz koji proizvod prolazi prije nego što stigne do tebe. To je ista priča za svako pakiranje određenog proizvoda, a ne podaci o pojedinačnoj pošiljci — iskreno radije ne obećavamo praćenje koje nemamo.",
+      "region_title": "Regija podrijetla",
+      "region_text": "Uzbekistan — bademi, marelice i začini iz Ferganske doline.",
+      "partner_title": "Partner na terenu",
+      "partner_text": "Sara Europe Exim bira sirovine izravno na izvoru.",
+      "packing_title": "Pakiranje u EU",
+      "packing_text": "Kontrola kvalitete i pakiranje odvijaju se unutar Europske unije.",
+      "delivery_title": "Dostava na tvoja vrata",
+      "delivery_text": "Slanje iz Švedske; vrijeme dostave za tvoju državu vidiš pri plaćanju.",
+      "cta_full_story": "Pročitaj cijelu priču Nature Pick"
+    },
+    "b2b_page": {
+      "meta_title": "B2B suradnja",
+      "meta_description": "Veleprodajne narudžbe Nature Pick za restorane, trgovine i distributere.",
+      "eyebrow": "B2B suradnja",
+      "title": "Veleprodajne narudžbe za tvrtke",
+      "description": "Isporučujemo prirodne začine, orašaste plodove i suho voće u većim količinama — uz individualne cijene i uvjete dostave. Ovo je zaseban kanal od maloprodajne kupnje.",
+      "audience_title": "Za koga je ova ponuda",
+      "audience1": "Trgovine mješovitom robom i delikatese",
+      "audience2": "Restorani i catering",
+      "audience3": "Veletrgovci i distributeri",
+      "audience4": "Vlastite robne marke (private label)",
+      "form_note": "Ispuni obrazac i naš tim će te kontaktirati u roku od 2 radna dana s individualnom ponudom i uvjetima suradnje."
+    },
+    "b2b_auth": {
+      "tab_register": "Registriraj tvrtku",
+      "tab_login": "Prijava",
+      "tab_quote": "Zatraži ponudu",
+      "company_name": "Naziv tvrtke",
+      "tax_id": "OIB (neobavezno)",
+      "email": "Adresa e-pošte",
+      "password": "Lozinka",
+      "register_submit": "Registriraj tvrtku",
+      "login_submit": "Prijavi se",
+      "register_hint": "Tvoju tvrtku provjeravamo ručno i odgovaramo e-poštom, obično u roku od 2 radna dana. Nakon odobrenja prijavi se istom e-adresom da vidiš veleprodajne cijene.",
+      "active_title": "B2B način aktivan",
+      "active_text": "Prijava kao {{ company }}. Tvoj poslovni račun je aktivan.",
+      "browse_cta": "Pregledaj trgovinu",
+      "logout": "Odjava",
+      "header_active": "Veleprodajne cijene aktivne — {{ company }}",
+      "header_logout": "Odjava",
+      "login_hint": "Račun je već odobren? Prijavi se poslovnim računom da vidiš veleprodajne cijene.",
+      "oib": "OIB / matični broj tvrtke",
+      "vat_number": "PDV ID broj (VAT)",
+      "vat_hint": "PDV ID broj s prefiksom države, npr. HR12345678901. Hrvatske tvrtke upisuju OIB, ostale države matični broj tvrtke. Sva polja su obavezna.",
+      "error_id": "Unesi matični broj tvrtke (5–20 znakova).",
+      "verifying": "Provjeravamo tvoju tvrtku …",
+      "result_approved_title": "Tvrtka je provjerena",
+      "result_approved_text": "Tvoj poslovni račun je spreman. Prijavi se unesenom e-adresom — poslat ćemo ti kod za prijavu ili poveznicu za aktivaciju — da vidiš veleprodajne cijene.",
+      "result_pending_title": "Hvala — provjerit ćemo tvoju tvrtku",
+      "result_pending_text": "Nismo mogli automatski potvrditi tvoje podatke. Naš tim će ih provjeriti i odgovoriti e-poštom, obično u roku od 2 radna dana.",
+      "result_exists_title": "Već imaš poslovni račun",
+      "result_exists_text": "Ova e-adresa već je registrirana za veleprodaju. Prijavi se da vidiš svoje cijene.",
+      "sent_title": "Hvala — provjeravamo tvoju tvrtku",
+      "sent_text": "Primili smo tvoj zahtjev. Provjerit ćemo podatke i odgovoriti e-poštom, obično u roku od 2 radna dana. Kad tvrtka bude odobrena, prijavi se istom e-adresom da vidiš veleprodajne cijene.",
+      "error_required": "Ispuni ovo polje.",
+      "error_email": "Unesi ispravnu e-adresu.",
+      "error_oib": "OIB mora imati 11 znamenki i ispravnu kontrolnu znamenku.",
+      "error_vat": "Unesi PDV ID broj s prefiksom države, npr. HR12345678901.",
+      "error_generic": "Nešto je pošlo po zlu. Pokušaj ponovno za trenutak."
+    },
+    "spice_club_page": {
+      "meta_title": "Klub okusa",
+      "meta_description": "Mjesečno iznenađujuće pakiranje sa začinima i suhim voćem iz Srednje Azije — pridruži se listi čekanja.",
+      "eyebrow": "Uskoro",
+      "title": "Nature Pick Klub okusa",
+      "description": "Mjesečno pakiranje s jednim pažljivo odabranim proizvodom iz Srednje Azije. Još radimo na pokretanju — prijavi se i pokaži nam da se isplati.",
+      "how_title": "Kako će to funkcionirati",
+      "step1_title": "Novi okus svaki mjesec",
+      "step1_text": "Jedan proizvod koji još nije u našoj stalnoj ponudi, izravno u tvoj sandučić.",
+      "step2_title": "Bez obveza",
+      "step2_text": "Otkaži kad god želiš — jednim klikom, bez pitanja.",
+      "step3_title": "Priča svakog proizvoda",
+      "step3_text": "Uz svako pakiranje dolazi kratka kartica s podrijetlom i načinom korištenja.",
+      "waitlist_label": "Lista čekanja",
+      "waitlist_title": "Budi prvi kad krenemo",
+      "waitlist_text": "Bez obveza ili plaćanja sada — samo e-mail kada Klub okusa bude spreman za prijave."
+    },
+    "shipping_returns_page": {
+      "meta_title": "Dostava i povrati",
+      "meta_description": "Politika dostave i povrata Nature Pick — troškovi dostave po zemljama i pravila odustajanja od kupnje.",
+      "eyebrow": "Dostava i povrati",
+      "title": "Dostava i povrati",
+      "contact_prompt": "Nešto nejasno ili neuobičajena situacija? Piši nam — čitamo svaku poruku.",
+      "cta_contact": "Piši nam",
+      "shipping_title": "Politika dostave",
+      "refund_title": "Dostava i pravo odustajanja"
+    },
+    "search": {
+      "placeholder": "Pretraži proizvode...",
+      "no_results": "Nema rezultata za ovu pretragu.",
+      "close_aria": "Zatvori pretragu",
+      "open_aria": "Pretraži"
+    },
+    "categories": {
+      "notter_snacks": {
+        "name": "Orašasti plodovi i grickalice",
+        "tagline": "Hrskavo, prženo, bez nepotrebnih dodataka",
+        "description": "Bademi, kikiriki i sjemenke prženi u malim serijama kako bi se zadržao prirodan okus i hrskavost."
+      },
+      "naturliga_kryddor": {
+        "name": "Prirodni začini",
+        "tagline": "Intenzivna aroma izravno u lonac",
+        "description": "Mljeveni i sušeni začini — od slatke paprike do kurkume — bez konzervansa i umjetnih punila."
+      },
+      "torkad_frukt": {
+        "name": "Suho voće",
+        "tagline": "Prirodna slatkoća za zdravu grickalicu",
+        "description": "Bobice goji i drugo suho voće, sušeno bez dodanog šećera, spremno za jelo izravno iz pakiranja."
+      },
+      "soltorkade_gronsaker": {
+        "name": "Povrće sušeno na suncu",
+        "tagline": "Koncentrirani okus ljeta",
+        "description": "Sušene rajčice, luk i pahuljice paprike — savršeno za umake, namaze i jela iz jedne posude."
+      },
+      "baljvaxter": {
+        "name": "Mahunarke",
+        "tagline": "Biljne bjelančevine svaki dan",
+        "description": "Pečeni slanutak i druge mahunarke — sit međuobrok ili osnova za domaći humus."
+      },
+      "ortteer": {
+        "name": "Biljni čajevi",
+        "tagline": "Prirodne mješavine za kuhanje čaja",
+        "description": "Sušeno bilje i biljne mješavine za svakodnevno kuhanje čaja."
+      },
+      "sotsaker_delikatesser": {
+        "name": "Slastice i delicije",
+        "tagline": "Male poslastice od prirodnih sastojaka",
+        "description": "Odabrani specijaliteti uz kavu, za desert ili kao poklon."
+      },
+      "gavopaket": {
+        "name": "Poklon-setovi",
+        "tagline": "Sastavi vlastiti poklon od prirodnih proizvoda",
+        "description": "Odaberi barem 3 proizvoda koji putuju zajedno u jednoj pošiljci — gotov, personalizirani poklon."
+      }
+    },
+    "recipes": {
+      "page_title": "Recepti s Istoka",
+      "page_description": "Jednostavna jela i napitci s našim začinima, orašastim plodovima i suhim voćem — s popisom sastojaka koji možete odmah dodati u košaricu.",
+      "ingredients_title": "Sastojci",
+      "steps_title": "Priprema"
+    },
+    "blog": {
+      "no_articles": "Još nema članaka."
+    }
+  },
+  "gempages": {
+    "Carousel": {
+      "no_slider": "No Slider"
+    },
+    "CarouselV3": {
+      "no_slider": "No Slider"
+    },
+    "Newsletter": {
+      "err_msg_default": "Can’t send email. Please try again later.",
+      "success_msg_default": "Thanks for subscribing"
+    },
+    "IconListV2": {
+      "icons_not_found": "Icons not found"
+    },
+    "IconList": {
+      "icons_not_found": "Icons not found"
+    },
+    "IconListHoz": {
+      "icons_not_found": "Icons not found"
+    },
+    "Product": {
+      "product_not_found": "Product not found"
+    },
+    "ProductList": {
+      "product_not_found": "Product Not Found!",
+      "no_products_found": "No products found!",
+      "no_related_products": "No related products!"
+    },
+    "ProductListV3": {
+      "product_not_found": "Product Not Found!",
+      "no_products_found": "No products found!",
+      "no_related_products": "No related products!"
+    },
+    "ProductTitle": {
+      "product_not_found": "Product Not Found"
+    },
+    "ProductVariants": {
+      "please_select": "Please select an option"
+    },
+    "StockCounter": {
+      "let_buy_now": "<mark>HURRY!</mark> LET'S BUY NOW"
+    },
+    "Breadcrumb": {
+      "home": "Home"
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{%- comment -%}
+  Language + country/currency switchers. They use Shopify's own localization form, so language and
+  currency follow Shopify Markets (this replaces the display-only currency converter of the Next.js
+  storefront - prices are now real market prices).
+
+  Params:
+    kind    - 'language' | 'country'
+    variant - 'desktop' (hover dropdown, default) | 'mobile' (compact controls for the mobile menu)
+    form_id - unique form id
+{%- endcomment -%}
+{%- liquid
+  assign loc_variant = variant | default: 'desktop'
+  assign loc_form_id = form_id | default: 'LocalizationForm'
+-%}
+{%- if kind == 'language' and localization.available_languages.size > 1 -%}
+  {%- capture current_flag -%}{%- render 'np-flag', code: localization.language.iso_code -%}{%- endcapture -%}
+  {%- form 'localization', id: loc_form_id, class: 'contents' -%}
+    {%- if loc_variant == 'mobile' -%}
+      <div class="grid grid-cols-2 gap-1.5">
+        {%- for language in localization.available_languages -%}
+          {%- capture lang_flag -%}{%- render 'np-flag', code: language.iso_code -%}{%- endcapture -%}
+          <button
+            type="submit"
+            name="language_code"
+            value="{{ language.iso_code }}"
+            lang="{{ language.iso_code }}"
+            {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %}
+            class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm {% if language.iso_code == localization.language.iso_code %}bg-[var(--color-charcoal)] text-white{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
+          >
+            <span aria-hidden="true">{{ lang_flag | strip }}</span> {{ language.endonym_name | capitalize }}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="np-dropdown relative" data-dropdown>
+        <button
+          type="button"
+          data-dropdown-toggle
+          aria-label="{{ 'localization.language_label' | t }}"
+          aria-haspopup="true"
+          aria-expanded="false"
+          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-white hover:bg-white/10"
+        >
+          <span aria-hidden="true">{{ current_flag | strip }}</span>
+          <span class="hidden sm:inline">{{ localization.language.iso_code | split: '-' | first | upcase }}</span>
+          {% render 'icon', name: 'chevron-down', class: 'h-3.5 w-3.5' %}
+        </button>
+        <div data-dropdown-panel class="absolute right-0 top-full z-10 w-44 pt-2">
+          <div class="flex max-h-80 flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 shadow-xl">
+            {%- for language in localization.available_languages -%}
+              {%- capture lang_flag -%}{%- render 'np-flag', code: language.iso_code -%}{%- endcapture -%}
+              <button
+                type="submit"
+                name="language_code"
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
+                {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %}
+                class="flex items-center gap-2.5 px-3.5 py-2 text-left text-sm {% if language.iso_code == localization.language.iso_code %}font-semibold text-[var(--color-paprika-dark)]{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
+              >
+                <span aria-hidden="true">{{ lang_flag | strip }}</span>
+                {{ language.endonym_name | capitalize }}
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+{%- elsif kind == 'country' and localization.available_countries.size > 1 -%}
+  {%- form 'localization', id: loc_form_id, class: 'contents' -%}
+    {%- if loc_variant == 'mobile' -%}
+      <label for="{{ loc_form_id }}-select" class="sr-only">{{ 'np.currency_switcher.label' | t }}</label>
+      <div class="relative">
+        <select id="{{ loc_form_id }}-select" name="country_code" data-autosubmit class="np-select input-field pr-9">
+          {%- for country in localization.available_countries -%}
+            <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+            </option>
+          {%- endfor -%}
+        </select>
+        {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
+      </div>
+      <p class="mt-2 px-1 text-xs text-[var(--color-charcoal-soft)]">{{ 'np.currency_switcher.note' | t }}</p>
+    {%- else -%}
+      <div class="np-dropdown relative" data-dropdown>
+        <button
+          type="button"
+          data-dropdown-toggle
+          aria-label="{{ 'np.currency_switcher.label' | t }}"
+          aria-haspopup="true"
+          aria-expanded="false"
+          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-white hover:bg-white/10"
+        >
+          <span aria-hidden="true">{{ localization.country.currency.symbol }}</span>
+          <span class="hidden sm:inline">{{ localization.country.currency.iso_code }}</span>
+          {% render 'icon', name: 'chevron-down', class: 'h-3.5 w-3.5' %}
+        </button>
+        <div data-dropdown-panel class="absolute right-0 top-full z-10 w-64 pt-2">
+          <div class="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 shadow-xl">
+            <div class="flex max-h-72 flex-col overflow-y-auto overflow-x-hidden">
+              {%- for country in localization.available_countries -%}
+                <button
+                  type="submit"
+                  name="country_code"
+                  value="{{ country.iso_code }}"
+                  {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %}
+                  class="flex items-center justify-between gap-3 px-3.5 py-2 text-left text-sm {% if country.iso_code == localization.country.iso_code %}font-semibold text-[var(--color-paprika-dark)]{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
+                >
+                  <span class="truncate">{{ country.name }}</span>
+                  <span class="flex-shrink-0 text-xs text-[var(--color-charcoal-soft)]">{{ country.currency.iso_code }} {{ country.currency.symbol }}</span>
+                </button>
+              {%- endfor -%}
+            </div>
+            <p class="mt-1 border-t border-[var(--color-line)] px-3.5 pt-2 text-xs leading-snug text-[var(--color-charcoal-soft)]">{{ 'np.currency_switcher.note' | t }}</p>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+{%- endif -%}

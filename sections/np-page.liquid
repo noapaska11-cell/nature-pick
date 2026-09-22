@@ -1,0 +1,14 @@
+{%- comment -%}Generic page (templates/page.json): title band + rich text content.{%- endcomment -%}
+{%- render 'np-page-hero', eyebrow: page.title, title: page.title, description: nil -%}
+<section class="container-page max-w-3xl py-14">
+  <div class="np-prose">{{ page.content }}</div>
+</section>
+
+{% schema %}
+{
+  "name": "Page",
+  "enabled_on": {
+    "templates": ["page"]
+  }
+}
+{% endschema %}

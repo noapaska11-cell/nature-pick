@@ -1,0 +1,78 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.trust_bar.label' | t
+  endif
+-%}
+<section class="border-y border-[var(--color-line)] bg-[var(--color-paper)]">
+  <div class="container-page py-12">
+    <p class="section-label text-[var(--color-paprika-dark)]">{{ label }}</p>
+    <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign title = block.settings.title
+          if title == blank
+            assign title_key = 'np.trust_bar.item' | append: forloop.index | append: '_title'
+            assign title = title_key | t: default: ''
+          endif
+          assign text = block.settings.text
+          if text == blank
+            assign text_key = 'np.trust_bar.item' | append: forloop.index | append: '_text'
+            assign text = text_key | t: default: ''
+          endif
+        -%}
+        <div class="flex flex-col gap-1.5" {{ block.shopify_attributes }}>
+          <span class="font-display text-2xl font-semibold text-[var(--color-paprika)]">{{ forloop.index | prepend: '0' }}</span>
+          <p class="text-sm font-semibold text-[var(--color-charcoal)]">{{ title }}</p>
+          <p class="text-xs leading-relaxed text-[var(--color-charcoal-soft)]">{{ text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Leave empty to use the translated default text."
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "info": "Leave empty to use the translated default text."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust bar",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,7 @@
+{%- comment -%}One row of the product specification table. Renders nothing when the value is blank. Params: label, value{%- endcomment -%}
+{%- if value != blank -%}
+  <div class="grid grid-cols-[9rem_1fr] gap-3 px-4 py-3 text-sm">
+    <dt class="font-medium text-[var(--color-charcoal)]">{{ label }}</dt>
+    <dd class="text-[var(--color-charcoal-soft)]">{{ value }}</dd>
+  </div>
+{%- endif -%}

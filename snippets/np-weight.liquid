@@ -1,0 +1,18 @@
+{%- comment -%}
+  Prints a variant weight as "125 g" / "1.5 kg" (variant.weight is always grams in Liquid).
+  Prints nothing when the variant has no weight. Param: grams
+{%- endcomment -%}
+{%- liquid
+  assign w_grams = grams | plus: 0
+  if w_grams >= 1000
+    assign w_kg = w_grams | divided_by: 1000.0
+    assign w_kg_rounded = w_kg | round
+    if w_kg == w_kg_rounded
+      echo w_kg_rounded | append: ' kg'
+    else
+      echo w_kg | round: 2 | append: ' kg'
+    endif
+  elsif w_grams > 0
+    echo w_grams | round | append: ' g'
+  endif
+-%}

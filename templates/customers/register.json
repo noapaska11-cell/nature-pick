@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-register",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

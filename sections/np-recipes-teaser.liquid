@@ -1,0 +1,87 @@
+{%- liquid
+  assign recipe_blog = section.settings.blog
+  if recipe_blog == blank
+    assign recipe_blog = blogs.recipes
+  endif
+
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.recipes.page_title' | t
+  endif
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.recipes.page_title' | t
+  endif
+-%}
+{%- if recipe_blog != blank and recipe_blog.articles_count > 0 -%}
+  <div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+    <section class="bg-[var(--color-cream-soft)]">
+      <div class="container-page py-16">
+        <div class="flex items-end justify-between gap-4">
+          <div>
+            <span class="section-label text-[var(--color-paprika-dark)]">
+              {% render 'icon', name: 'spice', class: 'h-3.5 w-3.5' %} {{ label }}
+            </span>
+            <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+          </div>
+          <a href="{{ recipe_blog.url }}" class="hidden items-center gap-1 text-sm font-medium text-[var(--color-paprika-dark)] hover:underline sm:flex">
+            {{ 'np.common.see_all' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+          </a>
+        </div>
+
+        <div class="mt-8 grid gap-5 sm:grid-cols-3">
+          {%- for article in recipe_blog.articles limit: 3 -%}
+            {% render 'np-article-card', article: article, index: forloop.index0, sizes: '(min-width: 640px) 33vw, 100vw' %}
+          {%- endfor -%}
+        </div>
+
+        <a href="{{ recipe_blog.url }}" class="mt-6 flex items-center gap-1 text-sm font-medium text-[var(--color-paprika-dark)] hover:underline sm:hidden">
+          {{ title }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+        </a>
+      </div>
+    </section>
+  </div>
+{%- elsif request.design_mode -%}
+  <section class="bg-[var(--color-cream-soft)]">
+    <div class="container-page py-10 text-center text-sm text-[var(--color-charcoal-soft)]">
+      Recipes: pick a blog with recipe articles in this section's settings (or create a blog with the handle "recipes").
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Recipes teaser",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Leave empty to use the blog with the handle 'recipes'. The latest 3 articles are shown."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recipes teaser"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+{%- comment -%}One selectable product tile of the gift box builder (React <GiftBoxBuilder /> grid item). Param: product{%- endcomment -%}
+{%- liquid
+  assign gift_variant = product.selected_or_first_available_variant
+  assign gift_title = product.title | escape
+  assign gift_image = product.featured_media
+-%}
+{%- if product.available and gift_variant.available -%}
+  <button
+    type="button"
+    data-gift-tile
+    data-variant-id="{{ gift_variant.id }}"
+    data-price="{{ gift_variant.price }}"
+    aria-pressed="false"
+    class="group relative overflow-hidden rounded-2xl border-2 border-[var(--color-line)] text-left transition-colors hover:border-[var(--color-charcoal-soft)] aria-pressed:border-[var(--color-paprika)]"
+  >
+    {%- render 'np-product-image', image: gift_image, alt: product.title, class: 'aspect-square w-full', sizes: '(min-width: 1024px) 20vw, 40vw', widths: '180, 360, 540', index: product.id -%}
+    <span class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-white/80 text-transparent transition-colors group-aria-pressed:border-[var(--color-paprika)] group-aria-pressed:bg-[var(--color-paprika)] group-aria-pressed:text-white">
+      {% render 'icon', name: 'check', class: 'h-3.5 w-3.5' %}
+    </span>
+    <span class="block p-2.5">
+      <span class="block truncate text-xs font-medium text-[var(--color-charcoal)]">{{ gift_title }}</span>
+      <span class="block text-xs text-[var(--color-charcoal-soft)]">{{ gift_variant.price | money_without_trailing_zeros }}</span>
+    </span>
+  </button>
+{%- endif -%}

@@ -1,0 +1,18 @@
+{%- comment -%}404 page.{%- endcomment -%}
+<section class="container-page flex flex-col items-center gap-4 py-24 text-center">
+  <p class="font-display text-7xl font-semibold text-[var(--color-paprika)]">404</p>
+  <h1 class="font-display text-2xl font-semibold text-[var(--color-charcoal)]">{{ 'templates.404.title' | t }}</h1>
+  <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
+    <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'np.cart.browse' | t }}</a>
+    <a href="{{ routes.root_url }}" class="btn-secondary">{{ 'np.common.home' | t }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404",
+  "enabled_on": {
+    "templates": ["404"]
+  }
+}
+{% endschema %}

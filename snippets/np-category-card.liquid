@@ -1,0 +1,75 @@
+{%- comment -%}
+  Category tile (image + name + tagline). Port of one <CategoryGrid /> card.
+  Params: collection, image (optional override), custom_title, custom_tagline, index, shopify_attributes
+{%- endcomment -%}
+{%- liquid
+  assign card_image = image
+  if card_image == blank
+    assign card_image = collection.image
+  endif
+  if card_image == blank
+    for p in collection.products limit: 12
+      if p.featured_media != blank and p.available
+        assign card_image = p.featured_media
+        break
+      endif
+    endfor
+  endif
+  if card_image == blank
+    assign card_image = collection.products.first.featured_media
+  endif
+
+  assign card_title = custom_title
+  if card_title == blank
+    assign card_title = collection.title
+  endif
+
+  assign card_tagline = custom_tagline
+  if card_tagline == blank
+    assign card_tagline = collection.metafields.custom.tagline.value
+  endif
+  if card_tagline == blank
+    assign tagline_key = 'np.categories.' | append: collection.handle | replace: '-', '_' | append: '.tagline'
+    assign card_tagline = tagline_key | t: default: '@@'
+    if card_tagline == '@@'
+      assign card_tagline = ''
+    endif
+  endif
+
+  case collection.handle
+    when 'notter-snacks'
+      assign fallback_icon = 'nut'
+    when 'naturliga-kryddor'
+      assign fallback_icon = 'spice'
+    when 'torkad-frukt'
+      assign fallback_icon = 'fruit'
+    when 'soltorkade-gronsaker'
+      assign fallback_icon = 'leaf'
+    when 'baljvaxter'
+      assign fallback_icon = 'bean'
+    when 'ortteer'
+      assign fallback_icon = 'tea'
+    when 'sotsaker-delikatesser'
+      assign fallback_icon = 'gift'
+    when 'gavopaket'
+      assign fallback_icon = 'box'
+    else
+      assign fallback_icon = 'leaf'
+  endcase
+-%}
+<a href="{{ collection.url }}" class="group card-surface overflow-hidden" {{ shopify_attributes }}>
+  {%- render 'np-product-image',
+    image: card_image,
+    alt: '',
+    class: 'aspect-[4/3] w-full',
+    sizes: '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw',
+    index: index,
+    icon: fallback_icon
+  -%}
+  <div class="p-4">
+    <h3 class="font-display text-base font-medium text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)]">{{ card_title | escape }}</h3>
+    {%- if card_tagline != blank -%}
+      <p class="mt-1 text-xs leading-relaxed text-[var(--color-charcoal-soft)]">{{ card_tagline }}</p>
+    {%- endif -%}
+  </div>
+</a>

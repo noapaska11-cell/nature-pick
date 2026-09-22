@@ -1,0 +1,26 @@
+{%- comment -%}
+  Pagination for {% paginate %} blocks. Param: paginate (the paginate object)
+{%- endcomment -%}
+{%- if paginate.pages > 1 -%}
+  <nav class="mt-12 flex flex-wrap items-center justify-center gap-1.5" aria-label="{{ 'general.pagination.label' | t }}">
+    {%- if paginate.previous -%}
+      <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}" class="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:border-[var(--color-charcoal)]">
+        {% render 'icon', name: 'chevron-left', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a href="{{ part.url }}" aria-label="{{ 'general.pagination.page' | t: number: part.title }}" class="flex h-10 min-w-10 items-center justify-center rounded-full border border-[var(--color-line)] px-3 text-sm font-medium text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)] hover:text-[var(--color-charcoal)]">{{ part.title }}</a>
+      {%- elsif part.title == paginate.current_page -%}
+        <span aria-current="page" class="flex h-10 min-w-10 items-center justify-center rounded-full border border-[var(--color-charcoal)] bg-[var(--color-charcoal)] px-3 text-sm font-semibold text-white">{{ part.title }}</span>
+      {%- else -%}
+        <span class="flex h-10 items-center justify-center px-1 text-sm text-[var(--color-charcoal-soft)]">{{ part.title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if paginate.next -%}
+      <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}" class="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:border-[var(--color-charcoal)]">
+        {% render 'icon', name: 'chevron-right', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

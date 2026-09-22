@@ -1,0 +1,199 @@
+{
+  "sections": {
+    "hero": {
+      "type": "np-hero",
+      "settings": {}
+    },
+    "b2b": {
+      "type": "np-b2b-banner",
+      "settings": {}
+    },
+    "trust": {
+      "type": "np-trust-bar",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {}
+        },
+        "t2": {
+          "type": "item",
+          "settings": {}
+        },
+        "t3": {
+          "type": "item",
+          "settings": {}
+        },
+        "t4": {
+          "type": "item",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "categories": {
+      "type": "np-category-grid",
+      "blocks": {
+        "c1": {
+          "type": "category",
+          "settings": {
+            "collection": "notter-snacks"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "collection": "naturliga-kryddor"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "collection": "torkad-frukt"
+          }
+        },
+        "c4": {
+          "type": "category",
+          "settings": {
+            "collection": "soltorkade-gronsaker"
+          }
+        },
+        "c5": {
+          "type": "category",
+          "settings": {
+            "collection": "baljvaxter"
+          }
+        },
+        "c6": {
+          "type": "category",
+          "settings": {
+            "collection": "ortteer"
+          }
+        },
+        "c7": {
+          "type": "category",
+          "settings": {
+            "collection": "sotsaker-delikatesser"
+          }
+        },
+        "c8": {
+          "type": "category",
+          "settings": {
+            "collection": "gavopaket"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8"
+      ],
+      "settings": {
+        "reveal": true
+      }
+    },
+    "bestsellers": {
+      "type": "np-featured-products",
+      "settings": {
+        "style": "bestsellers",
+        "collection": "bastsaljare",
+        "products_to_show": 8,
+        "anchor_id": "bestsellers",
+        "reveal": true
+      }
+    },
+    "origin": {
+      "type": "np-origin-map",
+      "settings": {
+        "reveal": true
+      }
+    },
+    "story": {
+      "type": "np-brand-story",
+      "settings": {
+        "collection_1": "soltorkade-gronsaker",
+        "product_2": "bergmandel-mix",
+        "collection_2": "notter-snacks",
+        "reveal": true
+      }
+    },
+    "testimonials": {
+      "type": "np-testimonials",
+      "disabled": true,
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {}
+        },
+        "r2": {
+          "type": "review",
+          "settings": {}
+        },
+        "r3": {
+          "type": "review",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "reveal": true
+      }
+    },
+    "recipes": {
+      "type": "np-recipes-teaser",
+      "settings": {
+        "reveal": true
+      }
+    },
+    "more": {
+      "type": "np-featured-products",
+      "settings": {
+        "style": "more",
+        "collection": "naturliga-kryddor",
+        "products_to_show": 8,
+        "reveal": true
+      }
+    },
+    "faq": {
+      "type": "np-faq",
+      "settings": {
+        "layout": "split",
+        "item_count": 6,
+        "first_open": true,
+        "reveal": true
+      }
+    },
+    "newsletter": {
+      "type": "np-newsletter-cta",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "b2b",
+    "trust",
+    "categories",
+    "bestsellers",
+    "origin",
+    "story",
+    "testimonials",
+    "recipes",
+    "more",
+    "faq",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,24 @@
+{%- comment -%}
+  Outputs the free-shipping threshold (major units, e.g. 599) configured for the visitor's
+  selected country in Theme settings > Cart & shipping, or nothing when none is configured.
+  Usage: {%- capture np_threshold -%}{%- render 'np-threshold' -%}{%- endcapture -%}
+  Each line of the setting looks like  SE:599:SEK  - country code, amount in major units and (optional)
+  the currency the amount is meant for. A line only applies while the cart is shown in that currency,
+  so a threshold in EUR is never displayed to a visitor who sees prices in another currency.
+{%- endcomment -%}
+{%- liquid
+  assign found = ''
+  assign threshold_lines = settings.free_shipping_thresholds | newline_to_br | split: '<br />'
+  for threshold_line in threshold_lines
+    assign parts = threshold_line | strip | split: ':'
+    assign part_code = parts[0] | strip | upcase
+    if part_code == localization.country.iso_code
+      assign part_currency = parts[2] | strip | upcase
+      if part_currency == '' or part_currency == cart.currency.iso_code
+        assign found = parts[1] | strip
+        break
+      endif
+    endif
+  endfor
+  echo found
+-%}

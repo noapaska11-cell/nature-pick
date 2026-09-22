@@ -1,0 +1,111 @@
+{%- liquid
+  assign vat_label = 'np.common.eu_vat' | t
+  assign contact_url = pages.contact.url
+  assign privacy_url = shop.privacy_policy.url
+
+  assign image_1 = section.settings.image_1
+  if image_1 == blank
+    assign image_1 = section.settings.collection_1.products.first.featured_media
+  endif
+  assign image_2 = section.settings.image_2
+  if image_2 == blank
+    assign image_2 = section.settings.collection_2.products.first.featured_media
+  endif
+-%}
+<section class="container-page grid gap-10 py-14 md:grid-cols-2 md:items-center">
+  <div>
+    <span class="section-label text-[var(--color-paprika-dark)]">
+      {% render 'icon', name: 'map-pin', class: 'h-3.5 w-3.5' %} {{ 'np.about_page.section_label' | t }}
+    </span>
+    <h2 class="mt-2 font-display text-2xl font-semibold text-[var(--color-charcoal)] sm:text-3xl">{{ 'np.about_page.section_title' | t }}</h2>
+    <p class="mt-4 leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.about_page.story_p1_html' | t }}</p>
+    <p class="mt-4 leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.about_page.story_p2' | t }}</p>
+    {%- if contact_url != blank -%}
+      <a href="{{ contact_url }}" class="btn-secondary mt-6 inline-flex">{{ 'np.about_page.cta_contact' | t }}</a>
+    {%- endif -%}
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    {%- render 'np-product-image', image: image_1, alt: '', class: 'aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 0, icon: 'nut' -%}
+    {%- render 'np-product-image', image: image_2, alt: '', class: 'mt-8 aspect-square rounded-3xl', sizes: '(min-width: 768px) 25vw, 50vw', index: 3, icon: 'leaf' -%}
+  </div>
+</section>
+
+<section class="bg-[var(--color-cream-soft)]">
+  <div class="container-page py-14">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign title_key = 'np.about_page.journey' | append: i | append: '_title'
+          assign text_key = 'np.about_page.journey' | append: i | append: '_text'
+          case i
+            when 1
+              assign journey_icon = 'map-pin'
+            when 2
+              assign journey_icon = 'box'
+            when 3
+              assign journey_icon = 'shield'
+            when 4
+              assign journey_icon = 'check'
+            else
+              assign journey_icon = 'truck'
+          endcase
+        -%}
+        <div class="card-surface p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">
+            {% render 'icon', name: journey_icon, class: 'h-5 w-5' %}
+          </span>
+          <h3 class="mt-4 font-display text-sm font-bold tracking-wide text-[var(--color-charcoal)]">{{ title_key | t }}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ text_key | t }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<section class="container-page py-14">
+  <div class="card-surface flex flex-col items-start gap-3 p-8 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.about_page.registration_title' | t }}</h2>
+      <p class="mt-2 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.about_page.registration_text' | t: company: settings.company_name, address: settings.company_address, vat_label: vat_label, vat: settings.company_vat }}</p>
+    </div>
+    {%- if privacy_url != blank -%}
+      <a href="{{ privacy_url }}" class="btn-secondary flex-shrink-0">{{ 'np.about_page.cta_privacy' | t }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About / Our origin",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Picture 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Or: collection for picture 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Picture 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Or: collection for picture 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About / Our origin"
+    }
+  ]
+}
+{% endschema %}

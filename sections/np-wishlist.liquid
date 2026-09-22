@@ -1,0 +1,41 @@
+{%- liquid
+  assign products_base = routes.all_products_collection_url | replace: '/collections/all', '/products'
+-%}
+<np-wishlist
+  class="container-page block py-10"
+  data-products-base="{{ products_base }}"
+  data-count-one="{{ 'np.wishlist.count' | t: count: 1 }}"
+  data-count-few="{{ 'np.wishlist.count' | t: count: 3 }}"
+  data-count-other="{{ 'np.wishlist.count' | t: count: 5 }}"
+>
+  <div data-wishlist-loading class="flex justify-center py-24 text-[var(--color-charcoal-soft)]" role="status" aria-label="{{ 'accessibility.loading' | t }}">
+    <span class="np-spinner"></span>
+  </div>
+
+  <div data-wishlist-empty hidden class="flex flex-col items-center gap-4 py-14 text-center">
+    {% render 'icon', name: 'heart', class: 'h-12 w-12 text-[var(--color-charcoal-soft)] opacity-40' %}
+    <h1 class="font-display text-2xl font-semibold text-[var(--color-charcoal)]">{{ 'np.wishlist.empty_title' | t }}</h1>
+    <p class="text-[var(--color-charcoal-soft)]">{{ 'np.wishlist.empty_text' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="btn-primary mt-2">{{ 'np.wishlist.browse' | t }}</a>
+  </div>
+
+  <div data-wishlist-filled hidden>
+    <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'np.wishlist.title' | t }}</h1>
+    <p class="mt-2 text-sm text-[var(--color-charcoal-soft)]" data-wishlist-count-label></p>
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4" data-wishlist-grid></div>
+  </div>
+</np-wishlist>
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "presets": [
+    {
+      "name": "Wishlist"
+    }
+  ]
+}
+{% endschema %}

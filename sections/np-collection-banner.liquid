@@ -1,0 +1,72 @@
+{%- liquid
+  assign is_all = false
+  if collection.handle == 'all'
+    assign is_all = true
+  endif
+
+  if is_all
+    assign banner_title = 'np.collection.all_products_title' | t
+    assign banner_description = 'np.collection.all_products_description' | t
+  else
+    assign banner_title = collection.title | escape
+    assign banner_description = collection.description
+    if banner_description == blank
+      assign description_key = 'np.categories.' | append: collection.handle | replace: '-', '_' | append: '.description'
+      assign banner_description = description_key | t: default: '@@'
+      if banner_description == '@@'
+        assign banner_description = ''
+      endif
+    endif
+  endif
+
+  assign banner_image = collection.image
+  if banner_image == blank
+    for p in collection.products limit: 12
+      if p.featured_media != blank and p.available
+        assign banner_image = p.featured_media
+        break
+      endif
+    endfor
+  endif
+  if banner_image == blank
+    assign banner_image = collection.products.first.featured_media
+  endif
+-%}
+<section class="border-b border-[var(--color-line)] bg-[var(--color-cream-soft)]">
+  <div class="container-page grid gap-8 py-12 md:grid-cols-[1fr_auto] md:items-center">
+    <div>
+      <nav class="mb-3 flex items-center gap-1.5 text-xs text-[var(--color-charcoal-soft)]" aria-label="{{ 'np.common.breadcrumb' | t }}">
+        <a href="{{ routes.root_url }}" class="hover:text-[var(--color-paprika-dark)]">{{ 'np.common.home' | t }}</a>
+        {% render 'icon', name: 'chevron-right', class: 'h-3 w-3' %}
+        <span>{{ banner_title }}</span>
+      </nav>
+      <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ banner_title }}</h1>
+      {%- if banner_description != blank -%}
+        <div class="np-prose mt-3 max-w-xl">{{ banner_description }}</div>
+      {%- endif -%}
+      {%- if section.settings.show_count -%}
+        <p class="mt-2 text-sm text-[var(--color-charcoal-soft)]">{{ 'np.collection.product_count' | t: count: collection.all_products_count }}</p>
+      {%- endif -%}
+    </div>
+    {%- if banner_image != blank and is_all == false -%}
+      {%- render 'np-product-image', image: banner_image, alt: '', class: 'hidden aspect-[4/3] w-64 rounded-3xl md:block', sizes: '256px', widths: '256, 512' -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

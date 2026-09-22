@@ -1,0 +1,34 @@
+{%- comment -%}
+  "Notify me when it's back in stock" (React <NotifyMeForm />). Posts to Shopify's contact endpoint,
+  so the request arrives in the store's inbox (no third-party back-in-stock app needed).
+  Params: product, form_id
+{%- endcomment -%}
+{%- assign notify_id = form_id | default: 'NotifyForm' -%}
+{%- form 'contact', id: notify_id, class: 'contents' -%}
+  {%- if form.posted_successfully? -%}
+    <p class="flex items-center gap-2 rounded-full bg-[var(--color-olive-light)] px-4 py-3 text-sm font-medium text-[var(--color-olive-dark)]" role="status">
+      {% render 'icon', name: 'check', class: 'h-4 w-4' %} {{ 'np.common.notify_me_confirmed' | t }}
+    </p>
+  {%- else -%}
+    <input type="hidden" name="contact[Request type]" value="Back in stock notification">
+    <input type="hidden" name="contact[Product]" value="{{ product.title | escape }} - {{ request.origin }}{{ product.url }}">
+    <input type="hidden" name="contact[body]" value="Back in stock notification: {{ product.title | escape }}">
+    <div class="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] p-1">
+      <label for="{{ notify_id }}-email" class="sr-only">{{ 'np.common.notify_me_aria' | t: name: product.title }}</label>
+      <input
+        id="{{ notify_id }}-email"
+        type="email"
+        name="contact[email]"
+        required
+        autocomplete="email"
+        value="{% if customer %}{{ customer.email | escape }}{% endif %}"
+        placeholder="{{ 'np.common.notify_me_email_placeholder' | t }}"
+        class="w-full flex-1 rounded-full bg-transparent px-3 py-2.5 text-sm text-[var(--color-charcoal)] outline-none placeholder:text-[var(--color-charcoal-soft)] focus-visible:ring-2 focus-visible:ring-[var(--color-paprika)]"
+      >
+      <button type="submit" class="btn-secondary flex-shrink-0 !px-4 !py-2 text-sm">{{ 'np.common.notify_me' | t }}</button>
+    </div>
+    {%- if form.errors -%}
+      <div class="mt-2 text-xs text-[var(--color-paprika-dark)]" role="alert">{{ form.errors | default_errors }}</div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endform -%}

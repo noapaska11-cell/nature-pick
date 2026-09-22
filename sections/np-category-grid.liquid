@@ -1,0 +1,142 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.category_grid.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.category_grid.title' | t
+  endif
+
+  assign resolved_blocks = 0
+  for block in section.blocks
+    if block.settings.collection != blank
+      assign resolved_blocks = resolved_blocks | plus: 1
+    endif
+  endfor
+  assign placeholder_keys = 'notter_snacks,naturliga_kryddor,torkad_frukt,soltorkade_gronsaker,baljvaxter,ortteer,sotsaker_delikatesser,gavopaket' | split: ','
+  assign placeholder_icons = 'nut,spice,fruit,leaf,bean,tea,gift,box' | split: ','
+-%}
+<div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+  <section class="container-page py-16">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <span class="section-label text-[var(--color-paprika-dark)]">
+          {% render 'icon', name: 'box', class: 'h-3.5 w-3.5' %} {{ label }}
+        </span>
+        <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+      </div>
+      <a href="{{ routes.all_products_collection_url }}" class="hidden items-center gap-1 text-sm font-medium text-[var(--color-paprika-dark)] hover:underline sm:flex">
+        {{ 'np.common.all_products' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+      </a>
+    </div>
+
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {%- comment -%}
+        Blocks pick the collections. When none of them exists in this store (or there are no blocks) the first collections
+        of the store are shown, and in a store without collections the standard categories appear as placeholder tiles.
+      {%- endcomment -%}
+      {%- if resolved_blocks > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.collection != blank -%}
+            {%- render 'np-category-card',
+              collection: block.settings.collection,
+              image: block.settings.image,
+              custom_title: block.settings.title,
+              custom_tagline: block.settings.tagline,
+              index: forloop.index0,
+              shopify_attributes: block.shopify_attributes
+            -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign shown = 0 -%}
+        {%- for collection in collections -%}
+          {%- unless collection.handle == 'frontpage' or collection.products_count == 0 or shown >= 8 -%}
+            {%- render 'np-category-card', collection: collection, index: shown -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endunless -%}
+        {%- endfor -%}
+        {%- if shown == 0 -%}
+          {%- for key in placeholder_keys -%}
+            {%- liquid
+              assign name_key = 'np.categories.' | append: key | append: '.name'
+              assign tagline_key = 'np.categories.' | append: key | append: '.tagline'
+              assign icon_name = placeholder_icons[forloop.index0]
+            -%}
+            <a href="{{ routes.collections_url }}" class="group card-surface overflow-hidden">
+              {%- render 'np-product-image', alt: '', class: 'aspect-[4/3] w-full', sizes: '25vw', index: forloop.index0, icon: icon_name -%}
+              <div class="p-4">
+                <h3 class="font-display text-base font-medium text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)]">{{ name_key | t }}</h3>
+                <p class="mt-1 text-xs leading-relaxed text-[var(--color-charcoal-soft)]">{{ tagline_key | t }}</p>
+              </div>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Category grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Optional. Defaults to the collection image, then to the image of one of its products."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Optional. Defaults to the collection title."
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Tagline",
+          "info": "Optional. Defaults to the collection metafield custom.tagline or the translated tagline."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category grid"
+    }
+  ]
+}
+{% endschema %}

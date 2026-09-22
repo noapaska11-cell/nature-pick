@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "b2b"
+      }
+    },
+    "main": {
+      "type": "np-b2b",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

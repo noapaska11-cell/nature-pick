@@ -1,0 +1,93 @@
+{%- liquid
+  assign recipe_time = article.metafields.custom.recipe_time.value
+  assign recipe_difficulty = article.metafields.custom.recipe_difficulty.value
+  assign recipe_servings = article.metafields.custom.recipe_servings.value
+  assign recipe_products = article.metafields.custom.recipe_products.value
+  assign article_alt = article.image.alt | default: article.title
+  assign is_recipe = false
+  if recipe_time != blank or recipe_difficulty != blank or recipe_servings != blank or recipe_products != blank
+    assign is_recipe = true
+  endif
+-%}
+<article class="container-page py-10">
+  <nav class="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-[var(--color-charcoal-soft)]" aria-label="{{ 'np.common.breadcrumb' | t }}">
+    <a href="{{ routes.root_url }}" class="hover:text-[var(--color-paprika-dark)]">{{ 'np.common.home' | t }}</a>
+    {% render 'icon', name: 'chevron-right', class: 'h-3 w-3' %}
+    <a href="{{ blog.url }}" class="hover:text-[var(--color-paprika-dark)]">{{ blog.title | escape }}</a>
+    {% render 'icon', name: 'chevron-right', class: 'h-3 w-3' %}
+    <span>{{ article.title | escape }}</span>
+  </nav>
+
+  <div class="grid gap-10 {% if article.image != blank %}lg:grid-cols-2{% endif %}">
+    {%- if article.image != blank -%}
+      {%- render 'np-product-image', image: article.image, alt: article_alt, class: 'aspect-[4/3] w-full rounded-3xl lg:aspect-square', sizes: '(min-width: 1024px) 50vw, 100vw', eager: true, icon: 'spice' -%}
+    {%- endif -%}
+    <div>
+      <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ article.title | escape }}</h1>
+      <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--color-charcoal-soft)]">
+        {%- if is_recipe -%}
+          {%- if recipe_time != blank -%}<span class="flex items-center gap-1.5">{% render 'icon', name: 'clock', class: 'h-4 w-4' %} {{ recipe_time }}</span>{%- endif -%}
+          {%- if recipe_difficulty != blank -%}<span>{{ recipe_difficulty }}</span>{%- endif -%}
+          {%- if recipe_servings != blank -%}<span>{{ recipe_servings }}</span>{%- endif -%}
+        {%- else -%}
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | time_tag: format: 'date' }}</time>
+          {%- if section.settings.show_author and article.author != blank -%}<span>{{ article.author | escape }}</span>{%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- if is_recipe and recipe_products != blank -%}
+        <h2 class="mt-8 font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'np.recipes.ingredients_title' | t }}</h2>
+        <div class="mt-4 flex flex-col gap-2">
+          {%- for product in recipe_products -%}
+            <a href="{{ product.url }}" class="flex items-center justify-between rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 hover:border-[var(--color-paprika)]">
+              <span class="text-sm font-medium text-[var(--color-charcoal)]">{{ product.title | escape }}</span>
+              <span class="flex items-center gap-1 text-sm font-semibold text-[var(--color-paprika-dark)]">
+                {% render 'np-price', product: product, class: '' %} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+              </span>
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="np-prose mt-12 max-w-2xl">{{ article.content }}</div>
+
+  <div class="mt-10 flex flex-wrap items-center gap-4 border-t border-[var(--color-line)] pt-6">
+    <a href="{{ blog.url }}" class="btn-secondary">{% render 'icon', name: 'chevron-left', class: 'h-4 w-4' %} {{ 'blogs.article.back_to_blog' | t }}</a>
+    <button type="button" data-copy-link="{{ shop.url }}{{ article.url }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+      {% render 'icon', name: 'link', class: 'h-4 w-4' %} {{ 'general.share.copy_to_clipboard' | t }}
+    </button>
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "{% if is_recipe %}Recipe{% else %}Article{% endif %}",
+    "{% if is_recipe %}name{% else %}headline{% endif %}": {{ article.title | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+    {%- if article.image != blank -%}
+    "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},
+    {%- endif -%}
+    "author": { "@type": "Person", "name": {{ article.author | default: shop.name | json }} },
+    "description": {{ article.excerpt_or_content | strip_html | truncate: 200 | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Article",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

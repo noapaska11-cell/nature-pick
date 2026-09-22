@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

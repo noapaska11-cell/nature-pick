@@ -1,0 +1,92 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  if eyebrow == blank
+    assign eyebrow = 'np.hero.eyebrow' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.hero.title' | t
+  endif
+  assign subtitle = section.settings.subtitle
+  if subtitle == blank
+    assign subtitle = 'np.hero.subtitle' | t
+  endif
+  assign cta_label = section.settings.cta_label
+  if cta_label == blank
+    assign cta_label = 'np.hero.cta' | t
+  endif
+  assign cta_link = section.settings.cta_link
+  if cta_link == blank
+    assign cta_link = '#bestsellers'
+  endif
+-%}
+<section class="relative isolate flex min-h-[38rem] items-center overflow-hidden bg-[var(--color-charcoal)] sm:min-h-[46rem]">
+  {%- comment -%} Oversized line-art marks: brand texture without a photo or video. {%- endcomment -%}
+  {% render 'icon', name: 'leaf', stroke: 0.6, class: 'pointer-events-none absolute -right-24 -top-24 -z-10 h-[34rem] w-[34rem] rotate-12 text-[var(--color-olive)]/25 sm:h-[46rem] sm:w-[46rem]' %}
+  {% render 'icon', name: 'nut', stroke: 0.6, class: 'pointer-events-none absolute -bottom-20 -left-16 -z-10 hidden h-64 w-64 -rotate-12 text-[var(--color-gold)]/20 sm:block' %}
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_var(--color-charcoal-soft)_0%,_transparent_55%)] opacity-40" aria-hidden="true"></div>
+
+  <div class="container-page py-20 sm:py-28">
+    <div class="max-w-2xl border-l-2 border-[var(--color-gold)] pl-6 sm:pl-8">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-gold-on-dark)]">
+        {% render 'icon', name: 'leaf', class: 'h-3.5 w-3.5' %} {{ eyebrow }}
+      </span>
+      <h1 class="mt-5 font-display text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-6xl sm:leading-[0.95] lg:text-8xl">{{ title }}</h1>
+      <p class="mt-6 max-w-lg text-lg leading-relaxed text-white/80">{{ subtitle }}</p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="{{ cta_link }}" class="btn-primary px-8 py-4 text-base">
+          {{ cta_label }}
+          {% render 'icon', name: 'arrow-right', class: 'h-4 w-4' %}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "div",
+  "class": "np-section-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Leave empty to scroll to the bestsellers section (#bestsellers)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+{%- comment -%}
+  B2B call-to-action band for the home page: visible to everybody straight under the hero.
+  Visitors get "Register company" / "Log in"; approved business customers see their active status.
+{%- endcomment -%}
+{%- liquid
+  assign b2b_page_url = section.settings.b2b_url
+  if b2b_page_url == blank
+    assign b2b_page_url = pages.b2b.url
+  endif
+
+  assign b2b_active = false
+  assign b2b_company = ''
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+      assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
+    endif
+  endif
+
+  assign banner_title = section.settings.title
+  if banner_title == blank
+    assign banner_title = 'np.b2b_page.title' | t
+  endif
+  assign banner_text = section.settings.text
+  if banner_text == blank
+    assign banner_text = 'np.b2b_page.description' | t
+  endif
+-%}
+<section class="bg-[var(--color-charcoal)] text-white" data-b2b-banner>
+  <div class="container-page flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
+    <div class="flex items-start gap-4">
+      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-[var(--color-gold-on-dark)]">
+        {% render 'icon', name: 'building', class: 'h-6 w-6' %}
+      </span>
+      <div>
+        <span class="section-label text-[var(--color-gold-on-dark)]">{{ 'np.b2b_page.eyebrow' | t }}</span>
+        <h2 class="mt-1 font-display text-2xl font-semibold sm:text-3xl">{{ banner_title }}</h2>
+        <p class="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
+          {%- if b2b_active -%}
+            {{ 'np.b2b_auth.active_text' | t: company: b2b_company }}
+          {%- else -%}
+            {{ banner_text }}
+          {%- endif -%}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-shrink-0 flex-wrap gap-3">
+      {%- if b2b_active -%}
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'np.b2b_auth.browse_cta' | t }}</a>
+        <a href="{{ routes.account_logout_url }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">{{ 'np.b2b_auth.logout' | t }}</a>
+      {%- else -%}
+        {%- if b2b_page_url != blank -%}
+          <a href="{{ b2b_page_url }}#register" class="btn-primary">
+            {% render 'icon', name: 'building', class: 'h-4 w-4' %} {{ 'np.b2b_auth.tab_register' | t }}
+          </a>
+        {%- endif -%}
+        {%- assign login_href = routes.account_login_url -%}
+        {%- if b2b_page_url != blank -%}{%- assign login_href = b2b_page_url | append: '#login' -%}{%- endif -%}
+        <a href="{{ login_href }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+          {% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.tab_login' | t }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "B2B banner",
+  "settings": [
+    {
+      "type": "url",
+      "id": "b2b_url",
+      "label": "B2B page",
+      "info": "Leave empty to use the page with the handle 'b2b'."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "info": "Leave empty to use the translated default text."
+    }
+  ],
+  "presets": [
+    {
+      "name": "B2B banner"
+    }
+  ]
+}
+{% endschema %}

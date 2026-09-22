@@ -1,0 +1,184 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.origin_map.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.origin_map.title' | t
+  endif
+  assign hint = section.settings.hint
+  if hint == blank
+    assign hint = 'np.origin_map.hint' | t
+  endif
+-%}
+<div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+  <np-origin-map class="container-page block py-16">
+    <div class="text-center">
+      <span class="section-label justify-center text-[var(--color-paprika-dark)]">{{ label }}</span>
+      <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+      <p class="mx-auto mt-3 max-w-md text-sm text-[var(--color-charcoal-soft)]">{{ hint }}</p>
+    </div>
+
+    {%- comment -%}
+      The five steps: block text overrides the translated defaults.
+      Steps are packed into one string (fields split by ¦, steps by ¶) so the markup below can loop three times.
+    {%- endcomment -%}
+    {%- capture steps_raw -%}
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign idx = i | minus: 1
+          assign step_block = section.blocks[idx]
+          assign place = step_block.settings.place
+          if place == blank
+            assign place_key = 'np.origin_map.step' | append: i | append: '_place'
+            assign place = place_key | t
+          endif
+          assign step_title = step_block.settings.title
+          if step_title == blank
+            assign title_key = 'np.origin_map.step' | append: i | append: '_title'
+            assign step_title = title_key | t
+          endif
+          assign step_text = step_block.settings.text
+          if step_text == blank
+            assign text_key = 'np.origin_map.step' | append: i | append: '_text'
+            assign step_text = text_key | t
+          endif
+          case i
+            when 1
+              assign step_icon = 'map-pin'
+            when 2
+              assign step_icon = 'fruit'
+            when 3
+              assign step_icon = 'shield'
+            when 4
+              assign step_icon = 'box'
+            else
+              assign step_icon = 'truck'
+          endcase
+        -%}
+        {{ place }}¦{{ step_title }}¦{{ step_text }}¦{{ step_icon }}{% unless forloop.last %}¶{% endunless %}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- assign steps = steps_raw | split: '¶' -%}
+
+    {%- comment -%} Route line + waypoints (tablet and up) {%- endcomment -%}
+    <div class="relative mt-14 hidden sm:block">
+      <div class="absolute left-[5%] right-[5%] top-5 h-px border-t-2 border-dashed border-[var(--color-line)]"></div>
+      <ol class="relative flex justify-between">
+        {%- for step in steps -%}
+          {%- assign parts = step | split: '¦' -%}
+          {%- assign icon_name = parts[3] | strip -%}
+          <li class="flex flex-col items-center">
+            <button
+              type="button"
+              data-origin-step="{{ forloop.index0 }}"
+              aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="{{ parts[0] | strip | escape }}"
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-line)] bg-[var(--color-paper)] text-[var(--color-charcoal-soft)] transition-all duration-300 hover:border-[var(--color-paprika)] hover:text-[var(--color-paprika-dark)] aria-pressed:scale-110 aria-pressed:border-[var(--color-paprika)] aria-pressed:bg-[var(--color-paprika)] aria-pressed:text-white aria-pressed:shadow-lg aria-pressed:shadow-[#c1440e]/25"
+            >
+              {% render 'icon', name: icon_name, class: 'h-4 w-4' %}
+            </button>
+            <span class="mt-3 text-xs font-semibold uppercase tracking-wide {% if forloop.first %}text-[var(--color-paprika-dark)]{% else %}text-[var(--color-charcoal-soft)]{% endif %}" data-origin-place>{{ parts[0] | strip }}</span>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+
+    {%- comment -%} Vertical list (mobile) {%- endcomment -%}
+    <ol class="mt-10 flex flex-col gap-2 sm:hidden">
+      {%- for step in steps -%}
+        {%- assign parts = step | split: '¦' -%}
+        {%- assign icon_name = parts[3] | strip -%}
+        <li>
+          <button
+            type="button"
+            data-origin-step="{{ forloop.index0 }}"
+            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            class="group flex w-full items-center gap-3 rounded-xl border border-[var(--color-line)] px-4 py-3 text-left transition-colors aria-pressed:border-[var(--color-paprika)] aria-pressed:bg-[var(--color-paprika-light)]/40"
+          >
+            <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal-soft)] group-aria-pressed:bg-[var(--color-paprika)] group-aria-pressed:text-white">
+              {% render 'icon', name: icon_name, class: 'h-3.5 w-3.5' %}
+            </span>
+            <span class="text-sm font-semibold text-[var(--color-charcoal)]">{{ parts[0] | strip }}</span>
+          </button>
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    {%- comment -%} Detail cards: all rendered, the script shows the active one {%- endcomment -%}
+    {%- for step in steps -%}
+      {%- assign parts = step | split: '¦' -%}
+      <div
+        data-origin-detail="{{ forloop.index0 }}"
+        {% unless forloop.first %}hidden{% endunless %}
+        class="mx-auto mt-8 max-w-lg animate-[fadein_.4s_ease] rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6 text-center"
+      >
+        <h3 class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ parts[1] | strip }}</h3>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ parts[2] | strip }}</p>
+      </div>
+    {%- endfor -%}
+  </np-origin-map>
+</div>
+
+{% schema %}
+{
+  "name": "Origin journey",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "hint",
+      "label": "Hint",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "place",
+          "label": "Place",
+          "info": "Leave empty to use the translated default text of this step (the first block is step 1, and so on)."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Origin journey"
+    }
+  ]
+}
+{% endschema %}

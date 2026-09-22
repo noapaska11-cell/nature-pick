@@ -1,0 +1,34 @@
+<!doctype html>
+<html class="scroll-smooth" lang="{{ request.locale.iso_code }}">
+  <head>
+    {%- render 'np-head' -%}
+    {{ content_for_header }}
+    {%- render 'np-head-styles' -%}
+  </head>
+
+  <body class="min-h-full antialiased">
+    {%- comment -%}
+      Everything our own theme renders lives inside #np-app. Tailwind's Preflight reset (see
+      build-css.mjs) is scoped to this id, so an app that appends its own widget straight to
+      <body> (Kaching/Pumper bundle popups, the Shopify Forms widget, ...) lands as a sibling
+      of #np-app and is never touched by our CSS reset.
+    {%- endcomment -%}
+    <div id="np-app" class="flex min-h-full flex-col">
+      <a href="#main-content" class="skip-link">{{ 'np.common.skip_link' | t }}</a>
+
+      {% sections 'header-group' %}
+
+      <main id="main-content" class="flex-1" role="main" tabindex="-1">
+        {{ content_for_layout }}
+      </main>
+
+      {% sections 'footer-group' %}
+
+      {%- if settings.cart_type != 'page' -%}
+        {% section 'np-cart-drawer' %}
+      {%- endif -%}
+
+      {%- render 'np-body-end' -%}
+    </div>
+  </body>
+</html>

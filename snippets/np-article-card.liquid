@@ -1,0 +1,39 @@
+{%- comment -%}
+  Article / recipe card (React <RecipesTeaser /> card). Optional recipe metafields on the article:
+  custom.recipe_time, custom.recipe_difficulty, custom.recipe_servings (single line text).
+  Params: article, index, sizes
+{%- endcomment -%}
+{%- liquid
+  assign recipe_time = article.metafields.custom.recipe_time.value
+  assign recipe_difficulty = article.metafields.custom.recipe_difficulty.value
+  assign recipe_servings = article.metafields.custom.recipe_servings.value
+  assign card_excerpt = article.excerpt_or_content | strip_html | truncate: 140
+  assign card_alt = article.image.alt | default: article.title
+-%}
+<a href="{{ article.url }}" class="group card-surface overflow-hidden">
+  {%- render 'np-product-image',
+    image: article.image,
+    alt: card_alt,
+    class: 'aspect-[4/3] w-full',
+    sizes: sizes,
+    index: index,
+    icon: 'spice'
+  -%}
+  <div class="p-5">
+    {%- if recipe_time != blank or recipe_difficulty != blank or recipe_servings != blank -%}
+      <div class="flex items-center gap-3 text-xs text-[var(--color-charcoal-soft)]">
+        {%- if recipe_time != blank -%}
+          <span class="flex items-center gap-1">{% render 'icon', name: 'clock', class: 'h-3.5 w-3.5' %} {{ recipe_time }}</span>
+        {%- endif -%}
+        {%- if recipe_difficulty != blank -%}<span>{{ recipe_difficulty }}</span>{%- endif -%}
+        {%- if recipe_servings != blank -%}<span>{{ recipe_servings }}</span>{%- endif -%}
+      </div>
+    {%- else -%}
+      <p class="text-xs text-[var(--color-charcoal-soft)]"><time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | time_tag: format: 'date' }}</time></p>
+    {%- endif -%}
+    <h3 class="mt-2 font-display text-lg font-medium text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)]">{{ article.title | escape }}</h3>
+    {%- if card_excerpt != blank -%}
+      <p class="mt-1 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ card_excerpt }}</p>
+    {%- endif -%}
+  </div>
+</a>

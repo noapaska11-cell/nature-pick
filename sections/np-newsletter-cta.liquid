@@ -1,0 +1,55 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.newsletter_cta.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.newsletter_cta.title' | t
+  endif
+  assign text = section.settings.text
+  if text == blank
+    assign text = 'np.newsletter_cta.text' | t
+  endif
+-%}
+<section class="bg-[var(--color-charcoal)]">
+  <div class="container-page flex flex-col items-center gap-4 py-16 text-center">
+    <span class="section-label text-[var(--color-gold-on-dark)]">
+      {% render 'icon', name: 'mail', class: 'h-3.5 w-3.5' %} {{ label }}
+    </span>
+    <h2 class="font-display text-3xl font-semibold text-white sm:text-4xl">{{ title }}</h2>
+    <p class="max-w-md text-sm text-white/70">{{ text }}</p>
+    <div class="w-full max-w-sm">
+      {% render 'np-newsletter-form', dark: true, form_id: 'HomeNewsletter' %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

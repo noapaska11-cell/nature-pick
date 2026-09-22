@@ -1,0 +1,35 @@
+{%- comment -%}
+  Quantity stepper (product page, quick view). A real <input name="quantity"> so the value is posted
+  to Shopify's /cart/add. Params: size ('md' default | 'sm'), value, id, min, step
+{%- endcomment -%}
+{%- liquid
+  assign qty_id = id | default: 'Quantity'
+  assign qty_value = value | default: 1
+  assign qty_min = min | default: 1
+  if size == 'sm'
+    assign btn_class = 'h-9 w-9'
+    assign input_class = 'w-8 text-sm'
+  else
+    assign btn_class = 'h-11 w-11'
+    assign input_class = 'w-10'
+  endif
+-%}
+<div class="flex items-center justify-between rounded-full border border-[var(--color-line)] px-1 sm:justify-start" data-quantity>
+  <button type="button" data-qty-minus aria-label="{{ 'np.common.decrease_qty' | t }}" class="flex {{ btn_class }} items-center justify-center text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+    {% render 'icon', name: 'minus', class: 'h-4 w-4' %}
+  </button>
+  <input
+    id="{{ qty_id }}"
+    class="np-qty {{ input_class }} bg-transparent text-center font-medium text-[var(--color-charcoal)] outline-none"
+    type="number"
+    name="quantity"
+    value="{{ qty_value }}"
+    min="{{ qty_min }}"
+    {% if step %}step="{{ step }}"{% endif %}
+    inputmode="numeric"
+    aria-label="{{ 'products.product.quantity.label' | t }}"
+  >
+  <button type="button" data-qty-plus aria-label="{{ 'np.common.increase_qty' | t }}" class="flex {{ btn_class }} items-center justify-center text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+    {% render 'icon', name: 'plus', class: 'h-4 w-4' %}
+  </button>
+</div>

@@ -1,0 +1,43 @@
+{%- comment -%}
+  "You might also like" (React related products). Uses Shopify's own product recommendation engine:
+  the section is fetched by <np-recommendations> from /recommendations/products?section_id=...
+{%- endcomment -%}
+<np-recommendations
+  class="block"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent=related"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="container-page pb-16">
+      <section class="mt-6">
+        <h2 class="font-display text-2xl font-semibold text-[var(--color-charcoal)]">{{ 'np.product.related_title' | t }}</h2>
+        <div class="mt-6 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+          {%- for recommendation in recommendations.products limit: section.settings.products_to_show -%}
+            {% render 'np-product-card', product: recommendation, index: forloop.index0 %}
+          {%- endfor -%}
+        </div>
+      </section>
+    </div>
+  {%- endif -%}
+</np-recommendations>
+
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "default": 4,
+      "label": "Products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related products"
+    }
+  ]
+}
+{% endschema %}

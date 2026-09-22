@@ -1,0 +1,98 @@
+{%- comment -%}
+  Inline SVG icon set (same glyphs as the Next.js <Icon /> component).
+  Usage: {% render 'icon', name: 'cart', class: 'h-5 w-5', stroke: 1.6 %}
+{%- endcomment -%}
+{%- liquid
+  assign icon_class = class | default: 'w-5 h-5'
+  assign icon_stroke = stroke | default: 1.6
+-%}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ icon_stroke }}" stroke-linecap="round" stroke-linejoin="round" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+  {%- case name -%}
+    {%- when 'nut' -%}
+      <path d="M12 2c-3.5 0-6 3-6 7 0 5 3 9 6 13 3-4 6-8 6-13 0-4-2.5-7-6-7Z M9 9c1-1.5 4-1.5 5 0"/>
+    {%- when 'spice' -%}
+      <path d="M6 3h12l-1.5 5H7.5L6 3Z M7.5 8 6 20a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1L16.5 8 M9 12h6 M9 15h6"/>
+    {%- when 'fruit' -%}
+      <path d="M12 7c4 0 7 3 7 7a7 7 0 0 1-14 0c0-4 3-7 7-7Z M12 7c0-2 1-4 3-5"/>
+    {%- when 'leaf' -%}
+      <path d="M20 4C10 4 4 10 4 18c8 0 14-6 14-14ZM4 18c4-2 8-6 10-10"/>
+    {%- when 'bean' -%}
+      <path d="M7 16c-3-3-3-8 1-11 4-3 9-1 9 3 0 6-5 11-11 11-2 0-4-1-5-2 2 0 4-.4 6-1Z"/>
+    {%- when 'tea' -%}
+      <path d="M4 8h13a3 3 0 0 1 0 6h-1 M4 8v7a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4V8 M8 4c0 1.2-1 1.3-1 2.5S8 8 8 8 M12 4c0 1.2-1 1.3-1 2.5S12 8 12 8"/>
+    {%- when 'gift' -%}
+      <path d="M3 9h18v4H3V9Zm1 4h16v8H4v-8Zm8-11c-2 0-3 2-3 3v1h3V6c0 0 0-3-3-3Zm0 0c2 0 3 2 3 3v1h-3V6c0 0 0-3 3-3Z"/>
+    {%- when 'box' -%}
+      <path d="m3 7 9-4 9 4-9 4-9-4Zm0 0v10l9 4 9-4V7 M12 11v10"/>
+    {%- when 'cart' -%}
+      <path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.8h7.6a2 2 0 0 0 2-1.6L21 8H6 M9 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm9 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>
+    {%- when 'search' -%}
+      <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-5.5-5.5"/>
+    {%- when 'star' -%}
+      <path d="M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.3-4.2 6-.9L12 3.5Z" fill="currentColor" stroke-linejoin="round"/>
+    {%- when 'star-outline' -%}
+      <path d="M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.3-4.2 6-.9L12 3.5Z" stroke-linejoin="round"/>
+    {%- when 'check' -%}
+      <path d="M4 12.5 9 17.5 20 6.5"/>
+    {%- when 'truck' -%}
+      <path d="M3 7h11v9H3V7Zm11 3h4l3 3v3h-7v-6Z M7.5 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm10 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>
+    {%- when 'shield' -%}
+      <path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6l-8-3Z M9 12l2 2 4-4"/>
+    {%- when 'menu' -%}
+      <path d="M4 7h16 M4 12h16 M4 17h16"/>
+    {%- when 'close' -%}
+      <path d="M6 6l12 12 M18 6 6 18"/>
+    {%- when 'chevron-down' -%}
+      <path d="m6 9 6 6 6-6"/>
+    {%- when 'chevron-right' -%}
+      <path d="m9 6 6 6-6 6"/>
+    {%- when 'chevron-left' -%}
+      <path d="m15 6-6 6 6 6"/>
+    {%- when 'plus' -%}
+      <path d="M12 5v14 M5 12h14"/>
+    {%- when 'minus' -%}
+      <path d="M5 12h14"/>
+    {%- when 'mail' -%}
+      <path d="M4 5h16v14H4V5Zm0 1 8 7 8-7"/>
+    {%- when 'instagram' -%}
+      <path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Z M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z M17 6.8h.01"/>
+    {%- when 'facebook' -%}
+      <path d="M15 4h-2a4 4 0 0 0-4 4v2H7v3h2v7h3v-7h2.5l.5-3H12V8a1 1 0 0 1 1-1h2V4Z"/>
+    {%- when 'youtube' -%}
+      <path d="M3 8a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8Z M10 9.5v5l4.5-2.5-4.5-2.5Z"/>
+    {%- when 'tiktok' -%}
+      <path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5 M14 4c.4 2.3 1.9 3.8 4 4"/>
+    {%- when 'map-pin' -%}
+      <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+    {%- when 'phone' -%}
+      <path d="M6 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2L21 15v3a2 2 0 0 1-2 2C11 20 4 13 4 5a2 2 0 0 1 2-2Z"/>
+    {%- when 'clock' -%}
+      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-14v5l3.5 2"/>
+    {%- when 'arrow-right' -%}
+      <path d="M5 12h14 M13 6l6 6-6 6"/>
+    {%- when 'heart' -%}
+      <path d="M12 20s-7-4.4-9.5-9C.8 7.5 2.3 4 5.8 4c2 0 3.3 1 4.2 2.3C11 5 12.3 4 14.3 4c3.4 0 5 3.5 3.2 7-2.5 4.6-9.5 9-9.5 9Z"/>
+    {%- when 'heart-filled' -%}
+      <path d="M12 20s-7-4.4-9.5-9C.8 7.5 2.3 4 5.8 4c2 0 3.3 1 4.2 2.3C11 5 12.3 4 14.3 4c3.4 0 5 3.5 3.2 7-2.5 4.6-9.5 9-9.5 9Z" fill="currentColor"/>
+    {%- when 'eye' -%}
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+    {%- when 'chat' -%}
+      <path d="M4 5h16v11H9l-5 4V5Z M8 9h8 M8 12.5h5"/>
+    {%- when 'lock' -%}
+      <path d="M6 11V8a6 6 0 0 1 12 0v3 M5 11h14v9H5v-9Z M12 15v3"/>
+    {%- when 'building' -%}
+      <path d="M4 21V7a1 1 0 0 1 .5-.87l7-4a1 1 0 0 1 1 0l7 4a1 1 0 0 1 .5.87v14 M4 21h16 M9 21v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5 M9 10h.01 M15 10h.01 M9 14h.01 M15 14h.01"/>
+    {%- when 'user' -%}
+      <path d="M20 21a8 8 0 0 0-16 0 M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+    {%- when 'link' -%}
+      <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1 M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/>
+    {%- when 'globe' -%}
+      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M3 12h18 M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/>
+    {%- when 'grid' -%}
+      <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"/>
+    {%- when 'alert' -%}
+      <path d="M12 3 2 20h20L12 3Z M12 10v4 M12 17h.01"/>
+    {%- else -%}
+      <path d="M20 4C10 4 4 10 4 18c8 0 14-6 14-14ZM4 18c4-2 8-6 10-10"/>
+  {%- endcase -%}
+</svg>
