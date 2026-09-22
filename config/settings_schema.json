@@ -86,19 +86,19 @@
         "type": "color",
         "id": "color_olive",
         "label": "Green (top bar, brand story)",
-        "default": "#34a066"
+        "default": "#2fb567"
       },
       {
         "type": "color",
         "id": "color_olive_dark",
         "label": "Green, dark",
-        "default": "#22794a"
+        "default": "#1f8a4c"
       },
       {
         "type": "color",
         "id": "color_olive_light",
         "label": "Green, light",
-        "default": "#d4e8cd"
+        "default": "#dff2e4"
       },
       {
         "type": "color",
