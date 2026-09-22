@@ -39,7 +39,7 @@
           aria-label="{{ 'localization.language_label' | t }}"
           aria-haspopup="true"
           aria-expanded="false"
-          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-white hover:bg-white/10"
+          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]"
         >
           <span aria-hidden="true">{{ current_flag | strip }}</span>
           <span class="hidden sm:inline">{{ localization.language.iso_code | split: '-' | first | upcase }}</span>
@@ -103,7 +103,7 @@
           aria-label="{{ 'np.currency_switcher.label' | t }}"
           aria-haspopup="true"
           aria-expanded="false"
-          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-white hover:bg-white/10"
+          class="flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]"
         >
           <span aria-hidden="true">{{ localization.country.currency.symbol }}</span>
           <span class="hidden sm:inline">{{ localization.country.currency.iso_code }}</span>
