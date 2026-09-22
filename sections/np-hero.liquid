@@ -21,18 +21,16 @@
   endif
 -%}
 <section class="relative isolate flex min-h-[38rem] items-center overflow-hidden bg-[var(--color-charcoal)] sm:min-h-[46rem]">
-  {%- if section.settings.image != blank -%}
-    <div class="absolute inset-0 -z-10">
+  <div class="absolute inset-0 -z-10">
+    {%- if section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', alt: '', class: 'h-full w-full object-cover', sizes: '100vw', widths: '768, 1200, 1600, 2000, 2400' }}
-      <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-charcoal)] via-[var(--color-charcoal)]/80 to-[var(--color-charcoal)]/10 sm:via-[var(--color-charcoal)]/70 sm:to-transparent" aria-hidden="true"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-charcoal)]/50 via-transparent to-transparent" aria-hidden="true"></div>
-    </div>
-  {%- else -%}
-    {%- comment -%} Oversized line-art marks: brand texture until a merchant uploads a hero photo. {%- endcomment -%}
-    {% render 'icon', name: 'leaf', stroke: 0.6, class: 'pointer-events-none absolute -right-24 -top-24 -z-10 h-[34rem] w-[34rem] rotate-12 text-[var(--color-olive)]/25 sm:h-[46rem] sm:w-[46rem]' %}
-    {% render 'icon', name: 'nut', stroke: 0.6, class: 'pointer-events-none absolute -bottom-20 -left-16 -z-10 hidden h-64 w-64 -rotate-12 text-[var(--color-gold)]/20 sm:block' %}
-    <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_var(--color-charcoal-soft)_0%,_transparent_55%)] opacity-40" aria-hidden="true"></div>
-  {%- endif -%}
+    {%- else -%}
+      {%- comment -%} Default brand photo until a merchant picks their own in Theme settings > Hero. {%- endcomment -%}
+      <img src="{{ 'np-hero-bg.webp' | asset_url }}" width="1671" height="941" loading="eager" fetchpriority="high" alt="" class="h-full w-full object-cover">
+    {%- endif -%}
+    <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-charcoal)] via-[var(--color-charcoal)]/80 to-[var(--color-charcoal)]/10 sm:via-[var(--color-charcoal)]/70 sm:to-transparent" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-charcoal)]/50 via-transparent to-transparent" aria-hidden="true"></div>
+  </div>
 
   <div class="container-page py-20 sm:py-28">
     <div class="max-w-2xl border-l-2 border-[var(--color-gold)] pl-6 sm:pl-8">
@@ -65,7 +63,7 @@
       "type": "image_picker",
       "id": "image",
       "label": "Background photo",
-      "info": "Full-bleed photo behind the text (e.g. a product or lifestyle shot). Leave empty to show the default line-art background."
+      "info": "Full-bleed photo behind the text (e.g. a product or lifestyle shot). Leave empty to use the default brand photo."
     },
     {
       "type": "header",
