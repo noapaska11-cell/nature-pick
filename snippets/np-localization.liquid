@@ -67,14 +67,28 @@
     {%- endif -%}
   {%- endform -%}
 {%- elsif kind == 'country' and localization.available_countries.size > 1 -%}
+  {%- comment -%}
+    Grouped by currency, not by country: many markets (e.g. every Eurozone country) share the same
+    currency, and listing each country separately is redundant. One row per distinct currency; its
+    value is still a real country_code (the first country found using that currency), since Shopify's
+    localization form only accepts country_code - the currency itself isn't directly selectable.
+  {%- endcomment -%}
+  {%- assign unique_currency_codes = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq -%}
   {%- form 'localization', id: loc_form_id, class: 'contents' -%}
     {%- if loc_variant == 'mobile' -%}
       <label for="{{ loc_form_id }}-select" class="sr-only">{{ 'np.currency_switcher.label' | t }}</label>
       <div class="relative">
         <select id="{{ loc_form_id }}-select" name="country_code" data-autosubmit class="np-select input-field pr-9">
-          {%- for country in localization.available_countries -%}
-            <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
-              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+          {%- for currency_code in unique_currency_codes -%}
+            {%- assign rep_country = blank -%}
+            {%- for country in localization.available_countries -%}
+              {%- if country.currency.iso_code == currency_code -%}
+                {%- assign rep_country = country -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            <option value="{{ rep_country.iso_code }}" {% if currency_code == localization.country.currency.iso_code %}selected{% endif %}>
+              {{ rep_country.currency.iso_code }} ({{ rep_country.currency.symbol }})
             </option>
           {%- endfor -%}
         </select>
@@ -95,19 +109,30 @@
           <span class="hidden sm:inline">{{ localization.country.currency.iso_code }}</span>
           {% render 'icon', name: 'chevron-down', class: 'h-3.5 w-3.5' %}
         </button>
-        <div data-dropdown-panel class="absolute right-0 top-full z-10 w-64 pt-2">
+        <div data-dropdown-panel class="absolute right-0 top-full z-10 w-52 pt-2">
           <div class="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 shadow-xl">
             <div class="flex max-h-72 flex-col overflow-y-auto overflow-x-hidden">
-              {%- for country in localization.available_countries -%}
+              {%- for currency_code in unique_currency_codes -%}
+                {%- assign rep_country = blank -%}
+                {%- for country in localization.available_countries -%}
+                  {%- if country.currency.iso_code == currency_code -%}
+                    {%- assign rep_country = country -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- assign is_active = false -%}
+                {%- if currency_code == localization.country.currency.iso_code -%}
+                  {%- assign is_active = true -%}
+                {%- endif -%}
                 <button
                   type="submit"
                   name="country_code"
-                  value="{{ country.iso_code }}"
-                  {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %}
-                  class="flex items-center justify-between gap-3 px-3.5 py-2 text-left text-sm {% if country.iso_code == localization.country.iso_code %}font-semibold text-[var(--color-paprika-dark)]{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
+                  value="{{ rep_country.iso_code }}"
+                  {% if is_active %}aria-current="true"{% endif %}
+                  class="flex items-center gap-2 px-3.5 py-2 text-left text-sm {% if is_active %}font-semibold text-[var(--color-paprika-dark)]{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
                 >
-                  <span class="truncate">{{ country.name }}</span>
-                  <span class="flex-shrink-0 text-xs text-[var(--color-charcoal-soft)]">{{ country.currency.iso_code }} {{ country.currency.symbol }}</span>
+                  <span class="flex-shrink-0">{{ rep_country.currency.symbol }}</span>
+                  <span>{{ rep_country.currency.iso_code }}</span>
                 </button>
               {%- endfor -%}
             </div>
