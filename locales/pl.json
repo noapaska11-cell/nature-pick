@@ -6,7 +6,7 @@
       "login_form_password_label": "Hasło",
       "login_form_password_placeholder": "Twoje hasło",
       "login_form_error": "Nieprawidłowe hasło!",
-      "login_form_submit": "Enter",
+      "login_form_submit": "Wejdź",
       "admin_link_html": "Czy jesteś właścicielem sklepu? <a href=\"/admin\" class=\"link underlined-link\">Zaloguj się tutaj</a>",
       "powered_by_shopify_html": "Ten sklep będzie obsługiwany przez {{ shopify }}"
     },
@@ -457,7 +457,7 @@
       "guest_continue": "Kontynuuj",
       "guest_title": "Kontynuuj jako gość",
       "password": "Hasło",
-      "title": "Login",
+      "title": "Logowanie",
       "sign_in": "Zaloguj się",
       "submit": "Prześlij",
       "alternate_provider_separator": "lub"
@@ -601,7 +601,7 @@
       "please_select": "Proszę wybrać opcję"
     },
     "StockCounter": {
-      "let_buy_now": "<mark>SPIESZYĆ SIĘ!</mark> KUPUJMY TERAZ"
+      "let_buy_now": "<mark>POŚPIESZ SIĘ!</mark> KUP TERAZ"
     },
     "Breadcrumb": {
       "home": "Dom"
@@ -727,7 +727,7 @@
       "link_b2b": "Współpraca B2B"
     },
     "hero": {
-      "eyebrow": "From Sunny Eastern Fields",
+      "eyebrow": "Ze słonecznych pól Wschodu",
       "title": "Autentyczne smaki Azji Środkowej",
       "subtitle": "Przyprawy, orzechy i bakalie starannie wyselekcjonowane w Uzbekistanie i regionie Azji Środkowej — dostarczane prosto do Twoich drzwi.",
       "cta": "Zobacz bestsellery"

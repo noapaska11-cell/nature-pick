@@ -28,7 +28,7 @@
       "moderated": "Notera att kommentarer behöver godkännas innan de publiceras.",
       "comment_form_title": "Lämna en kommentar",
       "name": "Namn",
-      "email": "Email",
+      "email": "E-post",
       "message": "Kommentar",
       "post": "Lägg upp kommentar",
       "back_to_blog": "Tillbaka till blogg",
@@ -150,48 +150,48 @@
   },
   "gempages": {
     "Carousel": {
-      "no_slider": "No Slider"
+      "no_slider": "Ingen slider"
     },
     "CarouselV3": {
-      "no_slider": "No Slider"
+      "no_slider": "Ingen slider"
     },
     "Newsletter": {
-      "err_msg_default": "Can’t send email. Please try again later.",
-      "success_msg_default": "Thanks for subscribing"
+      "err_msg_default": "Det gick inte att skicka e-post. Försök igen senare.",
+      "success_msg_default": "Tack för att du prenumererar"
     },
     "IconListV2": {
-      "icons_not_found": "Icons not found"
+      "icons_not_found": "Inga ikoner hittades"
     },
     "IconList": {
-      "icons_not_found": "Icons not found"
+      "icons_not_found": "Inga ikoner hittades"
     },
     "IconListHoz": {
-      "icons_not_found": "Icons not found"
+      "icons_not_found": "Inga ikoner hittades"
     },
     "Product": {
-      "product_not_found": "Product not found"
+      "product_not_found": "Produkten hittades inte"
     },
     "ProductList": {
-      "product_not_found": "Product Not Found!",
-      "no_products_found": "No products found!",
-      "no_related_products": "No related products!"
+      "product_not_found": "Produkten hittades inte!",
+      "no_products_found": "Inga produkter hittades!",
+      "no_related_products": "Inga relaterade produkter!"
     },
     "ProductListV3": {
-      "product_not_found": "Product Not Found!",
-      "no_products_found": "No products found!",
-      "no_related_products": "No related products!"
+      "product_not_found": "Produkten hittades inte!",
+      "no_products_found": "Inga produkter hittades!",
+      "no_related_products": "Inga relaterade produkter!"
     },
     "ProductTitle": {
-      "product_not_found": "Product Not Found"
+      "product_not_found": "Produkten hittades inte"
     },
     "ProductVariants": {
-      "please_select": "Please select an option"
+      "please_select": "Välj ett alternativ"
     },
     "StockCounter": {
-      "let_buy_now": "<mark>HURRY!</mark> LET BUY NOW"
+      "let_buy_now": "<mark>SKYNDA DIG!</mark> KÖP NU"
     },
     "Breadcrumb": {
-      "home": "Home"
+      "home": "Hem"
     }
   },
   "general": {
@@ -639,7 +639,7 @@
       "link_b2b": "B2B-samarbete"
     },
     "hero": {
-      "eyebrow": "From Sunny Eastern Fields",
+      "eyebrow": "Från soliga fält i öst",
       "title": "Autentiska smaker från Centralasien",
       "subtitle": "Kryddor, nötter och torkad frukt noggrant utvalda i Uzbekistan och Centralasien — levererade direkt till din dörr.",
       "cta": "Se bästsäljare"
@@ -1015,7 +1015,7 @@
       "title": "Frakt & returer",
       "contact_prompt": "Något oklart eller en ovanlig situation? Skriv till oss — vi läser varje meddelande.",
       "cta_contact": "Kontakta oss",
-      "shipping_title": "Shipping policy",
+      "shipping_title": "Fraktpolicy",
       "refund_title": "Leverans och ångerrätt"
     },
     "search": {
