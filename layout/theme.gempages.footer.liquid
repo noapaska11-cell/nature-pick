@@ -22,16 +22,18 @@
         {{ content_for_layout }}
       </main>
 
-      {%- comment -%}
-        footer-group also renders the global overlays (search modal, quick-view shell, cart toast,
-        cookie banner, quick-contact widget, structured data) as its own "overlays" section - see
-        sections/np-overlays.liquid and sections/footer-group.json.
-      {%- endcomment -%}
       {% sections 'footer-group' %}
 
       {%- if settings.cart_type != 'page' -%}
         {% section 'np-cart-drawer' %}
       {%- endif -%}
+
+      {%- comment -%}
+        Global overlays: search modal, quick-view shell, cart toast, cookie banner, quick-contact
+        widget, structured data. Plain section (same pattern as np-cart-drawer above), not part of
+        a section group - see sections/np-overlays.liquid.
+      {%- endcomment -%}
+      {% section 'np-overlays' %}
     </div>
   </body>
 </html>
