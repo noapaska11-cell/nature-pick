@@ -121,10 +121,14 @@
 
     <div class="flex items-center gap-1.5">
       {%- if section.settings.show_language -%}
-        {% render 'np-localization', kind: 'language', variant: 'desktop', form_id: 'HeaderLanguageForm' %}
+        <div class="hidden sm:block">
+          {% render 'np-localization', kind: 'language', variant: 'desktop', form_id: 'HeaderLanguageForm' %}
+        </div>
       {%- endif -%}
       {%- if section.settings.show_country -%}
-        {% render 'np-localization', kind: 'country', variant: 'desktop', form_id: 'HeaderCountryForm' %}
+        <div class="hidden sm:block">
+          {% render 'np-localization', kind: 'country', variant: 'desktop', form_id: 'HeaderCountryForm' %}
+        </div>
       {%- endif -%}
 
       <button type="button" data-search-open aria-label="{{ 'np.nav.search' | t }}" class="{{ icon_button_class }}">
