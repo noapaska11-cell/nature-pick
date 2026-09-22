@@ -1,0 +1,140 @@
+{%- comment -%}
+  Product card - port of the React <ProductCard />.
+  Purchases go through Shopify's own cart (POST /cart/add), the round button is a real
+  product form so it also works without JavaScript.
+
+  Params:
+    product - product object (required)
+    eager   - true for the first row above the fold
+    index   - position, used for the fallback gradient
+    sizes   - image sizes attribute
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign product_title = product.title | escape
+  assign card_alt = product.featured_media.alt | default: product.title
+
+  assign badge = ''
+  if product.tags contains 'bestseller'
+    assign badge = 'bestseller'
+  elsif product.tags contains 'new' or product.tags contains 'nowosc'
+    assign badge = 'new'
+  elsif product.compare_at_price > product.price
+    assign badge = 'sale'
+  endif
+
+  assign title_class = ''
+  if settings.soften_uppercase_titles
+    assign title_upper = product.title | upcase
+    if product.title == title_upper
+      assign title_class = 'np-soft-case'
+    endif
+  endif
+
+  assign weight_label = ''
+  assign grams = variant.weight | plus: 0
+  if grams >= 1000
+    assign kg = grams | divided_by: 1000.0
+    assign kg_rounded = kg | round
+    if kg == kg_rounded
+      assign weight_label = kg_rounded | append: ' kg'
+    else
+      assign weight_label = kg | round: 2 | append: ' kg'
+    endif
+  elsif grams > 0
+    assign weight_label = grams | round | append: ' g'
+  endif
+-%}
+<div class="group card-surface flex flex-col overflow-hidden transition-shadow hover:shadow-lg hover:shadow-[#c1440e]/5" data-product-card data-product-handle="{{ product.handle }}">
+  <div class="relative aspect-square">
+    <a href="{{ product.url }}" class="block h-full w-full" tabindex="-1" aria-hidden="true">
+      {%- render 'np-product-image',
+        image: product.featured_media,
+        alt: card_alt,
+        class: 'h-full w-full',
+        sizes: sizes,
+        eager: eager,
+        index: index
+      -%}
+    </a>
+
+    <div class="pointer-events-none absolute left-3 top-3 flex flex-col items-start gap-1.5">
+      {%- if badge != '' -%}
+        <span class="rounded-full bg-[var(--color-charcoal)] px-3 py-1 text-xs font-semibold text-white">
+          {%- case badge -%}
+            {%- when 'bestseller' -%}{{ 'np.common.bestseller' | t }}
+            {%- when 'new' -%}{{ 'np.common.badge_new' | t }}
+            {%- else -%}{{ 'np.common.badge_sale' | t }}
+          {%- endcase -%}
+        </span>
+      {%- endif -%}
+      {%- unless product.available -%}
+        <span class="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--color-charcoal-soft)]">{{ 'np.common.out_of_stock_badge' | t }}</span>
+      {%- endunless -%}
+    </div>
+
+    {%- if settings.show_wishlist -%}
+      <button
+        type="button"
+        data-wishlist-toggle
+        data-handle="{{ product.handle }}"
+        data-label-add="{{ 'np.common.add_to_wishlist_aria' | t: name: product_title }}"
+        data-label-remove="{{ 'np.common.remove_from_wishlist_aria' | t: name: product_title }}"
+        aria-pressed="false"
+        aria-label="{{ 'np.common.add_to_wishlist_aria' | t: name: product_title }}"
+        class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-[var(--color-charcoal)] backdrop-blur transition-colors hover:bg-white aria-pressed:bg-[var(--color-paprika)] aria-pressed:text-white"
+      >
+        {% render 'icon', name: 'heart', class: 'h-4 w-4' %}
+      </button>
+    {%- endif -%}
+
+    {%- if settings.show_quick_view -%}
+      <button
+        type="button"
+        data-quick-view
+        data-product-url="{{ product.url }}"
+        aria-label="{{ 'np.common.quick_view_aria' | t: name: product_title }}"
+        class="absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-center gap-1.5 rounded-full bg-white/95 py-2 text-xs font-semibold text-[var(--color-charcoal)] opacity-0 transition-all duration-200 focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+      >
+        {% render 'icon', name: 'eye', class: 'h-3.5 w-3.5' %} {{ 'np.common.quick_view' | t }}
+      </button>
+    {%- endif -%}
+  </div>
+
+  <div class="flex flex-1 flex-col gap-2 p-4">
+    <a href="{{ product.url }}" class="flex-1">
+      <h2 class="font-display text-base font-medium leading-snug text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)] {{ title_class }}">{{ product.title | escape }}</h2>
+      {%- if weight_label != '' -%}
+        <p class="mt-0.5 text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
+      {%- endif -%}
+    </a>
+
+    {% render 'np-stars', product: product %}
+
+    <div class="mt-1 flex items-center justify-between">
+      {% render 'np-price', product: product, show_from: true, class: 'font-display text-lg font-semibold text-[var(--color-charcoal)]' %}
+
+      {%- if product.has_only_default_variant or product.variants.size == 1 -%}
+        {%- form 'product', product, class: 'contents', data-ajax-cart: 'true', data-cart-feedback: 'toast' -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+          <button
+            type="submit"
+            {% unless variant.available %}disabled{% endunless %}
+            aria-label="{{ 'np.common.add_to_cart_aria' | t: name: product_title }}"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-olive)] text-white transition-colors hover:bg-[var(--color-olive-dark)] disabled:cursor-not-allowed disabled:bg-[var(--color-line)] disabled:text-[var(--color-charcoal-soft)]"
+          >
+            {% render 'icon', name: 'cart', class: 'h-4 w-4' %}
+          </button>
+        {%- endform -%}
+      {%- else -%}
+        <a
+          href="{{ product.url }}"
+          aria-label="{{ 'np.common.add_to_cart_aria' | t: name: product_title }}"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-olive)] text-white transition-colors hover:bg-[var(--color-olive-dark)]"
+        >
+          {% render 'icon', name: 'cart', class: 'h-4 w-4' %}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

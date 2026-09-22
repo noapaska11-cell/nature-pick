@@ -1,0 +1,13 @@
+{%- comment -%}
+  Renders a single product card for the product in the current page context. Used by the wishlist page:
+  the script fetches /products/<handle>?section_id=np-product-card-ajax for every saved product.
+{%- endcomment -%}
+{%- if product != blank -%}
+  {% render 'np-product-card', product: product %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product card (ajax)"
+}
+{% endschema %}

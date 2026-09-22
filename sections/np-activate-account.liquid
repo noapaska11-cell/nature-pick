@@ -1,0 +1,25 @@
+<div class="container-page py-14">
+  <div class="mx-auto max-w-md">
+    <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'customer.activate_account.title' | t }}</h1>
+    <p class="mt-2 text-sm text-[var(--color-charcoal-soft)]">{{ 'customer.activate_account.subtext' | t }}</p>
+
+    {%- form 'activate_customer_password', novalidate: 'novalidate', class: 'mt-6 flex flex-col gap-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6' -%}
+      {%- if form.errors -%}
+        <div class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]" role="alert">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+      {% render 'np-field', id: 'ActivatePassword', name: 'customer[password]', type: 'password', label_key: 'customer.activate_account.password', autocomplete: 'new-password', required: true %}
+      {% render 'np-field', id: 'ActivatePasswordConfirm', name: 'customer[password_confirmation]', type: 'password', label_key: 'customer.activate_account.password_confirm', autocomplete: 'new-password', required: true %}
+      <button type="submit" class="btn-primary">{{ 'customer.activate_account.submit' | t }}</button>
+      <button type="submit" name="decline" class="text-sm text-[var(--color-charcoal-soft)] underline hover:text-[var(--color-charcoal)]">{{ 'customer.activate_account.cancel' | t }}</button>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Activate account",
+  "enabled_on": {
+    "templates": ["customers/activate_account"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,58 @@
+{%- comment -%}
+  Shipping & returns page (React /dostawa-i-zwroty). The texts are the store's own policies
+  (Shopify admin > Settings > Policies), so shipping rates and the right of withdrawal are always
+  the ones you maintain in Shopify - and they are translatable there.
+{%- endcomment -%}
+{%- liquid
+  assign contact_url = pages.contact.url
+  assign shipping_body = shop.shipping_policy.body
+  assign refund_body = shop.refund_policy.body
+-%}
+<section class="container-page max-w-3xl py-14">
+  <div class="flex flex-col gap-12">
+    {%- if shipping_body != blank -%}
+      <div>
+        <h2 class="flex items-center gap-2 font-display text-2xl font-semibold text-[var(--color-charcoal)]">
+          {% render 'icon', name: 'truck', class: 'h-5 w-5 text-[var(--color-paprika)]' %} {{ 'np.shipping_returns_page.shipping_title' | t }}
+        </h2>
+        <div class="np-prose mt-3">{{ shipping_body }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if refund_body != blank -%}
+      <div>
+        <h2 class="flex items-center gap-2 font-display text-2xl font-semibold text-[var(--color-charcoal)]">
+          {% render 'icon', name: 'shield', class: 'h-5 w-5 text-[var(--color-paprika)]' %} {{ 'np.shipping_returns_page.refund_title' | t }}
+        </h2>
+        <div class="np-prose mt-3">{{ refund_body }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if shipping_body == blank and refund_body == blank and request.design_mode -%}
+      <p class="rounded-2xl border border-dashed border-[var(--color-line)] p-8 text-center text-sm text-[var(--color-charcoal-soft)]">Add your shipping and refund policies in Shopify admin > Settings > Policies - they are shown here automatically.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if contact_url != blank -%}
+  <section class="container-page pb-16">
+    <div class="card-surface flex flex-col items-start gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-sm text-[var(--color-charcoal-soft)]">{{ 'np.shipping_returns_page.contact_prompt' | t }}</p>
+      <a href="{{ contact_url }}" class="btn-secondary flex-shrink-0">{{ 'np.shipping_returns_page.cta_contact' | t }}</a>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Shipping & returns",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "presets": [
+    {
+      "name": "Shipping & returns"
+    }
+  ]
+}
+{% endschema %}

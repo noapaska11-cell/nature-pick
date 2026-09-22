@@ -1,0 +1,384 @@
+{% doc %}
+  @prompt
+    Lag en seksjon hvor jeg kan laste opp 4 ulike logoer (tenker å legge opp vegan, glutenfri osv.) PÅ mobil bør det legge seg to og to, Legg til at bilde ligger til venstre, og at det til høyre for bildet er en liten oversikrift og et lite paragraf under overskrift som man kan legge til, Nå har du lagt til for mye/forsto ikke hva jeg mente.
+    
+    Ha fortsatt at delt opp i fire, men for hver "fire" så er det et bilde, overskrift og avsnitt
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-logo-grid-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
+  }
+
+  .ai-logo-grid__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-logo-grid__item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_gap }}px;
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-logo-grid__image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-logo-grid__image-{{ ai_gen_id }} {
+    max-width: {{ block.settings.logo_max_width }}px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale({{ block.settings.grayscale }}%);
+    opacity: {{ block.settings.opacity | divided_by: 100.0 }};
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+
+  .ai-logo-grid__item-{{ ai_gen_id }}:hover .ai-logo-grid__image-{{ ai_gen_id }} {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+
+  .ai-logo-grid__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: {{ block.settings.logo_max_width }}px;
+    aspect-ratio: 3 / 2;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .ai-logo-grid__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-logo-grid__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ai-logo-grid__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-logo-grid__text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.5;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-logo-grid__container-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-logo-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-logo-grid__container-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign logo_key = 'logo_' | append: i
+        assign heading_key = 'heading_' | append: i
+        assign text_key = 'text_' | append: i
+        
+        assign logo = block.settings[logo_key]
+        assign heading = block.settings[heading_key]
+        assign text = block.settings[text_key]
+      %}
+      
+      <div class="ai-logo-grid__item-{{ ai_gen_id }}">
+        <div class="ai-logo-grid__image-wrapper-{{ ai_gen_id }}">
+          {% if logo %}
+            <img
+              src="{{ logo | image_url: width: 400 }}"
+              alt="{{ logo.alt | escape }}"
+              loading="lazy"
+              width="{{ logo.width }}"
+              height="{{ logo.height }}"
+              class="ai-logo-grid__image-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-logo-grid__placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+              <div class="ai-logo-grid__empty-state-{{ ai_gen_id }}">
+                Logo {{ i }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if heading != blank %}
+          <h3 class="ai-logo-grid__heading-{{ ai_gen_id }}">{{ heading }}</h3>
+        {% endif %}
+
+        {% if text != blank %}
+          <p class="ai-logo-grid__text-{{ ai_gen_id }}">{{ text }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Logo grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_1",
+      "label": "Bilde"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Overskrift",
+      "default": "Vegan"
+    },
+    {
+      "type": "textarea",
+      "id": "text_1",
+      "label": "Tekst",
+      "default": "Alle våre produkter er 100% plantebaserte."
+    },
+    {
+      "type": "header",
+      "content": "Logo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_2",
+      "label": "Bilde"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Overskrift",
+      "default": "Glutenfri"
+    },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "Tekst",
+      "default": "Trygt for deg med glutenintoleranse."
+    },
+    {
+      "type": "header",
+      "content": "Logo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_3",
+      "label": "Bilde"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Overskrift",
+      "default": "Økologisk"
+    },
+    {
+      "type": "textarea",
+      "id": "text_3",
+      "label": "Tekst",
+      "default": "Sertifisert økologisk produksjon."
+    },
+    {
+      "type": "header",
+      "content": "Logo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_4",
+      "label": "Bilde"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Overskrift",
+      "default": "Fairtrade"
+    },
+    {
+      "type": "textarea",
+      "id": "text_4",
+      "label": "Tekst",
+      "default": "Rettferdig handel for alle involverte."
+    },
+    {
+      "type": "header",
+      "content": "Stil"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Maks logo bredde",
+      "min": 40,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Overskriftstørrelse",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Tekststørrelse",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Overskriftfarge",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Tekstfarge",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Tekstjustering",
+      "options": [
+        {
+          "value": "left",
+          "label": "Venstre"
+        },
+        {
+          "value": "center",
+          "label": "Senter"
+        },
+        {
+          "value": "right",
+          "label": "Høyre"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "grayscale",
+      "label": "Gråtone",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "opacity",
+      "label": "Gjennomsiktighet",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop bredde",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Avstand mellom elementer",
+      "min": 16,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Avstand i hvert element",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding topp",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bunn",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo grid"
+    }
+  ]
+}
+{% endschema %}

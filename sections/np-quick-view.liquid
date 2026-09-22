@@ -1,0 +1,92 @@
+{%- comment -%}
+  Quick view dialog content (React <QuickViewModal />). Fetched by JS with
+  /products/<handle>?section_id=np-quick-view, so `product` is the product being previewed.
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign title_class = ''
+  if settings.soften_uppercase_titles
+    assign title_upper = product.title | upcase
+    if product.title == title_upper
+      assign title_class = 'np-soft-case'
+    endif
+  endif
+  assign short_description = product.metafields.custom.short_description.value
+  if short_description == blank
+    assign short_description = product.description | strip_html | truncate: 220
+  endif
+  capture weight_label
+    render 'np-weight', grams: variant.weight
+  endcapture
+  assign weight_label = weight_label | strip
+  assign qv_form_id = 'QuickViewForm-' | append: product.id
+  assign qv_qty_id = qv_form_id | append: '-qty'
+-%}
+<div role="dialog" aria-modal="true" aria-labelledby="quickview-title" class="relative grid max-h-[90vh] w-full max-w-2xl grid-cols-1 gap-6 overflow-y-auto rounded-3xl bg-[var(--color-paper)] p-6 shadow-2xl sm:grid-cols-2 sm:p-7">
+  <button type="button" data-quick-view-close aria-label="{{ 'np.common.close_quick_view_aria' | t }}" class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal)] hover:bg-[var(--color-line)]">
+    {% render 'icon', name: 'close', class: 'h-4 w-4' %}
+  </button>
+
+  {%- render 'np-product-image',
+    image: product.featured_media,
+    alt: product.title,
+    class: 'aspect-square w-full rounded-2xl',
+    sizes: '(min-width: 640px) 40vw, 90vw',
+    eager: true
+  -%}
+
+  <div>
+    <h2 id="quickview-title" class="pr-10 font-display text-2xl font-semibold text-[var(--color-charcoal)] {{ title_class }}">{{ product.title | escape }}</h2>
+    {%- if weight_label != '' -%}
+      <p class="mt-1 text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
+    {%- endif -%}
+
+    <div class="mt-2">{% render 'np-stars', product: product %}</div>
+
+    <p class="mt-3 font-display text-2xl font-semibold text-[var(--color-charcoal)]">
+      {% render 'np-price', product: product, class: '' %}
+    </p>
+
+    {%- if short_description != blank -%}
+      <p class="mt-3 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ short_description }}</p>
+    {%- endif -%}
+
+    {%- if product.available -%}
+      {%- form 'product', product, id: qv_form_id, class: 'mt-5 flex flex-col gap-3', data-ajax-cart: 'true', data-cart-feedback: 'toast', data-close-quick-view: 'true' -%}
+        {%- if product.has_only_default_variant -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+        {%- else -%}
+          <div class="relative">
+            <label for="{{ qv_form_id }}-variant" class="sr-only">{{ product.options_with_values.first.name }}</label>
+            <select id="{{ qv_form_id }}-variant" name="id" class="np-select input-field pr-9">
+              {%- for v in product.variants -%}
+                <option value="{{ v.id }}" {% if v == variant %}selected{% endif %} {% unless v.available %}disabled{% endunless %}>
+                  {{ v.title | escape }} — {{ v.price | money_without_trailing_zeros }}{% unless v.available %} ({{ 'products.product.sold_out' | t }}){% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
+          </div>
+        {%- endif -%}
+        <div class="flex items-center gap-3">
+          {% render 'np-quantity', size: 'sm', id: qv_qty_id %}
+          <button type="submit" class="btn-primary flex-1" data-add-button>
+            {% render 'icon', name: 'cart', class: 'h-4 w-4' %} {{ 'np.common.add_to_cart' | t }}
+          </button>
+        </div>
+      {%- endform -%}
+    {%- else -%}
+      <p class="mt-5 text-sm font-medium text-[var(--color-charcoal-soft)]">{{ 'np.common.out_of_stock' | t }}</p>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="mt-4 flex items-center gap-1 text-sm font-medium text-[var(--color-paprika-dark)] hover:underline">
+      {{ 'np.product.view_full_details' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quick view"
+}
+{% endschema %}

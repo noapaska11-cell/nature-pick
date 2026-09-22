@@ -1,0 +1,53 @@
+{%- comment -%}
+  <head> content that must come BEFORE {{ content_for_header }}.
+  Shared by layout/theme.liquid and the GemPages layouts so both stay identical.
+{%- endcomment -%}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="{{ settings.color_cream }}">
+<link rel="canonical" href="{{ canonical_url }}">
+<script src="https://t.contentsquare.net/uxa/ae3b982e64382.js" async></script>
+
+{%- if settings.favicon != blank -%}
+  <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+{%- endif -%}
+
+<title>
+  {{ page_title }}
+  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {%- if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: number: current_page }}{% endif -%}
+  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+</title>
+
+{%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}">
+{%- endif -%}
+
+{%- render 'meta-tags' -%}
+
+{%- comment -%} Fallback share image when a page has no image of its own {%- endcomment -%}
+{%- unless page_image -%}
+  {%- if settings.share_image != blank -%}
+    <meta property="og:image" content="https:{{ settings.share_image | image_url: width: 1200 }}">
+  {%- else -%}
+    <meta property="og:image" content="https:{{ 'np-og-image.png' | asset_url }}">
+  {%- endif -%}
+{%- endunless -%}
+
+{% comment %}theme-check-disable AssetPreload{% endcomment %}
+<link rel="preload" href="{{ 'fraunces-latin.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ 'manrope-latin.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{% comment %}theme-check-enable AssetPreload{% endcomment %}
+
+<script>
+  document.documentElement.classList.add('js');
+  if (window.Shopify && Shopify.designMode) {
+    document.documentElement.classList.add('shopify-design-mode');
+  }
+  // Safety net: sections that fade in on scroll are hidden until naturepick.js has started. If the script is blocked,
+  // fails or is slow (an app conflict, a network problem), show everything after 4 seconds instead of a half empty page.
+  window.setTimeout(function () {
+    if (!document.documentElement.hasAttribute('data-np-ready')) document.documentElement.classList.add('np-no-script');
+  }, 4000);
+</script>

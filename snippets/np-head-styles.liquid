@@ -1,0 +1,90 @@
+{%- comment -%}
+  Design tokens (from Theme settings > Colors), self-hosted fonts, stylesheet and runtime config.
+  Rendered AFTER {{ content_for_header }} so the token overrides win over the defaults in naturepick.css.
+{%- endcomment -%}
+<style>
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('{{ 'fraunces-latin-ext.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('{{ 'fraunces-latin.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Manrope';
+    src: url('{{ 'manrope-latin-ext.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 800;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Manrope';
+    src: url('{{ 'manrope-latin.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 800;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  :root {
+    --color-cream: {{ settings.color_cream }};
+    --color-cream-soft: {{ settings.color_cream_soft }};
+    --color-paper: {{ settings.color_paper }};
+    --color-paprika: {{ settings.color_paprika }};
+    --color-paprika-dark: {{ settings.color_paprika_dark }};
+    --color-paprika-light: {{ settings.color_paprika_light }};
+    --color-olive: {{ settings.color_olive }};
+    --color-olive-dark: {{ settings.color_olive_dark }};
+    --color-olive-light: {{ settings.color_olive_light }};
+    --color-charcoal: {{ settings.color_charcoal }};
+    --color-charcoal-soft: {{ settings.color_charcoal_soft }};
+    --color-line: {{ settings.color_line }};
+    --color-gold: {{ settings.color_gold }};
+    --color-gold-on-dark: {{ settings.color_gold_on_dark }};
+  }
+</style>
+
+<link rel="stylesheet" href="{{ 'naturepick.css' | asset_url }}">
+
+<script>
+  window.NP = {
+    routes: {
+      root: {{ routes.root_url | json }},
+      cart: {{ routes.cart_url | json }},
+      cartAdd: {{ routes.cart_add_url | append: '.js' | json }},
+      cartChange: {{ routes.cart_change_url | append: '.js' | json }},
+      cartJson: {{ routes.cart_url | append: '.js' | json }},
+      search: {{ routes.search_url | json }},
+      predictiveSearch: {{ routes.predictive_search_url | json }},
+      recommendations: {{ routes.product_recommendations_url | json }}
+    },
+    cartType: {{ settings.cart_type | default: 'drawer' | json }},
+    locale: {{ request.locale.iso_code | json }},
+    currency: {{ cart.currency.iso_code | json }},
+    shopCurrency: {{ shop.currency | default: '' | json }},
+    moneyFormat: {{ shop.money_format | default: '' | json }},
+    strings: {
+      added: {{ 'np.common.added' | t | json }},
+      addToCart: {{ 'np.common.add_to_cart' | t | json }},
+      soldOut: {{ 'products.product.sold_out' | t | json }},
+      unavailable: {{ 'products.product.unavailable' | t | json }},
+      viewCart: {{ 'np.cart.view_cart' | t | json }},
+      dismissToast: {{ 'np.common.dismiss_toast_aria' | t | json }},
+      cartError: {{ 'sections.cart.cart_error' | t | json }},
+      quantityError: {{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' | json }},
+      loading: {{ 'accessibility.loading' | t | json }},
+      linkCopied: {{ 'general.share.success_message' | t | json }}
+    }
+  };
+</script>
+<script src="{{ 'naturepick.js' | asset_url }}" defer="defer"></script>

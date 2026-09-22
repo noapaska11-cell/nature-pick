@@ -1,0 +1,100 @@
+{%- comment -%}
+  B2B page: audience list + a card with three tabs (register company / log in / request a quote).
+  Registration has exactly four fields and all of them are required: company name, e-mail, OIB and VAT number.
+  Default (no server): the request goes to the store inbox through Shopify's contact form and the owner approves
+  the company by hand in the Shopify admin (customer tag). Optional: with a verification service configured
+  (Theme settings > B2B / wholesale) the company is checked automatically instead.
+{%- endcomment -%}
+{%- liquid
+  assign b2b_active = false
+  assign b2b_company = ''
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+      assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
+    endif
+  endif
+  assign return_target = page.url | url_encode
+  assign login_url = routes.account_login_url | append: '?return_url=' | append: return_target
+  assign endpoint = settings.b2b_endpoint | strip
+-%}
+<section class="container-page grid gap-10 py-14 lg:grid-cols-[1fr_1.2fr]">
+  <div>
+    <h2 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_page.audience_title' | t }}</h2>
+    <ul class="mt-4 flex flex-col gap-3">
+      {%- for i in (1..4) -%}
+        {%- assign audience_key = 'np.b2b_page.audience' | append: i -%}
+        <li class="flex items-center gap-2 text-sm text-[var(--color-charcoal-soft)]">
+          {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0 text-[var(--color-olive-dark)]' %}
+          {{ audience_key | t }}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  {%- if b2b_active -%}
+    <div class="card-surface flex flex-col items-center gap-3 p-10 text-center">
+      <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">
+        {% render 'icon', name: 'check', class: 'h-6 w-6' %}
+      </span>
+      <h3 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.active_title' | t }}</h3>
+      <p class="text-sm text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.active_text' | t: company: b2b_company }}</p>
+      <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'np.b2b_auth.browse_cta' | t }}</a>
+        <a href="{{ routes.account_logout_url }}" class="btn-secondary">{{ 'np.b2b_auth.logout' | t }}</a>
+      </div>
+    </div>
+  {%- else -%}
+    <np-tabs class="card-surface block scroll-mt-32 overflow-hidden" data-default="register" id="b2b-card">
+      <div class="flex border-b border-[var(--color-line)]" role="tablist">
+        <button type="button" role="tab" data-tab="register" aria-selected="true" class="flex flex-1 items-center justify-center gap-1.5 px-2 py-3.5 text-xs font-semibold text-[var(--color-charcoal-soft)] transition-colors hover:text-[var(--color-charcoal)] aria-selected:border-b-2 aria-selected:border-[var(--color-paprika)] aria-selected:text-[var(--color-charcoal)] sm:text-sm">
+          {% render 'icon', name: 'building', class: 'h-4 w-4 flex-shrink-0' %} {{ 'np.b2b_auth.tab_register' | t }}
+        </button>
+        <button type="button" role="tab" data-tab="login" aria-selected="false" class="flex flex-1 items-center justify-center gap-1.5 px-2 py-3.5 text-xs font-semibold text-[var(--color-charcoal-soft)] transition-colors hover:text-[var(--color-charcoal)] aria-selected:border-b-2 aria-selected:border-[var(--color-paprika)] aria-selected:text-[var(--color-charcoal)] sm:text-sm">
+          {% render 'icon', name: 'lock', class: 'h-4 w-4 flex-shrink-0' %} {{ 'np.b2b_auth.tab_login' | t }}
+        </button>
+        <button type="button" role="tab" data-tab="quote" aria-selected="false" class="flex flex-1 items-center justify-center gap-1.5 px-2 py-3.5 text-xs font-semibold text-[var(--color-charcoal-soft)] transition-colors hover:text-[var(--color-charcoal)] aria-selected:border-b-2 aria-selected:border-[var(--color-paprika)] aria-selected:text-[var(--color-charcoal)] sm:text-sm">
+          {% render 'icon', name: 'chat', class: 'h-4 w-4 flex-shrink-0' %} {{ 'np.b2b_auth.tab_quote' | t }}
+        </button>
+      </div>
+
+      <div class="p-6">
+        <div role="tabpanel" data-panel="register">
+          {%- if endpoint != blank -%}
+            {% render 'np-b2b-register-form', endpoint: endpoint, login_url: login_url %}
+          {%- else -%}
+            {% render 'np-contact-form', kind: 'b2b_register', form_id: 'B2BRegisterForm' %}
+          {%- endif -%}
+          <p class="mt-4 text-center text-xs text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.register_hint' | t }}</p>
+        </div>
+
+        <div role="tabpanel" data-panel="login" hidden class="flex flex-col items-center gap-4 py-6 text-center">
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal)]">
+            {% render 'icon', name: 'lock', class: 'h-6 w-6' %}
+          </span>
+          <p class="max-w-xs text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.login_hint' | t }}</p>
+          <a href="{{ login_url }}" class="btn-primary">{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.login_submit' | t }}</a>
+        </div>
+
+        <div role="tabpanel" data-panel="quote" hidden>
+          <p class="mb-4 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_page.form_note' | t }}</p>
+          {% render 'np-contact-form', kind: 'b2b_quote', form_id: 'B2BQuoteForm' %}
+        </div>
+      </div>
+    </np-tabs>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "B2B",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "presets": [
+    {
+      "name": "B2B"
+    }
+  ]
+}
+{% endschema %}

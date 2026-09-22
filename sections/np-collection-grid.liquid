@@ -1,0 +1,109 @@
+{%- liquid
+  assign categories_menu = linklists[settings.menu_categories]
+  assign availability_filter = nil
+  for filter in collection.filters
+    if filter.param_name == 'filter.v.availability'
+      assign availability_filter = filter
+    endif
+  endfor
+  assign in_stock_active = false
+  if availability_filter
+    for value in availability_filter.values
+      if value.value == '1' and value.active
+        assign in_stock_active = true
+      endif
+    endfor
+  endif
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+-%}
+<section class="container-page py-10">
+  {%- if section.settings.show_category_pills -%}
+    <div class="mb-6 flex flex-wrap gap-2">
+      <a
+        href="{{ routes.all_products_collection_url }}"
+        class="rounded-full border px-4 py-1.5 text-sm {% if collection.handle == 'all' %}border-[var(--color-charcoal)] bg-[var(--color-charcoal)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
+      >{{ 'np.collection.filter_all' | t }}</a>
+      {%- for link in categories_menu.links -%}
+        {%- assign is_current = false -%}
+        {%- if link.type == 'collection_link' and link.object.handle == collection.handle -%}
+          {%- assign is_current = true -%}
+        {%- endif -%}
+        <a
+          href="{{ link.url }}"
+          {% if is_current %}aria-current="page"{% endif %}
+          class="rounded-full border px-4 py-1.5 text-sm {% if is_current %}border-[var(--color-charcoal)] bg-[var(--color-charcoal)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}"
+        >{{ link.title }}</a>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- paginate collection.products by section.settings.products_per_page -%}
+    <form method="get" action="{{ collection.url }}" data-collection-form class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] pb-4">
+      {%- if availability_filter -%}
+        <label class="flex items-center gap-2 text-sm text-[var(--color-charcoal-soft)]">
+          <input type="checkbox" name="filter.v.availability" value="1" data-autosubmit {% if in_stock_active %}checked{% endif %} class="h-4 w-4 rounded">
+          {{ 'np.collection.filter_in_stock_only' | t }}
+        </label>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+
+      {%- if collection.sort_options.size > 0 -%}
+        <label class="flex items-center gap-2 text-sm">
+          <span class="text-[var(--color-charcoal-soft)]">{{ 'np.collection.sort_label' | t }}:</span>
+          <span class="relative">
+            <select name="sort_by" data-autosubmit class="np-select rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 pl-3 pr-8 text-sm font-medium text-[var(--color-charcoal)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-paprika)]">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
+          </span>
+        </label>
+      {%- endif -%}
+      <noscript><button type="submit" class="btn-secondary !px-4 !py-1.5 text-sm">{{ 'general.search.search' | t }}</button></noscript>
+    </form>
+
+    {%- if collection.products.size == 0 -%}
+      <p class="py-16 text-center text-[var(--color-charcoal-soft)]">
+        {%- if collection.all_products_count == 0 -%}{{ 'np.collection.empty_category' | t }}{%- else -%}{{ 'np.collection.no_results' | t }}{%- endif -%}
+      </p>
+    {%- else -%}
+      <div class="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+        {%- for product in collection.products -%}
+          {%- assign is_eager = false -%}
+          {%- if forloop.index0 < 4 -%}{%- assign is_eager = true -%}{%- endif -%}
+          {% render 'np-product-card', product: product, index: forloop.index0, eager: is_eager %}
+        {%- endfor -%}
+      </div>
+      {% render 'np-pagination', paginate: paginate %}
+    {%- endif -%}
+  {%- endpaginate -%}
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "label": "Products per page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category_pills",
+      "label": "Show category filter pills",
+      "info": "Uses the categories menu (Theme settings > Navigation).",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

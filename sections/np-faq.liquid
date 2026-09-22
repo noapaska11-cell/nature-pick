@@ -1,0 +1,190 @@
+{%- liquid
+  assign faq_layout = section.settings.layout
+  assign item_count = section.settings.item_count
+  assign first_open = section.settings.first_open
+
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.faq_section.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    if faq_layout == 'page'
+      assign title = 'np.faq.all_questions_title' | t
+    else
+      assign title = 'np.faq_section.title' | t
+    endif
+  endif
+  assign text = section.settings.text
+  if text == blank
+    assign text = 'np.faq_section.text' | t
+  endif
+
+  comment
+    Items: blocks (custom content) or the translated FAQ items 1..item_count
+  endcomment
+-%}
+
+{%- capture faq_items -%}
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      <details name="faq-{{ section.id }}" {% if forloop.first and first_open %}open{% endif %} class="group" {{ block.shopify_attributes }}>
+        <summary class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left">
+          <span class="font-medium text-[var(--color-charcoal)]">{{ block.settings.question | escape }}</span>
+          {% render 'icon', name: 'chevron-down', class: 'h-4 w-4 flex-shrink-0 text-[var(--color-charcoal-soft)] transition-transform group-open:rotate-180' %}
+        </summary>
+        <div class="np-prose px-5 pb-4 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ block.settings.answer }}</div>
+      </details>
+    {%- endfor -%}
+  {%- else -%}
+    {%- for i in (1..item_count) -%}
+      {%- liquid
+        assign question_key = 'np.faq.item' | append: i | append: '.question'
+        assign answer_key = 'np.faq.item' | append: i | append: '.answer'
+        assign question = question_key | t: default: ''
+        assign answer = answer_key | t: email: settings.contact_email, company: settings.company_name, address: settings.company_address, vat: settings.company_vat, default: ''
+      -%}
+      {%- if question != blank -%}
+        <details name="faq-{{ section.id }}" {% if forloop.first and first_open %}open{% endif %} class="group">
+          <summary class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left">
+            <span class="font-medium text-[var(--color-charcoal)]">{{ question }}</span>
+            {% render 'icon', name: 'chevron-down', class: 'h-4 w-4 flex-shrink-0 text-[var(--color-charcoal-soft)] transition-transform group-open:rotate-180' %}
+          </summary>
+          <p class="px-5 pb-4 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ answer }}</p>
+        </details>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if faq_layout == 'page' -%}
+  <section class="container-page max-w-3xl py-14">
+    <h2 class="mb-6 font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ title }}</h2>
+    <div class="divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)]">
+      {{ faq_items }}
+    </div>
+  </section>
+{%- else -%}
+  <div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+    <section class="container-page py-16">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div>
+          <span class="section-label text-[var(--color-paprika-dark)]">
+            {% render 'icon', name: 'check', class: 'h-3.5 w-3.5' %} {{ label }}
+          </span>
+          <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+          <p class="mt-4 max-w-sm text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ text }}</p>
+        </div>
+        <div class="divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)]">
+          {{ faq_items }}
+        </div>
+      </div>
+    </section>
+  </div>
+{%- endif -%}
+
+{%- comment -%} FAQPage structured data for the translated default questions {%- endcomment -%}
+{%- if faq_layout == 'page' and section.blocks.size == 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for i in (1..item_count) -%}
+          {%- liquid
+            assign question_key = 'np.faq.item' | append: i | append: '.question'
+            assign answer_key = 'np.faq.item' | append: i | append: '.answer'
+            assign question = question_key | t: default: ''
+            assign answer = answer_key | t: email: settings.contact_email, company: settings.company_name, address: settings.company_address, vat: settings.company_vat, default: ''
+          -%}
+          {%- if question != blank -%}
+            {
+              "@type": "Question",
+              "name": {{ question | json }},
+              "acceptedAnswer": { "@type": "Answer", "text": {{ answer | json }} }
+            }{% unless forloop.last %},{% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Heading left, questions right (home page)" },
+        { "value": "page", "label": "Narrow list (FAQ page)" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "range",
+      "id": "item_count",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 6,
+      "label": "Translated questions to show",
+      "info": "Only used when there are no FAQ items below."
+    },
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "label": "Open the first question",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Intro text"
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ"
+    }
+  ]
+}
+{% endschema %}

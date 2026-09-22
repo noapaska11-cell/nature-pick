@@ -1,0 +1,135 @@
+{%- comment -%}
+  Address book. Same form fields / element ids as Shopify's reference theme, so the
+  Shopify.CountryProvinceSelector (province list per country) keeps working - see initAddresses() in naturepick.js.
+{%- endcomment -%}
+{%- paginate customer.addresses by 5 -%}
+  <div class="container-page py-14" data-customer-addresses>
+    <a href="{{ routes.account_url }}" class="inline-flex items-center gap-1 text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+      {% render 'icon', name: 'chevron-left', class: 'h-4 w-4' %} {{ 'customer.account.return' | t }}
+    </a>
+    <h1 class="mt-4 font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'customer.addresses.title' | t }}</h1>
+
+    {%- comment -%} New address {%- endcomment -%}
+    <div class="mt-6" data-address>
+      <button type="button" aria-expanded="false" aria-controls="AddAddress" class="btn-primary">
+        {% render 'icon', name: 'plus', class: 'h-4 w-4' %} {{ 'customer.addresses.add_new' | t }}
+      </button>
+      <div id="AddAddress" hidden class="mt-4 max-w-2xl rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+        <h2 id="AddressNewHeading" class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'customer.addresses.add_new' | t }}</h2>
+        {%- form 'customer_address', customer.new_address, aria-labelledBy: 'AddressNewHeading', class: 'mt-4 flex flex-col gap-4' -%}
+          {%- if form.errors -%}
+            <div class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="grid gap-4 sm:grid-cols-2">
+            {% render 'np-field', id: 'AddressFirstNameNew', name: 'address[first_name]', label_key: 'customer.addresses.first_name', value: form.first_name, autocomplete: 'given-name' %}
+            {% render 'np-field', id: 'AddressLastNameNew', name: 'address[last_name]', label_key: 'customer.addresses.last_name', value: form.last_name, autocomplete: 'family-name' %}
+          </div>
+          {% render 'np-field', id: 'AddressCompanyNew', name: 'address[company]', label_key: 'customer.addresses.company', value: form.company, autocomplete: 'organization' %}
+          {% render 'np-field', id: 'AddressAddress1New', name: 'address[address1]', label_key: 'customer.addresses.address1', value: form.address1, autocomplete: 'address-line1' %}
+          {% render 'np-field', id: 'AddressAddress2New', name: 'address[address2]', label_key: 'customer.addresses.address2', value: form.address2, autocomplete: 'address-line2' %}
+          {% render 'np-field', id: 'AddressCityNew', name: 'address[city]', label_key: 'customer.addresses.city', value: form.city, autocomplete: 'address-level2' %}
+          <div>
+            <label for="AddressCountryNew" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'customer.addresses.country' | t }}</label>
+            <select id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}" autocomplete="country" class="np-select input-field">{{ all_country_option_tags }}</select>
+          </div>
+          <div id="AddressProvinceContainerNew" style="display: none">
+            <label for="AddressProvinceNew" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'customer.addresses.province' | t }}</label>
+            <select id="AddressProvinceNew" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1" class="np-select input-field"></select>
+          </div>
+          {% render 'np-field', id: 'AddressZipNew', name: 'address[zip]', label_key: 'customer.addresses.zip', value: form.zip, autocomplete: 'postal-code' %}
+          {% render 'np-field', id: 'AddressPhoneNew', name: 'address[phone]', type: 'tel', label_key: 'customer.addresses.phone', value: form.phone, autocomplete: 'tel' %}
+          <label class="flex items-center gap-2 text-sm text-[var(--color-charcoal-soft)]">
+            {{ form.set_as_default_checkbox }}
+            {{ 'customer.addresses.set_default' | t }}
+          </label>
+          <div class="flex gap-3">
+            <button type="submit" class="btn-primary">{{ 'customer.addresses.add' | t }}</button>
+            <button type="reset" class="btn-secondary">{{ 'customer.addresses.cancel' | t }}</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+
+    {%- comment -%} Saved addresses {%- endcomment -%}
+    <ul class="mt-8 grid gap-6 lg:grid-cols-2" role="list">
+      {%- for address in customer.addresses -%}
+        <li data-address class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+          {%- if address == customer.default_address -%}
+            <p class="mb-2 inline-block rounded-full bg-[var(--color-olive-light)] px-3 py-1 text-xs font-semibold text-[var(--color-olive-dark)]">{{ 'customer.addresses.default' | t }}</p>
+          {%- endif -%}
+          <div class="text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ address | format_address }}</div>
+          <div class="mt-4 flex gap-3">
+            <button
+              type="button"
+              id="EditFormButton_{{ address.id }}"
+              aria-label="{{ 'customer.addresses.edit_address' | t }} {{ forloop.index }}"
+              aria-controls="EditAddress_{{ address.id }}"
+              aria-expanded="false"
+              data-address-id="{{ address.id }}"
+              class="btn-secondary !px-4 !py-1.5 text-sm"
+            >{{ 'customer.addresses.edit' | t }}</button>
+            <button
+              type="button"
+              aria-label="{{ 'customer.addresses.delete' | t }} {{ forloop.index }}"
+              data-target="{{ address.url }}"
+              data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
+              class="text-sm text-[var(--color-charcoal-soft)] underline hover:text-[var(--color-paprika)]"
+            >{{ 'customer.addresses.delete' | t }}</button>
+          </div>
+
+          <div id="EditAddress_{{ address.id }}" hidden class="mt-5 border-t border-[var(--color-line)] pt-5">
+            <h2 class="font-display text-base font-semibold text-[var(--color-charcoal)]">{{ 'customer.addresses.edit_address' | t }}</h2>
+            {%- form 'customer_address', address, class: 'mt-4 flex flex-col gap-4' -%}
+              {%- assign fid = form.id -%}
+              <div class="grid gap-4 sm:grid-cols-2">
+                {%- assign id_fn = 'AddressFirstName_' | append: fid -%}
+                {% render 'np-field', id: id_fn, name: 'address[first_name]', label_key: 'customer.addresses.first_name', value: form.first_name, autocomplete: 'given-name' %}
+                {%- assign id_ln = 'AddressLastName_' | append: fid -%}
+                {% render 'np-field', id: id_ln, name: 'address[last_name]', label_key: 'customer.addresses.last_name', value: form.last_name, autocomplete: 'family-name' %}
+              </div>
+              {%- assign id_company = 'AddressCompany_' | append: fid -%}
+              {% render 'np-field', id: id_company, name: 'address[company]', label_key: 'customer.addresses.company', value: form.company, autocomplete: 'organization' %}
+              {%- assign id_a1 = 'AddressAddress1_' | append: fid -%}
+              {% render 'np-field', id: id_a1, name: 'address[address1]', label_key: 'customer.addresses.address1', value: form.address1, autocomplete: 'address-line1' %}
+              {%- assign id_a2 = 'AddressAddress2_' | append: fid -%}
+              {% render 'np-field', id: id_a2, name: 'address[address2]', label_key: 'customer.addresses.address2', value: form.address2, autocomplete: 'address-line2' %}
+              {%- assign id_city = 'AddressCity_' | append: fid -%}
+              {% render 'np-field', id: id_city, name: 'address[city]', label_key: 'customer.addresses.city', value: form.city, autocomplete: 'address-level2' %}
+              <div>
+                <label for="AddressCountry_{{ fid }}" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'customer.addresses.country' | t }}</label>
+                <select id="AddressCountry_{{ fid }}" name="address[country]" data-form-id="{{ fid }}" data-default="{{ form.country }}" data-address-country-select autocomplete="country" class="np-select input-field">{{ all_country_option_tags }}</select>
+              </div>
+              <div id="AddressProvinceContainer_{{ fid }}" style="display: none">
+                <label for="AddressProvince_{{ fid }}" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'customer.addresses.province' | t }}</label>
+                <select id="AddressProvince_{{ fid }}" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1" class="np-select input-field"></select>
+              </div>
+              {%- assign id_zip = 'AddressZip_' | append: fid -%}
+              {% render 'np-field', id: id_zip, name: 'address[zip]', label_key: 'customer.addresses.zip', value: form.zip, autocomplete: 'postal-code' %}
+              {%- assign id_phone = 'AddressPhone_' | append: fid -%}
+              {% render 'np-field', id: id_phone, name: 'address[phone]', type: 'tel', label_key: 'customer.addresses.phone', value: form.phone, autocomplete: 'tel' %}
+              <label class="flex items-center gap-2 text-sm text-[var(--color-charcoal-soft)]">
+                {{ form.set_as_default_checkbox }}
+                {{ 'customer.addresses.set_default' | t }}
+              </label>
+              <div class="flex gap-3">
+                <button type="submit" class="btn-primary">{{ 'customer.addresses.update' | t }}</button>
+                <button type="reset" class="btn-secondary">{{ 'customer.addresses.cancel' | t }}</button>
+              </div>
+            {%- endform -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {% render 'np-pagination', paginate: paginate %}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Addresses",
+  "enabled_on": {
+    "templates": ["customers/addresses"]
+  }
+}
+{% endschema %}

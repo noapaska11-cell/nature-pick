@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "shipping"
+      }
+    },
+    "main": {
+      "type": "np-shipping-returns",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

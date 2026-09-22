@@ -1,0 +1,106 @@
+{%- liquid
+  assign label = section.settings.label
+  if label == blank
+    assign label = 'np.testimonials.label' | t
+  endif
+  assign title = section.settings.title
+  if title == blank
+    assign title = 'np.testimonials.title' | t
+  endif
+-%}
+<div {% if section.settings.reveal %}class="np-reveal"{% endif %}>
+  <section class="bg-[var(--color-cream-soft)]">
+    <div class="container-page py-16">
+      <div class="text-center">
+        <span class="section-label justify-center text-[var(--color-paprika-dark)]">
+          {% render 'icon', name: 'star', class: 'h-3.5 w-3.5' %} {{ label }}
+        </span>
+        <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+      </div>
+
+      <div class="mt-10 grid gap-5 sm:grid-cols-3">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign quote = block.settings.quote
+            if quote == blank
+              assign quote_key = 'np.testimonials.quote' | append: forloop.index
+              assign quote = quote_key | t: default: ''
+            endif
+            assign author = block.settings.author
+            if author == blank
+              assign author_key = 'np.testimonials.author' | append: forloop.index
+              assign author = author_key | t: default: ''
+            endif
+          -%}
+          {%- if quote != blank -%}
+            <div class="card-surface flex flex-col gap-4 p-6" {{ block.shopify_attributes }}>
+              <div class="flex gap-0.5 text-[var(--color-gold)]">
+                {%- for i in (1..5) -%}
+                  {% render 'icon', name: 'star', class: 'h-4 w-4' %}
+                {%- endfor -%}
+              </div>
+              <p class="flex-1 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">„{{ quote }}”</p>
+              <p class="text-sm font-semibold text-[var(--color-charcoal)]">{{ author }}</p>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Only publish real customer reviews. Leave empty to use the placeholder text that ships with the theme (blocks 1-3)."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1133 @@
+{
+  "general": {
+    "password_page": {
+      "login_form_heading": "Shop mit Passwort betreten:",
+      "login_password_button": "Mit Passwort betreten",
+      "login_form_password_label": "Passwort",
+      "login_form_password_placeholder": "Dein Passwort",
+      "login_form_error": "Falsches Passwort!",
+      "login_form_submit": "Eingeben",
+      "admin_link_html": "Bist du der Shop-Inhaber? <a href=\"/admin\" class=\"link underlined-link\">Hier einloggen</a>",
+      "powered_by_shopify_html": "Dieser Shop wird unterstützt von {{ shopify }}"
+    },
+    "social": {
+      "alt_text": {
+        "share_on_facebook": "Auf Facebook teilen",
+        "share_on_twitter": "Auf X teilen",
+        "share_on_pinterest": "Auf Pinterest pinnen"
+      },
+      "links": {
+        "twitter": "X (Twitter)",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok"
+      }
+    },
+    "continue_shopping": "Weiter shoppen",
+    "pagination": {
+      "label": "Seitennummerierung",
+      "page": "Seite {{ number }}",
+      "next": "Nächste Seite",
+      "previous": "Vorherige Seite"
+    },
+    "search": {
+      "search": "Suchen",
+      "reset": "Suchbegriff zurücksetzen"
+    },
+    "cart": {
+      "view": "Warenkorb ansehen ({{ count }})",
+      "item_added": "Artikel wurde in den Warenkorb gelegt",
+      "view_empty_cart": "Warenkorb ansehen"
+    },
+    "share": {
+      "copy_to_clipboard": "Link kopieren",
+      "share_url": "Link",
+      "success_message": "Link in die Zwischenablage kopiert",
+      "close": "Teilen schließen"
+    },
+    "slider": {
+      "of": "von",
+      "next_slide": "Nach rechts schieben",
+      "previous_slide": "Nach links schieben",
+      "name": "Slider"
+    }
+  },
+  "newsletter": {
+    "label": "E-Mail",
+    "success": "Danke für deine Anmeldung",
+    "button_label": "Abonnieren"
+  },
+  "accessibility": {
+    "skip_to_text": "Direkt zum Inhalt",
+    "close": "Schließen",
+    "unit_price_separator": "pro",
+    "vendor": "Anbieter:",
+    "error": "Fehler",
+    "refresh_page": "Wenn du dich für eine Auswahl entscheidest, wird die Seite komplett aktualisiert.",
+    "link_messages": {
+      "new_window": "Wird in einem neuen Fenster geöffnet.",
+      "external": "Öffnet externe Webseite."
+    },
+    "loading": "Wird geladen ...",
+    "skip_to_product_info": "Zu Produktinformationen springen",
+    "total_reviews": "Bewertungen insgesamt",
+    "star_reviews_info": "{{ rating_value }} von {{ rating_max }} Sternen",
+    "collapsible_content_title": "Einklappbarer Inhalt",
+    "complementary_products": "Ergänzende Produkte"
+  },
+  "blogs": {
+    "article": {
+      "blog": "Blog",
+      "read_more_title": "Weiterlesen: {{ title }}",
+      "comments": {
+        "one": "{{ count }} Kommentar",
+        "other": "{{ count }} Kommentare"
+      },
+      "moderated": "Bitte beachte, dass Kommentare vor der Veröffentlichung freigegeben werden müssen.",
+      "comment_form_title": "Hinterlasse einen Kommentar",
+      "name": "Name",
+      "email": "E-Mail",
+      "message": "Kommentar",
+      "post": "Kommentar posten",
+      "back_to_blog": "Zurück zum Blog",
+      "share": "Diesen Artikel teilen",
+      "success": "Dein Kommentar wurde erfolgreich gepostet! Vielen Dank!",
+      "success_moderated": "Dein Kommentar wurde erfolgreich gepostet. Da unser Blog moderiert wird, werden wir ihn erst kurze Zeit später veröffentlichen."
+    }
+  },
+  "onboarding": {
+    "product_title": "Beispiel für Produkttitel",
+    "collection_title": "Name deiner Kollektion"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "In den Warenkorb legen",
+      "description": "Beschreibung",
+      "on_sale": "Sale",
+      "quantity": {
+        "label": "Anzahl",
+        "input_label": "Anzahl von {{ product }}",
+        "increase": "Erhöhe die Menge für {{ product }}",
+        "decrease": "Verringere die Menge für {{ product }}",
+        "minimum_of": "Mindestens {{ quantity }}",
+        "maximum_of": "Maximal {{ quantity }}",
+        "multiples_of": "In {{ quantity }}er Schritten",
+        "in_cart_html": "<span class=\"quantity-cart\">{{ quantity }}</span> im Warenkorb",
+        "note": "Mengenregeln anzeigen",
+        "min_of": "Mindestens {{ quantity }}",
+        "max_of": "Höchstens {{ quantity }}",
+        "in_cart_aria_label": "Menge ({{ quantity }} im Warenkorb)"
+      },
+      "price": {
+        "from_price_html": "Von {{ price }}",
+        "regular_price": "Normaler Preis",
+        "sale_price": "Verkaufspreis",
+        "unit_price": "Grundpreis"
+      },
+      "share": "Dieses Produkt teilen",
+      "sold_out": "Ausverkauft",
+      "unavailable": "Nicht verfügbar",
+      "vendor": "Anbieter",
+      "video_exit_message": "{{ title }} öffnet das Video auf derselben Seite im Vollbildmodus.",
+      "xr_button": "In deinem Bereich ansehen",
+      "xr_button_label": "\"Ansicht in deinem Raum\" lädt den Artikel in ein Augmented-Reality-Fenster",
+      "pickup_availability": {
+        "view_store_info": "Shop-Informationen anzeigen",
+        "check_other_stores": "Verfügbarkeit in anderen Shops überprüfen",
+        "pick_up_available": "Abholung verfügbar",
+        "pick_up_available_at_html": "Abholung bei <span class=\"color-foreground\">{{ location_name }}</span> verfügbar",
+        "pick_up_unavailable_at_html": "Abholung bei <span class=\"color-foreground\">{{ location_name }}</span> derzeit nicht verfügbar",
+        "unavailable": "Verfügbarkeit für Abholungen konnte nicht geladen werden",
+        "refresh": "Aktualisieren"
+      },
+      "media": {
+        "open_media": "Medien {{ index }} in Modal öffnen",
+        "play_model": "3D-Viewer abspielen",
+        "play_video": "Video abspielen",
+        "gallery_viewer": "Galerie-Viewer",
+        "load_image": "Bild {{ index }} in Galerieansicht laden",
+        "load_model": "3D-Modell {{ index }} in Galerieansicht laden",
+        "load_video": "Video {{ index }} in Galerieansicht abspielen",
+        "image_available": "Bild {{ index }} ist nun in der Galerieansicht verfügbar"
+      },
+      "nested_label": "{{ title }} für {{ parent_title }}",
+      "view_full_details": "Vollständige Details anzeigen",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Versand</a> wird beim Checkout berechnet",
+      "choose_options": "Optionen auswählen",
+      "choose_product_options": "Optionen für {{ product_name }} auswählen",
+      "value_unavailable": "{{ option_value }} – nicht verfügbar",
+      "variant_sold_out_or_unavailable": "Variante ausverkauft oder nicht verfügbar",
+      "inventory_in_stock": "Auf Lager",
+      "inventory_in_stock_show_count": "{{ quantity }} auf Lager",
+      "inventory_low_stock": "Niedriger Lagerbestand",
+      "inventory_low_stock_show_count": "Niedriger Lagerbestand: {{ quantity }} verbleibend",
+      "inventory_out_of_stock": "Nicht vorrätig",
+      "inventory_out_of_stock_continue_selling": "Auf Lager",
+      "sku": "SKU",
+      "volume_pricing": {
+        "title": "Volumenabhängige Preisgestaltung",
+        "note": "Volumenabhängige Preisgestaltung verfügbar",
+        "minimum": "{{ quantity }}+",
+        "price_range": "{{ minimum }}–{{ maximum }}",
+        "price_at_each_html": "bei {{ price }}/Stück"
+      },
+      "product_variants": "Produktvarianten",
+      "taxes_included": "Inkl. Steuern.",
+      "duties_included": "Inkl. Zollgebühren.",
+      "duties_and_taxes_included": "Inkl. Zollgebühren und Steuern."
+    },
+    "modal": {
+      "label": "Medien-Galerie"
+    },
+    "facets": {
+      "apply": "Anwenden",
+      "clear": "Löschen",
+      "clear_all": "Alle entfernen",
+      "from": "Von",
+      "filter_and_sort": "Filtern und sortieren",
+      "filter_by_label": "Filter:",
+      "filter_button": "Filter",
+      "filters_selected": {
+        "one": "{{ count }} ausgewählt",
+        "other": "{{ count }} ausgewählt"
+      },
+      "max_price": "Der höchste Preis ist {{ price }}",
+      "product_count": {
+        "one": "{{ product_count }} von {{ count }} Produkt",
+        "other": "{{ product_count }} von {{ count }} Produkten"
+      },
+      "product_count_simple": {
+        "one": "{{ count }} Produkt",
+        "other": "{{ count }} Produkte"
+      },
+      "reset": "Zurücksetzen",
+      "sort_button": "Sortieren",
+      "sort_by_label": "Sortieren nach:",
+      "to": "Bis",
+      "clear_filter": "Filter entfernen",
+      "filter_selected_accessibility": "{{ type }} ({{ count }} Filter ausgewählt)",
+      "show_more": "Mehr anzeigen",
+      "show_less": "Weniger anzeigen",
+      "filter_and_operator_subtitle": "Allen entsprechen"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Seite nicht gefunden",
+      "subtext": "404"
+    },
+    "search": {
+      "no_results": "Keine Ergebnisse gefunden für \"{{ terms }}\". Überprüfe die Schreibweise oder versuche es mit einer anderen Suchanfrage.",
+      "results_with_count": {
+        "one": "{{ count }} Ergebnis",
+        "other": "{{ count }} Ergebnisse"
+      },
+      "title": "Suchergebnisse",
+      "page": "Seite",
+      "products": "Produkte",
+      "search_for": "Nach \"{{ terms }}\" suchen",
+      "results_with_count_and_term": {
+        "one": "{{ count }} Ergebnis für \"{{ terms }}\" gefunden",
+        "other": "{{ count }} Ergebnisse für \"{{ terms }}\" gefunden"
+      },
+      "results_pages_with_count": {
+        "one": "{{ count }} Seite",
+        "other": "{{ count }} Seiten"
+      },
+      "results_suggestions_with_count": {
+        "one": "{{ count }} Vorschlag",
+        "other": "{{ count }} Vorschläge"
+      },
+      "results_products_with_count": {
+        "one": "{{ count }} Produkt",
+        "other": "{{ count }} Produkte"
+      },
+      "suggestions": "Vorschläge",
+      "pages": "Seiten"
+    },
+    "cart": {
+      "cart": "Warenkorb"
+    },
+    "contact": {
+      "form": {
+        "name": "Name",
+        "email": "E-Mail",
+        "phone": "Telefonnummer",
+        "comment": "Kommentar",
+        "send": "Senden",
+        "post_success": "Danke, dass du uns kontaktiert hast. Wir werden uns so schnell wie möglich bei dir melden.",
+        "error_heading": "Bitte passe Folgendes an:",
+        "title": "Kontaktformular"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "announcement": "Ankündigung",
+      "menu": "Menü",
+      "cart_count": {
+        "one": "{{ count }} Artikel",
+        "other": "{{ count }} Artikel"
+      }
+    },
+    "cart": {
+      "title": "Dein Warenkorb",
+      "caption": "Artikel im Warenkorb",
+      "remove_title": "{{ title }} entfernen",
+      "note": "Spezielle Bestellanweisungen",
+      "checkout": "Auschecken",
+      "empty": "Dein Warenkorb ist leer",
+      "cart_error": "Beim Aktualisieren deines Warenkorbs ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+      "cart_quantity_error_html": "Du kannst deinem Warenkorb nur {{ quantity }} Stück dieses Artikels hinzufügen.",
+      "headings": {
+        "product": "Produkt",
+        "price": "Preis",
+        "total": "Gesamtsumme",
+        "quantity": "Anzahl",
+        "image": "Produktbild"
+      },
+      "update": "Aktualisieren",
+      "login": {
+        "title": "Hast du ein Konto?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Logge dich ein</a>, damit es beim Checkout schneller geht."
+      },
+      "estimated_total": "Geschätzte Gesamtkosten",
+      "new_estimated_total": "Neuer geschätzter Gesamtbetrag",
+      "duties_and_taxes_included_shipping_at_checkout_with_policy_html": "Inkl. Zollgebühren und Steuern. Rabatte und <a href=\"{{ link }}\">Versand</a> werden beim Checkout berechnet.",
+      "duties_and_taxes_included_shipping_at_checkout_without_policy": "Inkl. Zollgebühren und Steuern. Rabatte und Versand werden beim Checkout berechnet.",
+      "taxes_included_shipping_at_checkout_with_policy_html": "Inkl. Steuern. Rabatte und <a href=\"{{ link }}\">Versand</a> werden beim Checkout berechnet.",
+      "taxes_included_shipping_at_checkout_without_policy": "Inkl. Steuern. Rabatte und Versand werden beim Checkout berechnet.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html": "Inkl. Zollgebühren. Steuern, Rabatte und <a href=\"{{ link }}\">Versand</a> werden beim Checkout berechnet.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy": "Inkl. Zollgebühren. Steuern, Rabatte und Versand werden beim Checkout berechnet.",
+      "taxes_at_checkout_shipping_at_checkout_with_policy_html": "Steuern, Rabatte und <a href=\"{{ link }}\">Versand</a> werden beim Checkout berechnet.",
+      "taxes_at_checkout_shipping_at_checkout_without_policy": "Steuern, Rabatte und Versand werden beim Checkout berechnet."
+    },
+    "footer": {
+      "payment": "Zahlungsmethoden"
+    },
+    "featured_blog": {
+      "view_all": "Alle anzeigen",
+      "onboarding_title": "Blog-Beitrag",
+      "onboarding_content": "Verschaffe deinen Kunden eine Übersicht über deinen Blog-Beitrag"
+    },
+    "featured_collection": {
+      "view_all": "Alle anzeigen",
+      "view_all_label": "Alle Produkte in der Kollektion {{ collection_name }} anzeigen"
+    },
+    "collection_list": {
+      "view_all": "Alle anzeigen"
+    },
+    "collection_template": {
+      "title": "Kategorie",
+      "empty": "Keine Produkte gefunden",
+      "use_fewer_filters_html": "Verwende weniger Filter oder <a class=\"{{ class }}\" href=\"{{ link }}\">entferne alle</a>"
+    },
+    "video": {
+      "load_video": "Video laden: {{ description }}"
+    },
+    "slideshow": {
+      "load_slide": "Folie laden",
+      "previous_slideshow": "Vorherige Folie",
+      "next_slideshow": "Nächste Folie",
+      "pause_slideshow": "Slideshow pausieren",
+      "play_slideshow": "Slideshow abspielen",
+      "carousel": "Karussell",
+      "slide": "Folie"
+    },
+    "page": {
+      "title": "Seitentitel"
+    },
+    "announcements": {
+      "previous_announcement": "Vorherige Ankündigung",
+      "next_announcement": "Nächste Ankündigung",
+      "carousel": "Karussell",
+      "announcement": "Ankündigung",
+      "announcement_bar": "Ankündigungsleiste"
+    },
+    "quick_order_list": {
+      "product_total": "Produktzwischensumme",
+      "view_cart": "Warenkorb ansehen",
+      "each": "{{ money }}/Stück",
+      "product": "Produkt",
+      "variant": "Variante",
+      "variant_total": "Varianten insgesamt",
+      "items_added": {
+        "one": "{{ quantity }} Artikel hinzugefügt",
+        "other": "{{ quantity }} Artikel hinzugefügt"
+      },
+      "items_removed": {
+        "one": "{{ quantity }} Artikel entfernt",
+        "other": "{{ quantity }} Artikel entfernt"
+      },
+      "product_variants": "Produktvarianten",
+      "total_items": "Artikel gesamt",
+      "remove_all_items_confirmation": "Alle {{ quantity }} Artikel aus deinem Warenkorb entfernen?",
+      "remove_all": "Alle entfernen",
+      "cancel": "Abbrechen",
+      "remove_all_single_item_confirmation": "1 Artikel aus dem Warenkorb entfernen?",
+      "min_error": "Dieser Artikel hat ein Minimum von {{ min }}",
+      "max_error": "Dieser Artikel hat ein Maximum von {{ max }}",
+      "step_error": "Du kannst diesen Artikel nur in Abstufungen von {{ step }} hinzufügen."
+    }
+  },
+  "localization": {
+    "country_label": "Land/Region",
+    "language_label": "Sprache",
+    "update_language": "Sprache aktualisieren",
+    "update_country": "Land/Region aktualisieren",
+    "search": "Suchen",
+    "popular_countries_regions": "Beliebte Länder/Regionen",
+    "country_results_count": "{{ count }} Länder/Regionen gefunden"
+  },
+  "customer": {
+    "account": {
+      "title": "Konto",
+      "details": "Kontodetails",
+      "view_addresses": "Adressen anzeigen",
+      "return": "Zurück zu Kontodetails"
+    },
+    "account_fallback": "Konto",
+    "activate_account": {
+      "title": "Konto aktivieren",
+      "subtext": "Erstelle ein Passwort, um dein Konto zu aktiveren.",
+      "password": "Passwort",
+      "password_confirm": "Passwort bestätigen",
+      "submit": "Konto aktivieren",
+      "cancel": "Einladung ablehnen"
+    },
+    "addresses": {
+      "title": "Adressen",
+      "default": "Standard",
+      "add_new": "Neue Adresse hinzufügen",
+      "edit_address": "Adresse bearbeiten",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "company": "Unternehmen",
+      "address1": "Adresse 1",
+      "address2": "Adresse 2",
+      "city": "Ort",
+      "country": "Land/Region",
+      "province": "Bundesland/Provinz",
+      "zip": "PLZ",
+      "phone": "Telefonnummer",
+      "set_default": "Als Standard-Adresse festlegen",
+      "add": "Adresse hinzufügen",
+      "update": "Adresse aktualisieren",
+      "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "delete_confirm": "Bist du sicher, dass du diese Adresse löschen möchtest?"
+    },
+    "log_in": "Einloggen",
+    "log_out": "Abmelden",
+    "login_page": {
+      "cancel": "Abbrechen",
+      "create_account": "Konto erstellen",
+      "email": "E-Mail",
+      "forgot_password": "Hast du dein Passwort vergessen?",
+      "guest_continue": "Fortfahren",
+      "guest_title": "Als Gast fortsetzen",
+      "password": "Passwort",
+      "title": "Login",
+      "sign_in": "Anmelden",
+      "submit": "Senden",
+      "alternate_provider_separator": "oder"
+    },
+    "orders": {
+      "title": "Bestellhistorie",
+      "order_number": "Bestellung",
+      "order_number_link": "Bestellnummer {{ number }}",
+      "date": "Datum",
+      "payment_status": "Zahlungsstatus",
+      "fulfillment_status": "Fulfillmentstatus",
+      "total": "Gesamtsumme",
+      "none": "Du hast noch keine Bestellungen aufgegeben."
+    },
+    "recover_password": {
+      "title": "Setze dein Passwort zurück",
+      "subtext": "Wir werden dir eine E-Mail zum Zurücksetzen deines Passworts schicken",
+      "success": "Wir haben dir eine E-Mail mit einem Link zum Aktualisieren deines Passworts geschickt."
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Erstellen"
+    },
+    "reset_password": {
+      "title": "Passwort für Konto zurücksetzen",
+      "subtext": "Neues Passwort eingeben",
+      "password": "Passwort",
+      "password_confirm": "Passwort bestätigen",
+      "submit": "Passwort zurücksetzen"
+    },
+    "order": {
+      "title": "Bestellung {{ name }}",
+      "date_html": "Aufgegeben am {{ date }}",
+      "cancelled_html": "Bestellung storniert am {{ date }}",
+      "cancelled_reason": "Grund: {{ reason }}",
+      "billing_address": "Rechnungsadresse",
+      "payment_status": "Zahlungsstatus",
+      "shipping_address": "Lieferadresse",
+      "fulfillment_status": "Fulfillmentstatus",
+      "discount": "Rabatt",
+      "shipping": "Versand",
+      "tax": "Steuer",
+      "product": "Produkt",
+      "sku": "SKU",
+      "price": "Preis",
+      "quantity": "Menge",
+      "total": "Gesamtsumme",
+      "fulfilled_at_html": "Ausgeführt am {{ date }}",
+      "track_shipment": "Sendung nachverfolgen",
+      "tracking_url": "Tracking-Link",
+      "tracking_company": "Versanddienstleister",
+      "tracking_number": "Trackingnummer",
+      "subtotal": "Zwischensumme",
+      "total_duties": "Zollgebühren",
+      "total_refunded": "Zurückerstattet"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Hier ist dein {{ value }}-Gutschein für {{ shop }}!",
+      "subtext": "Dein Gutschein",
+      "gift_card_code": "Gutscheincode",
+      "shop_link": "Onlineshop besuchen",
+      "add_to_apple_wallet": "Zu Apple Wallet hinzufügen",
+      "qr_image_alt": "QR-Code – Scannen, um Gutschein einzulösen",
+      "copy_code": "Geschenkgutscheincode kopieren",
+      "expired": "Abgelaufen",
+      "copy_code_success": "Code erfolgreich kopiert",
+      "how_to_use_gift_card": "Verwende diesen Geschenkgutscheincode online oder verwende den QR-Code im Shop",
+      "expiration_date": "Gültig bis {{ expires_on }}"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Ich möchte dies als Geschenk senden",
+      "email_label": "Empfänger E-Mail",
+      "email": "E-Mail",
+      "name_label": "Name des Empfängers (optional)",
+      "name": "Name",
+      "message_label": "Nachricht (optional)",
+      "message": "Nachricht",
+      "max_characters": "Maximal {{ max_chars }} Zeichen",
+      "email_label_optional_for_no_js_behavior": "E-Mail-Adresse des Empfängers (optional)",
+      "send_on": "JJJJ-MM-TT",
+      "send_on_label": "Senden am (optional)",
+      "expanded": "Formular für den Empfänger des Gutscheins erweitert",
+      "collapsed": "Formular für den Empfänger des Gutscheins minimiert"
+    }
+  },
+  "shopify": {
+    "checkout": {
+      "thank_you": {
+        "checkout_again": "Zurück zur Kasse"
+      }
+    }
+  },
+  "gempages": {
+    "Newsletter": {
+      "success_msg_default": "Vielen Dank fürs Abonnieren!",
+      "err_msg_default": "E-Mail kann nicht gesendet werden. Bitte versuchen Sie es später noch einmal."
+    },
+    "Breadcrumb": {
+      "home": "Heim"
+    },
+    "Carousel": {
+      "no_slider": "Kein Schieberegler"
+    },
+    "CarouselV3": {
+      "no_slider": "Kein Schieberegler"
+    },
+    "IconListV2": {
+      "icons_not_found": "Symbole nicht gefunden"
+    },
+    "IconList": {
+      "icons_not_found": "Symbole nicht gefunden"
+    },
+    "IconListHoz": {
+      "icons_not_found": "Symbole nicht gefunden"
+    },
+    "Product": {
+      "product_not_found": "Produkt nicht gefunden"
+    },
+    "ProductList": {
+      "product_not_found": "Produkt nicht gefunden!",
+      "no_products_found": "Keine Produkte gefunden!",
+      "no_related_products": "Keine verwandten Produkte!"
+    },
+    "ProductListV3": {
+      "product_not_found": "Produkt nicht gefunden!",
+      "no_products_found": "Keine Produkte gefunden!",
+      "no_related_products": "Keine verwandten Produkte!"
+    },
+    "ProductTitle": {
+      "product_not_found": "Produkt nicht gefunden"
+    },
+    "ProductVariants": {
+      "please_select": "Bitte wählen Sie eine Option aus"
+    },
+    "StockCounter": {
+      "let_buy_now": "<mark>BEEIL DICH!</mark> JETZT KAUFEN LASSEN"
+    }
+  },
+  "customer_accounts": {
+    "B2B": {
+      "draft_order_details": {
+        "payment_status": {
+          "due_date": "Läuft ab am {{date}}",
+          "total_balance": "Gesamtsaldo",
+          "pending": {
+            "description_due_on_fulfillment_partially_paid_next": "Diese Bestellung wurde teilweise bezahlt. Es bleibt noch ein Restbetrag übrig."
+          }
+        }
+      }
+    },
+    "payment_methods": {
+      "add_payment_method": {
+        "subscription_contracts": {
+          "title": "Zahlungsmethode für wiederkehrende Bestellungen verwenden",
+          "product_details": "Produktinformationen",
+          "load_more": "Mehr laden",
+          "more_items": {
+            "one": "{{count}} Produkt zu",
+            "other": "{{count}} Produkte zu"
+          },
+          "product_count": {
+            "one": "{{count}} Produkt",
+            "other": "{{count}} Produkte"
+          }
+        },
+        "contracts_update_failed": "Einige Abonnementverträge konnten nicht aktualisiert werden.",
+        "subscription_contracts_updated": "{{succeeded}} von {{total}} Abonnements wurden aktualisiert",
+        "invalid_wallet_type_error": "Ungültiger Wallet-Typ.",
+        "updating_contracts": {
+          "one": "{{count}} Abonnementverträge werden aktualisiert...",
+          "other": "{{count}} Abonnementverträge werden aktualisiert..."
+        },
+        "contracts_updated": {
+          "one": "{{count}} Abonnementverträge wurden aktualisiert",
+          "other": "{{count}} Abonnementverträge wurden aktualisiert"
+        }
+      }
+    },
+    "account_menu": {
+      "aria_labels": {
+        "close_menu": "Menü schließen",
+        "back_to_main_menu": "Zurück zum Hauptmenü von {{title}}",
+        "open_submenu": "{{title}} , öffnet Untermenü",
+        "loading_menu": "Lademenü",
+        "sign_in_with_email": "Mit E-Mail anmelden",
+        "sign_in": "Einloggen"
+      }
+    }
+  },
+  "np": {
+    "common": {
+      "skip_link": "Zum Hauptinhalt springen",
+      "free_shipping_bar": "Kostenloser Versand ab {{ amount }}",
+      "add_to_cart": "In den Warenkorb",
+      "added": "In den Warenkorb gelegt",
+      "out_of_stock": "Derzeit nicht verfügbar",
+      "out_of_stock_badge": "Ausverkauft",
+      "b2b_badge": "B2B",
+      "b2b_price_aria": "B2B-Preis: {{ wholesale }} (regulärer Preis {{ retail }})",
+      "notify_me": "Benachrichtige mich",
+      "notify_me_email_placeholder": "Deine E-Mail",
+      "notify_me_confirmed": "Wir benachrichtigen dich, sobald das Produkt wieder verfügbar ist.",
+      "quick_view": "Schnellansicht",
+      "bestseller": "Bestseller",
+      "reviews": "Bewertungen",
+      "home": "Startseite",
+      "see_all": "Alle ansehen",
+      "all_products": "Alle Produkte",
+      "badge_new": "Neu",
+      "badge_sale": "Angebot",
+      "add_to_wishlist_aria": "{{ name }} zur Wunschliste hinzufügen",
+      "remove_from_wishlist_aria": "{{ name }} von der Wunschliste entfernen",
+      "quick_view_aria": "Schnellansicht: {{ name }}",
+      "add_to_cart_aria": "{{ name }} in den Warenkorb legen",
+      "notify_me_aria": "Benachrichtige mich bei Verfügbarkeit: {{ name }}",
+      "decrease_qty": "Menge verringern",
+      "increase_qty": "Menge erhöhen",
+      "close_quick_view_aria": "Schnellansicht schließen",
+      "close": "Schließen",
+      "email": "E-Mail-Adresse",
+      "dismiss_toast_aria": "Benachrichtigung schließen",
+      "breadcrumb": "Brotkrümelnavigation",
+      "eu_vat": "USt-IdNr."
+    },
+    "nav": {
+      "shop": "Shop",
+      "bestsellers": "Bestseller",
+      "recipes": "Rezepte",
+      "origin": "Unsere Herkunft",
+      "contact": "Kontakt",
+      "wishlist": "Merkliste",
+      "cart": "Warenkorb öffnen",
+      "search": "Suchen",
+      "menu": "Menü",
+      "b2b": "B2B"
+    },
+    "footer": {
+      "tagline": "Natürliche Gewürze, Nüsse, Trockenfrüchte und sonnengetrocknetes Gemüse von geprüfter Herkunft. Ein schwedisches Unternehmen mit transparenter Lieferkette.",
+      "categories_title": "Kategorien",
+      "help_title": "Kundenservice",
+      "newsletter_title": "Natürliche Aromen in deinem Postfach",
+      "newsletter_text": "Neuheiten, Rezepte und gelegentliche Rabatte. Kein Spam.",
+      "company_line_html": "Nature Pick ist eine Marke von <span class=\"np-em\">{{ company }}</span>, {{ address }} · USt-IdNr.: {{ vat }}",
+      "copyright": "© {{ year }} Nature Pick. Alle Rechte vorbehalten.",
+      "link_contact": "Kontakt",
+      "link_shipping": "Versand & Rücksendungen",
+      "link_recipes": "Rezepte",
+      "link_origin": "Herkunft der Produkte",
+      "link_spice_club": "Gewürz-Club",
+      "link_faq": "Häufig gestellte Fragen",
+      "link_terms": "Allgemeine Geschäftsbedingungen",
+      "link_privacy": "Datenschutzerklärung",
+      "link_b2b": "B2B-Zusammenarbeit"
+    },
+    "hero": {
+      "eyebrow": "From Sunny Eastern Fields",
+      "title": "Authentische Aromen Zentralasiens",
+      "subtitle": "Gewürze, Nüsse und Trockenfrüchte, sorgfältig ausgewählt in Usbekistan und der zentralasiatischen Region — direkt zu dir nach Hause geliefert.",
+      "cta": "Bestseller entdecken"
+    },
+    "trust_bar": {
+      "label": "Warum Nature Pick",
+      "item1_title": "Echte Herkunft",
+      "item1_text": "Ausgewählt aus den Regionen, zu denen diese Aromen natürlich gehören.",
+      "item2_title": "Einfache Zutaten",
+      "item2_text": "Ohne unnötige Komplexität und künstliche Zusatzstoffe. Einfach echtes Essen.",
+      "item3_title": "Östliches Erbe",
+      "item3_text": "Traditionelle zentralasiatische Aromen, angepasst an moderne europäische Küchen.",
+      "item4_title": "Sorgfältig verpackt",
+      "item4_text": "Ausgewählt und mit Sorgfalt verpackt, bevor sie bei dir ankommen."
+    },
+    "category_grid": {
+      "label": "Kategorien",
+      "title": "Wähle deine Kategorie"
+    },
+    "featured": {
+      "bestsellers_label": "Am meisten gekauft",
+      "bestsellers_title": "Bestseller",
+      "more_label": "Mehr entdecken",
+      "more_title": "Einen Versuch wert"
+    },
+    "origin_map": {
+      "label": "Der Weg des Geschmacks",
+      "title": "Vom Ferghanatal in deine Küche",
+      "hint": "Klicke auf einen Punkt der Route, um diese Etappe der Reise zu sehen.",
+      "step1_place": "Usbekistan",
+      "step1_title": "Wo alles beginnt",
+      "step1_text": "Mandeln, Aprikosen und Gewürze aus dem fruchtbaren Ferghanatal.",
+      "step2_place": "Ernte",
+      "step2_title": "Reifen unter der Sonne",
+      "step2_text": "Obst und Gemüse, traditionell und ohne Eile getrocknet.",
+      "step3_place": "Auswahl",
+      "step3_title": "Ausgewählt mit unserem Partner vor Ort",
+      "step3_text": "Sara Europe Exim lehnt jede Charge ab, die unseren Standards nicht entspricht.",
+      "step4_place": "Verpackung",
+      "step4_title": "Qualitätskontrolle in der EU",
+      "step4_text": "Verpackung und Qualitätskontrolle finden innerhalb der Europäischen Union statt.",
+      "step5_place": "Europa",
+      "step5_title": "Direkt zu dir nach Hause",
+      "step5_text": "Versand aus Schweden direkt zu dir nach Hause."
+    },
+    "brand_story": {
+      "label": "Woher wir kommen",
+      "title": "Aus Usbekistan, mit Liebe",
+      "text": "Unsere Reise beginnt in Usbekistan — einer Region, bekannt für Mandeln, Aprikosen, Trockenfrüchte und intensiv schmeckende Gewürze. Gemeinsam mit unserem lokalen Partner Sara Europe Exim wählen wir die Rohstoffe direkt an der Quelle aus, bevor sie sorgfältig verpackt und zu dir nach Hause versendet werden.",
+      "point1": "Rohstoffe, ausgewählt direkt in ihrer Herkunftsregion",
+      "point2": "Zusammenarbeit mit unserem lokalen Partner Sara Europe Exim bei Auswahl und Export",
+      "point3": "Traditionelle zentralasiatische Aromen, verpackt für die europäische Küche",
+      "cta": "Entdecke unsere Herkunft"
+    },
+    "testimonials": {
+      "label": "Kundenbewertungen",
+      "title": "Von unseren Kunden geliebt",
+      "quote1": "Die Mandeln haben einen ganz anderen, intensiveren Geschmack als die aus einem gewöhnlichen Geschäft. Ich bestelle sie regelmäßig.",
+      "author1": "Anna, Warschau",
+      "quote2": "Getrocknete Tomaten sind perfekt für hausgemachte Pasta. Man merkt, dass die Produkte gute Qualität haben und die Verpackung solide ist.",
+      "author2": "Marek, Krakau",
+      "quote3": "Das Paprikapulver riecht ganz anders als das aus dem Supermarkt. Die Bestellung kam schneller an, als ich erwartet hatte.",
+      "author3": "Kasia, Breslau"
+    },
+    "recipes_teaser": {
+      "label": "Rezepte aus dem Osten",
+      "title": "Koch etwas mit Nature Pick",
+      "cta": "Alle Rezepte"
+    },
+    "faq_section": {
+      "label": "Fragen & Antworten",
+      "title": "Häufig gestellte Fragen",
+      "text": "Keine Antwort gefunden? Schreib uns — wir helfen gerne, bevor du bestellst."
+    },
+    "newsletter_cta": {
+      "label": "-10% auf deine erste Bestellung",
+      "title": "Erhalte 10% Rabatt auf deine erste Bestellung",
+      "text": "Melde dich an, um deinen Rabattcode sowie Neuigkeiten zu Produkten, Rezepten und saisonalen Artikeln zu erhalten.",
+      "placeholder": "Deine E-Mail-Adresse",
+      "submit": "Anmelden",
+      "confirmed": "Danke für deine Anmeldung!"
+    },
+    "collection": {
+      "all_products_title": "Alle Produkte",
+      "all_products_description": "Das gesamte Nature-Pick-Sortiment an einem Ort — von Gewürzen bis zu fertigen Geschenksets. Jedes Produkt zeigt Herkunftsland, Zutaten und Allergene.",
+      "product_count": {
+        "one": "{{ count }} Produkt",
+        "other": "{{ count }} Produkte"
+      },
+      "filter_all": "Alle",
+      "filter_in_stock_only": "Nur verfügbare",
+      "sort_label": "Sortieren",
+      "sort_popular": "Beliebteste",
+      "sort_price_asc": "Preis: aufsteigend",
+      "sort_price_desc": "Preis: absteigend",
+      "sort_rating": "Bestbewertet",
+      "no_results": "Keine Produkte entsprechen den ausgewählten Filtern.",
+      "empty_category": "Keine Produkte in dieser Kategorie."
+    },
+    "product": {
+      "price_per_kg": "Preis pro kg",
+      "how_to_use": "Verwendung",
+      "shipping_time": "Schneller Versand aus Schweden",
+      "return_days": "14 Tage Rückgaberecht",
+      "spec_weight": "Gewicht",
+      "spec_ingredients": "Zutaten",
+      "spec_origin": "Herkunftsland",
+      "spec_storage": "Lagerung",
+      "spec_allergens": "Allergene",
+      "spec_availability": "Verfügbarkeit",
+      "available_text": "Auf Lager, versandbereit",
+      "nutrition_title": "Nährwerte",
+      "nutrition_note": "Durchschnittswerte pro 100 g Produkt.",
+      "nutrition_energy": "Brennwert",
+      "nutrition_fat": "Fett",
+      "nutrition_saturates": "davon gesättigte Fettsäuren",
+      "nutrition_carbs": "Kohlenhydrate",
+      "nutrition_sugars": "davon Zucker",
+      "nutrition_fiber": "Ballaststoffe",
+      "nutrition_protein": "Eiweiß",
+      "nutrition_salt": "Salz",
+      "related_title": "Das könnte dir auch gefallen",
+      "view_full_details": "Vollständige Produktdetails ansehen",
+      "gallery_thumb_aria": "Bild {{ index }} anzeigen",
+      "default_origin": "Usbekistan"
+    },
+    "gift_box": {
+      "your_box": "Dein Set",
+      "products": {
+        "one": "{{ count }} Produkt",
+        "other": "{{ count }} Produkte"
+      },
+      "min_items_hint": "Wähle mindestens {{ min }} Produkte, um dein Set zusammenzustellen.",
+      "total": "Gesamt",
+      "add_box": "Set in den Warenkorb legen",
+      "added": "Set hinzugefügt"
+    },
+    "wishlist": {
+      "title": "Merkliste",
+      "empty_title": "Deine Merkliste ist leer",
+      "empty_text": "Klicke auf das Herz-Symbol eines Produkts, um es für später zu speichern.",
+      "browse": "Produkte durchstöbern",
+      "count": {
+        "one": "{{ count }} Produkt",
+        "other": "{{ count }} Produkte"
+      }
+    },
+    "cart": {
+      "title": "Warenkorb",
+      "summary": "Zusammenfassung",
+      "your_cart": "Dein Warenkorb",
+      "empty": "Dein Warenkorb ist leer.",
+      "empty_title": "Dein Warenkorb ist leer",
+      "browse": "Produkte durchstöbern",
+      "free_shipping_unlocked": "Du hast kostenlosen Versand freigeschaltet!",
+      "free_shipping_remaining": "Füge noch {{ amount }} hinzu für kostenlosen Versand",
+      "subtotal": "Zwischensumme",
+      "shipping": "Versand",
+      "free": "Kostenlos",
+      "total": "Gesamt",
+      "checkout": "Zur Kasse",
+      "view_cart": "Warenkorb ansehen",
+      "go_to_cart": "Zum Warenkorb",
+      "secure": "Sichere Zahlung, verschlüsselte Daten",
+      "shipping_note": "Schneller Versand aus Schweden",
+      "returns_note": "14 Tage Rückgabe ohne Angabe von Gründen",
+      "remove": "Entfernen",
+      "close_aria": "Warenkorb schließen",
+      "remove_aria": "Aus dem Warenkorb entfernen",
+      "calculated_at_checkout": "Wird an der Kasse berechnet",
+      "note_label": "Bestellhinweis (optional)"
+    },
+    "quick_contact": {
+      "title": "Hast du eine Frage?",
+      "subtitle": "Wir bieten keinen Live-Chat, antworten aber schnell.",
+      "send_message": "Nachricht senden",
+      "faq": "Häufige Fragen",
+      "open_aria": "Schnellkontakt öffnen",
+      "close_aria": "Schnellkontakt schließen"
+    },
+    "contact_form": {
+      "name": "Vor- und Nachname",
+      "email": "E-Mail-Adresse",
+      "order_number": "Bestellnummer (optional)",
+      "message": "Wie können wir helfen?",
+      "submit": "Nachricht senden",
+      "sent_title": "Nachricht gesendet",
+      "sent_text": "Danke für deine Nachricht. Wir antworten innerhalb von 24 Stunden an Werktagen."
+    },
+    "cookie_consent": {
+      "text_html": "Wir verwenden Cookies, die für den Betrieb des Shops notwendig sind, sowie – mit deiner Zustimmung – Analyse- und Marketing-Cookies. Mehr dazu in unserer <a href=\"{{ privacy_url }}\" class=\"np-underline-link\">Datenschutzerklärung</a>.",
+      "reject_all": "Nur notwendige",
+      "accept_all": "Alle akzeptieren"
+    },
+    "waitlist_form": {
+      "placeholder": "Deine E-Mail-Adresse",
+      "submit": "Eintragen",
+      "confirmed": "Du stehst auf der Liste — wir melden uns!"
+    },
+    "faq": {
+      "item1": {
+        "question": "Welche Produkte bietet Nature Pick an?",
+        "answer": "Natürliche Gewürze, Nüsse, Kerne, Trockenfrüchte und sonnengetrocknetes Gemüse sowie fertige Geschenksets. Die vollständige Liste findest du unter „Alle Produkte“."
+      },
+      "item2": {
+        "question": "Woher stammen eure Produkte?",
+        "answer": "Viele unserer Produkte — darunter Mandeln — stammen aus Usbekistan, wo wir sie gemeinsam mit unserem lokalen Partner Sara Europe Exim auswählen. Andere Rohstoffe stammen von geprüften regionalen Lieferanten — das genaue Herkunftsland jedes Produkts findest du auf der jeweiligen Produktseite. Verpackung und Qualitätskontrolle erfolgen innerhalb der Europäischen Union."
+      },
+      "item3": {
+        "question": "In welche Länder liefert ihr?",
+        "answer": "Wir versenden aus Schweden nach Schweden, Deutschland, Polen und in viele weitere europäische Länder. Versandkosten und Lieferzeiten für dein Land siehst du an der Kasse, die vollständige Übersicht findest du auf der Seite „Versand & Rückgabe“."
+      },
+      "item4": {
+        "question": "Bietet ihr kostenlosen Versand an?",
+        "answer": "Ja — der Versand ist ab einem Mindestbestellwert kostenlos, der von deinem Land abhängt. Den Betrag siehst du im Warenkorb, und die Versandkosten werden immer an der Kasse berechnet, bevor du deine Zahlungsdaten eingibst."
+      },
+      "item5": {
+        "question": "Kann ich ein Produkt zurückgeben?",
+        "answer": "Du hast gemäß EU-Verbraucherrecht 14 Tage Zeit, um vom Vertrag zurückzutreten, ohne einen Grund anzugeben. Details und das Rückgabeformular findest du auf der Seite „Versand & Rückgabe“."
+      },
+      "item6": {
+        "question": "Welche Zahlungsmethoden kann ich nutzen?",
+        "answer": "Wir akzeptieren die an der Kasse angezeigten Zahlungsmethoden — Karten und lokale Optionen für dein Land. Alle Zahlungen werden verschlüsselt und von einem externen Zahlungsanbieter verarbeitet."
+      },
+      "item7": {
+        "question": "Wie kann ich den Kundenservice kontaktieren?",
+        "answer": "Am schnellsten über das Formular auf der Seite „Kontakt“ oder per E-Mail an {{ email }}. Wir antworten innerhalb von 24 Stunden an Werktagen."
+      },
+      "item8": {
+        "question": "Wer steht hinter der Marke Nature Pick?",
+        "answer": "Nature Pick ist eine Marke des schwedischen Unternehmens {{ company }} ({{ address }}, USt-IdNr.: {{ vat }}), das natürliche Lebensmittel in mehreren europäischen Märkten, darunter Polen, auswählt und vertreibt."
+      },
+      "page_eyebrow": "FAQ",
+      "page_title": "Häufig gestellte Fragen",
+      "page_description": "Antworten auf die häufigsten Fragen zu Bestellungen, Lieferung und Nature-Pick-Produkten.",
+      "all_questions_title": "Alle Fragen"
+    },
+    "currency_switcher": {
+      "label": "Land und Währung",
+      "note": "Preise und Währung richten sich nach dem gewählten Land."
+    },
+    "contact_page": {
+      "meta_title": "Kontakt",
+      "meta_description": "Kontaktiere den Nature Pick Kundenservice — Kontaktformular, E-Mail und Firmendaten.",
+      "eyebrow": "Kontakt",
+      "title": "Wie können wir helfen?",
+      "description": "Wir antworten innerhalb von 24 Stunden an Werktagen (Mo.–Fr.).",
+      "email_title": "E-Mail",
+      "response_time_title": "Antwortzeit",
+      "response_time_text": "Innerhalb von 24 Stunden an Werktagen",
+      "company_title": "Unternehmen",
+      "phone_title": "Telefon"
+    },
+    "about_page": {
+      "meta_title": "Unsere Herkunft",
+      "meta_description": "Entdecke die Geschichte von Nature Pick — von den Feldern Usbekistans über Auswahl und Verpackung bis zur Lieferung zu dir nach Hause.",
+      "eyebrow": "Unsere Herkunft",
+      "title": "Authentische Aromen Zentralasiens",
+      "description": "Nature Pick ist eine Marke, die die traditionellen Aromen Usbekistans und der zentralasiatischen Region auf europäische Tische bringt — mit klar angegebener Herkunft jedes Produkts.",
+      "section_label": "Aus Usbekistan, mit Liebe",
+      "section_title": "Eine Geschichte, die an der Quelle beginnt",
+      "story_p1_html": "Unsere Reise beginnt in Usbekistan — einer Region, die für Mandeln, Aprikosen, Trockenfrüchte und Gewürze von außergewöhnlicher Qualität bekannt ist. Gemeinsam mit unserem lokalen Partner <strong class=\"np-strong\">Sara Europe Exim</strong> wählen wir Rohstoffe direkt an der Quelle aus und sorgen dafür, dass sie in unveränderter, authentischer Qualität nach Europa gelangen.",
+      "story_p2": "Unser Onlineshop beliefert Kunden in ganz Europa: Wir versenden aus Schweden, und Versandkosten sowie Lieferzeiten für dein Land werden an der Kasse angezeigt.",
+      "cta_contact": "Nimm Kontakt mit uns auf",
+      "journey1_title": "UNSERE HERKUNFT",
+      "journey1_text": "Usbekistan — eine Region bekannt für Mandeln, Aprikosen, Trockenfrüchte und intensiv aromatische Gewürze.",
+      "journey2_title": "UNSERE PRODUKTE",
+      "journey2_text": "Sorgfältig ausgewählte Gewürze, Nüsse, Trockenfrüchte und sonnengetrocknetes Gemüse.",
+      "journey3_title": "UNSERE MENSCHEN",
+      "journey3_text": "NP Market AB und unser lokaler Partner in Usbekistan, Sara Europe Exim.",
+      "journey4_title": "UNSER VERSPRECHEN",
+      "journey4_text": "Transparenz bei Herkunft, einfachen Zutaten und Qualität — ohne Ausnahmen.",
+      "journey5_title": "UNSER WEG",
+      "journey5_text": "Vom Osten auf europäische Tische: Auswahl, Verpackung und Lieferung direkt zu dir nach Hause.",
+      "registration_title": "Firmendaten",
+      "registration_text": "{{ company }} · {{ address }} · {{ vat_label }}: {{ vat }}",
+      "cta_privacy": "Datenschutzerklärung"
+    },
+    "origin_page": {
+      "meta_title": "Herkunft der Produkte",
+      "meta_description": "Woher die Produkte von Nature Pick stammen und wie sie von Usbekistan auf deinen Tisch gelangen.",
+      "eyebrow": "Herkunft",
+      "title": "Scannen und die Geschichte entdecken",
+      "description": "Derselbe QR-Code, den du auf der Verpackung findest, führt genau hierher.",
+      "qr_caption": "Der Code von der Nature-Pick-Verpackung",
+      "why_title": "Warum wir das zeigen",
+      "why_text": "Wir wollen nicht, dass „natürliche Herkunft“ nur ein Slogan auf dem Etikett ist. Dieser QR-Code führt zu dieser Seite — einer Beschreibung der Region, des Partners und des Prozesses, den das Produkt durchläuft, bevor es zu dir gelangt. Es ist dieselbe Geschichte für jede Packung eines bestimmten Produkts, nicht Daten zu einer einzelnen Sendung — wir versprechen ehrlich lieber keine Rückverfolgung, die wir nicht haben.",
+      "region_title": "Herkunftsregion",
+      "region_text": "Usbekistan — Mandeln, Aprikosen und Gewürze aus dem Ferganatal.",
+      "partner_title": "Partner vor Ort",
+      "partner_text": "Sara Europe Exim wählt Rohstoffe direkt an der Quelle aus.",
+      "packing_title": "Verpackung in der EU",
+      "packing_text": "Qualitätskontrolle und Konfektionierung erfolgen innerhalb der Europäischen Union.",
+      "delivery_title": "Lieferung zu dir nach Hause",
+      "delivery_text": "Versand aus Schweden; die Lieferzeit für dein Land siehst du an der Kasse.",
+      "cta_full_story": "Lies die ganze Nature-Pick-Geschichte"
+    },
+    "b2b_page": {
+      "meta_title": "B2B-Partnerschaft",
+      "meta_description": "Großhandelsbestellungen von Nature Pick für Restaurants, Geschäfte und Vertriebspartner.",
+      "eyebrow": "B2B-Partnerschaft",
+      "title": "Großhandelsbestellungen für Unternehmen",
+      "description": "Wir liefern natürliche Gewürze, Nüsse und Trockenfrüchte in größeren Mengen — mit individuellen Preisen und Lieferbedingungen. Das ist ein separater Kanal zum Einzelhandel.",
+      "audience_title": "Für wen dieses Angebot ist",
+      "audience1": "Lebensmittelgeschäfte und Feinkostläden",
+      "audience2": "Restaurants und Catering",
+      "audience3": "Großhändler und Vertriebspartner",
+      "audience4": "Eigenmarken (Private Label)",
+      "form_note": "Fülle das Formular aus, und unser Team meldet sich innerhalb von 2 Werktagen mit einem individuellen Angebot und den Partnerschaftsbedingungen."
+    },
+    "b2b_auth": {
+      "tab_register": "Unternehmen registrieren",
+      "tab_login": "Anmelden",
+      "tab_quote": "Angebot anfragen",
+      "company_name": "Firmenname",
+      "tax_id": "USt-IdNr. (optional)",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "register_submit": "Unternehmen registrieren",
+      "login_submit": "Anmelden",
+      "register_hint": "Wir prüfen dein Unternehmen manuell und antworten per E-Mail, in der Regel innerhalb von 2 Werktagen. Nach der Freigabe meldest du dich mit derselben E-Mail-Adresse an und siehst die Großhandelspreise.",
+      "active_title": "B2B-Modus aktiv",
+      "active_text": "Angemeldet als {{ company }}. Dein Firmenkonto ist aktiv.",
+      "browse_cta": "Shop durchsuchen",
+      "logout": "Abmelden",
+      "header_active": "Großhandelspreise aktiv — {{ company }}",
+      "header_logout": "Abmelden",
+      "login_hint": "Dein Konto ist bereits freigeschaltet? Melde dich mit deinem Firmenkonto an, um die Großhandelspreise zu sehen.",
+      "oib": "OIB / Firmennummer",
+      "vat_number": "USt-IdNr.",
+      "vat_hint": "USt-IdNr. mit Ländervorwahl, z. B. HR12345678901. Kroatische Unternehmen geben ihre OIB an, andere Länder ihre Firmen-Registernummer. Alle Felder sind Pflichtfelder.",
+      "error_id": "Gib deine Firmen-Registernummer ein (5–20 Zeichen).",
+      "verifying": "Wir prüfen dein Unternehmen …",
+      "result_approved_title": "Unternehmen verifiziert",
+      "result_approved_text": "Dein Firmenkonto ist bereit. Melde dich mit der angegebenen E-Mail-Adresse an — wir senden dir einen Anmeldecode oder einen Aktivierungslink —, um die Großhandelspreise zu sehen.",
+      "result_pending_title": "Danke — wir prüfen dein Unternehmen",
+      "result_pending_text": "Wir konnten deine Angaben nicht automatisch bestätigen. Unser Team prüft sie und antwortet per E-Mail, in der Regel innerhalb von 2 Werktagen.",
+      "result_exists_title": "Du hast bereits ein Firmenkonto",
+      "result_exists_text": "Diese E-Mail-Adresse ist bereits für den Großhandel registriert. Melde dich an, um deine Preise zu sehen.",
+      "sent_title": "Danke — wir prüfen dein Unternehmen",
+      "sent_text": "Wir haben deine Anfrage erhalten. Wir prüfen deine Angaben und antworten per E-Mail, in der Regel innerhalb von 2 Werktagen. Sobald dein Unternehmen freigegeben ist, meldest du dich mit derselben E-Mail-Adresse an und siehst die Großhandelspreise.",
+      "error_required": "Bitte fülle dieses Feld aus.",
+      "error_email": "Gib eine gültige E-Mail-Adresse ein.",
+      "error_oib": "Die OIB muss 11 Ziffern und eine gültige Prüfziffer haben.",
+      "error_vat": "Gib die USt-IdNr. mit Ländervorwahl ein, z. B. HR12345678901.",
+      "error_generic": "Etwas ist schiefgelaufen. Bitte versuche es gleich noch einmal."
+    },
+    "spice_club_page": {
+      "meta_title": "Gewürzclub",
+      "meta_description": "Ein monatliches Überraschungspaket mit Gewürzen und Trockenfrüchten aus Zentralasien — trag dich in die Warteliste ein.",
+      "eyebrow": "Demnächst",
+      "title": "Nature Pick Gewürzclub",
+      "description": "Ein monatliches Paket mit einem sorgfältig ausgewählten Produkt aus Zentralasien. Wir arbeiten noch daran — trag dich ein und zeig uns, dass es sich lohnt.",
+      "how_title": "So wird es funktionieren",
+      "step1_title": "Jeden Monat ein neuer Geschmack",
+      "step1_text": "Ein Produkt, das noch nicht in unserem festen Sortiment ist, direkt in deinen Briefkasten.",
+      "step2_title": "Ohne Verpflichtung",
+      "step2_text": "Kündige, wann du willst — mit einem Klick, ohne Fragen.",
+      "step3_title": "Die Geschichte jedes Produkts",
+      "step3_text": "Jedem Paket liegt eine kurze Karte mit Herkunft und Verwendungstipps bei.",
+      "waitlist_label": "Warteliste",
+      "waitlist_title": "Sei als Erste(r) dabei, wenn wir starten",
+      "waitlist_text": "Jetzt keine Verpflichtung und keine Zahlung — nur eine E-Mail, sobald sich der Gewürzclub anmelden lässt."
+    },
+    "shipping_returns_page": {
+      "meta_title": "Versand & Rückgabe",
+      "meta_description": "Versand- und Rückgaberichtlinie von Nature Pick — Versandkosten je Land und die Regeln für den Rücktritt vom Kauf.",
+      "eyebrow": "Versand & Rückgabe",
+      "title": "Versand & Rückgabe",
+      "contact_prompt": "Etwas unklar oder ein ungewöhnlicher Fall? Schreib uns — wir lesen jede Nachricht.",
+      "cta_contact": "Schreib uns",
+      "shipping_title": "Versandrichtlinie",
+      "refund_title": "Lieferung und Widerrufsrecht"
+    },
+    "search": {
+      "placeholder": "Produkte suchen...",
+      "no_results": "Keine Ergebnisse für diese Suche.",
+      "close_aria": "Suche schließen",
+      "open_aria": "Suchen"
+    },
+    "categories": {
+      "notter_snacks": {
+        "name": "Nüsse & Snacks",
+        "tagline": "Knusprig, geröstet, ohne unnötige Zusätze",
+        "description": "Mandeln, Erdnüsse und Kerne, in kleinen Chargen geröstet, um natürlichen Geschmack und Knusprigkeit zu bewahren."
+      },
+      "naturliga_kryddor": {
+        "name": "Natürliche Gewürze",
+        "tagline": "Intensives Aroma direkt in den Topf",
+        "description": "Gemahlene und getrocknete Gewürze — von süßem Paprika bis Kurkuma — ohne Konservierungsstoffe oder künstliche Füllstoffe."
+      },
+      "torkad_frukt": {
+        "name": "Trockenfrüchte",
+        "tagline": "Natürliche Süße für einen gesunden Snack",
+        "description": "Goji-Beeren und andere Trockenfrüchte, ohne Zuckerzusatz getrocknet und direkt aus der Packung verzehrfertig."
+      },
+      "soltorkade_gronsaker": {
+        "name": "Sonnengetrocknetes Gemüse",
+        "tagline": "Der konzentrierte Geschmack des Sommers",
+        "description": "Getrocknete Tomaten, Zwiebeln und Paprikaflocken — perfekt für Saucen, Aufstriche und Eintöpfe."
+      },
+      "baljvaxter": {
+        "name": "Hülsenfrüchte",
+        "tagline": "Pflanzliches Protein für jeden Tag",
+        "description": "Geröstete Kichererbsen und andere Hülsenfrüchte — ein sättigender Snack oder die Basis für hausgemachten Hummus."
+      },
+      "ortteer": {
+        "name": "Kräutertees",
+        "tagline": "Natürliche Mischungen zum Aufbrühen",
+        "description": "Getrocknete Kräuter und Kräutermischungen für den täglichen Aufguss."
+      },
+      "sotsaker_delikatesser": {
+        "name": "Süßigkeiten & Delikatessen",
+        "tagline": "Kleine Freuden aus natürlichen Zutaten",
+        "description": "Ausgewählte Spezialitäten zum Kaffee, als Dessert oder als Geschenk."
+      },
+      "gavopaket": {
+        "name": "Geschenksets",
+        "tagline": "Stell dein eigenes Geschenk aus natürlichen Produkten zusammen",
+        "description": "Wähle mindestens 3 Produkte, die zusammen versendet werden — ein fertiges, personalisiertes Geschenk."
+      }
+    },
+    "recipes": {
+      "page_title": "Rezepte aus dem Osten",
+      "page_description": "Einfache Gerichte und Aufgüsse mit unseren Gewürzen, Nüssen und Trockenfrüchten — mit einer Zutatenliste, die Sie direkt in den Warenkorb legen können.",
+      "ingredients_title": "Zutaten",
+      "steps_title": "Zubereitung"
+    },
+    "blog": {
+      "no_articles": "Noch keine Beiträge."
+    }
+  }
+}

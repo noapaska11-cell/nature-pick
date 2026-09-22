@@ -1,0 +1,124 @@
+{%- comment -%}
+  Cart page (React <CartClient />) on top of Shopify's real cart. Quantity buttons talk to
+  /cart/change.js (script re-renders this section through the Section Rendering API);
+  the checkout button posts the standard cart form to Shopify's hosted checkout.
+{%- endcomment -%}
+<div data-cart-page data-section-id="{{ section.id }}" data-cart-count="{{ cart.item_count }}">
+  {%- if cart.item_count == 0 -%}
+    <div class="container-page flex flex-col items-center gap-4 py-24 text-center">
+      {% render 'icon', name: 'cart', class: 'h-12 w-12 text-[var(--color-charcoal-soft)] opacity-40' %}
+      <h1 class="font-display text-2xl font-semibold text-[var(--color-charcoal)]">{{ 'np.cart.empty_title' | t }}</h1>
+      <p class="text-[var(--color-charcoal-soft)]">{{ 'np.cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn-primary mt-2">{{ 'np.cart.browse' | t }}</a>
+    </div>
+  {%- else -%}
+    <div class="container-page py-10">
+      <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'np.cart.title' | t }}</h1>
+
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form" class="mt-8 grid gap-10 lg:grid-cols-[1fr_22rem]">
+        <div>
+          {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
+          {%- if progress_html contains 'data-free-shipping' -%}
+            <div class="mb-6 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3">{{ progress_html }}</div>
+          {%- endif -%}
+
+          <p data-cart-error hidden role="alert" class="mb-3 rounded-xl bg-[var(--color-paprika-light)] px-3 py-2 text-sm text-[var(--color-paprika-dark)]"></p>
+
+          <ul class="flex flex-col divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)]">
+            {%- for item in cart.items -%}
+              {%- capture weight_label -%}{%- render 'np-weight', grams: item.variant.weight -%}{%- endcapture -%}
+              {%- assign weight_label = weight_label | strip -%}
+              <li class="flex gap-4 p-4" data-cart-line data-line-key="{{ item.key }}">
+                <a href="{{ item.url }}" class="block h-24 w-24 flex-shrink-0" tabindex="-1" aria-hidden="true">
+                  {%- render 'np-product-image', image: item.image, alt: item.image.alt, class: 'h-24 w-24 rounded-xl', sizes: '96px', widths: '96, 192, 288' -%}
+                </a>
+                <div class="flex flex-1 flex-col justify-between gap-3">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <a href="{{ item.url }}" class="font-display font-medium text-[var(--color-charcoal)] hover:text-[var(--color-paprika-dark)]">{{ item.product.title | escape }}</a>
+                      {%- if item.product.has_only_default_variant == false -%}
+                        <p class="text-sm text-[var(--color-charcoal-soft)]">{{ item.variant.title | escape }}</p>
+                      {%- endif -%}
+                      {%- if weight_label != '' -%}
+                        <p class="text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
+                      {%- endif -%}
+                      {%- for allocation in item.line_level_discount_allocations -%}
+                        <p class="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-olive-dark)]">
+                          {% render 'icon', name: 'check', class: 'h-3 w-3' %} {{ allocation.discount_application.title | escape }}
+                        </p>
+                      {%- endfor -%}
+                    </div>
+                    <span class="font-display font-semibold">
+                      {%- if item.original_line_price > item.final_line_price -%}
+                        <s class="mr-1 text-xs font-normal text-[var(--color-charcoal-soft)]">{{ item.original_line_price | money_without_trailing_zeros }}</s>
+                      {%- endif -%}
+                      {{ item.final_line_price | money_without_trailing_zeros }}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center rounded-full border border-[var(--color-line)]">
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | minus: 1 }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                        {% render 'icon', name: 'minus', class: 'h-3.5 w-3.5' %}
+                      </button>
+                      <span class="min-w-[2rem] text-center text-sm">{{ item.quantity }}</span>
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | plus: 1 }}" aria-label="{{ 'np.common.increase_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                        {% render 'icon', name: 'plus', class: 'h-3.5 w-3.5' %}
+                      </button>
+                    </div>
+                    <a href="{{ item.url_to_remove }}" data-cart-change data-line-key="{{ item.key }}" data-quantity="0" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika)]">{{ 'np.cart.remove' | t }}</a>
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if settings.enable_cart_note -%}
+            <div class="mt-6">
+              <label for="CartNote" class="mb-2 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.cart.note_label' | t }}</label>
+              <textarea id="CartNote" name="note" rows="3" class="input-field resize-none">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <aside class="h-fit rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+          <h2 class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'np.cart.summary' | t }}</h2>
+          <div class="mt-4 flex flex-col gap-2 text-sm text-[var(--color-charcoal-soft)]">
+            <div class="flex justify-between">
+              <span>{{ 'np.cart.subtotal' | t }}</span>
+              <span>{{ cart.original_total_price | money_without_trailing_zeros }}</span>
+            </div>
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div class="flex justify-between text-[var(--color-olive-dark)]">
+                <span>{{ discount.title | escape }}</span>
+                <span>-{{ discount.total_allocated_amount | money_without_trailing_zeros }}</span>
+              </div>
+            {%- endfor -%}
+            <div class="flex justify-between">
+              <span>{{ 'np.cart.shipping' | t }}</span>
+              <span>{{ 'np.cart.calculated_at_checkout' | t }}</span>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-between border-t border-[var(--color-line)] pt-4 font-display text-lg font-semibold text-[var(--color-charcoal)]">
+            <span>{{ 'np.cart.total' | t }}</span>
+            <span>{{ cart.total_price | money_with_currency }}</span>
+          </div>
+          <button type="submit" name="checkout" class="btn-primary mt-5 w-full">{{ 'np.cart.checkout' | t }}</button>
+          <div class="mt-4 flex flex-col gap-1.5 text-xs text-[var(--color-charcoal-soft)]">
+            <span class="flex items-center gap-1.5">{% render 'icon', name: 'shield', class: 'h-3.5 w-3.5' %} {{ 'np.cart.secure' | t }}</span>
+            <span class="flex items-center gap-1.5">{% render 'icon', name: 'truck', class: 'h-3.5 w-3.5' %} {{ 'np.cart.shipping_note' | t }}</span>
+            <span class="flex items-center gap-1.5">{% render 'icon', name: 'check', class: 'h-3.5 w-3.5' %} {{ 'np.cart.returns_note' | t }}</span>
+          </div>
+        </aside>
+      </form>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "enabled_on": {
+    "templates": ["cart"]
+  }
+}
+{% endschema %}

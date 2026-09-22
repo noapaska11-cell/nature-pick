@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-product",
+      "blocks": {
+        "judgeme_badge": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "judgeme_badge"
+      ],
+      "settings": {
+        "show_dynamic_checkout": false,
+        "show_sticky_bar": true,
+        "show_trust": true
+      }
+    },
+    "recommendations": {
+      "type": "np-product-recommendations",
+      "settings": {
+        "products_to_show": 4
+      }
+    },
+    "apps": {
+      "type": "np-apps",
+      "blocks": {
+        "judgeme_widget": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judgeme_widget"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "recommendations",
+    "apps"
+  ]
+}

@@ -1,0 +1,64 @@
+{%- liquid
+  assign company = settings.company_name
+  assign address = settings.company_address
+  assign vat = settings.company_vat
+  assign vat_label = 'np.common.eu_vat' | t
+-%}
+<section class="container-page grid gap-10 py-14 lg:grid-cols-[1fr_1.2fr]">
+  <div class="flex flex-col gap-6">
+    {%- if settings.contact_email != blank -%}
+      <div class="card-surface p-6">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-paprika-light)] text-[var(--color-paprika-dark)]">
+          {% render 'icon', name: 'mail', class: 'h-5 w-5' %}
+        </span>
+        <h2 class="mt-4 font-display text-lg font-medium text-[var(--color-charcoal)]">{{ 'np.contact_page.email_title' | t }}</h2>
+        <p class="mt-1 text-sm text-[var(--color-charcoal-soft)]"><a href="mailto:{{ settings.contact_email }}" class="hover:text-[var(--color-paprika-dark)]">{{ settings.contact_email }}</a></p>
+      </div>
+    {%- endif -%}
+
+    {%- if settings.contact_phone != blank -%}
+      <div class="card-surface p-6">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-paprika-light)] text-[var(--color-paprika-dark)]">
+          {% render 'icon', name: 'phone', class: 'h-5 w-5' %}
+        </span>
+        <h2 class="mt-4 font-display text-lg font-medium text-[var(--color-charcoal)]">{{ 'np.contact_page.phone_title' | t }}</h2>
+        <p class="mt-1 text-sm text-[var(--color-charcoal-soft)]"><a href="tel:{{ settings.contact_phone | replace: ' ', '' }}" class="hover:text-[var(--color-paprika-dark)]">{{ settings.contact_phone }}</a></p>
+      </div>
+    {%- endif -%}
+
+    <div class="card-surface p-6">
+      <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">
+        {% render 'icon', name: 'clock', class: 'h-5 w-5' %}
+      </span>
+      <h2 class="mt-4 font-display text-lg font-medium text-[var(--color-charcoal)]">{{ 'np.contact_page.response_time_title' | t }}</h2>
+      <p class="mt-1 text-sm text-[var(--color-charcoal-soft)]">{{ 'np.contact_page.response_time_text' | t }}</p>
+    </div>
+
+    <div class="card-surface p-6">
+      <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal)]">
+        {% render 'icon', name: 'map-pin', class: 'h-5 w-5' %}
+      </span>
+      <h2 class="mt-4 font-display text-lg font-medium text-[var(--color-charcoal)]">{{ 'np.contact_page.company_title' | t }}</h2>
+      <p class="mt-1 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">
+        {{ company }}, {{ address }}
+        {%- if vat != blank -%}<br>{{ vat_label }}: {{ vat }}{%- endif -%}
+      </p>
+    </div>
+  </div>
+
+  {% render 'np-contact-form', kind: 'contact', form_id: 'ContactPageForm' %}
+</section>
+
+{% schema %}
+{
+  "name": "Contact",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "presets": [
+    {
+      "name": "Contact"
+    }
+  ]
+}
+{% endschema %}

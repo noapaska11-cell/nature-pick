@@ -1,0 +1,136 @@
+{%- liquid
+  assign source = section.settings.collection
+  if source == blank
+    assign source = collections.all
+  endif
+
+  assign label = section.settings.label
+  assign title = section.settings.title
+  if section.settings.style == 'more'
+    if label == blank
+      assign label = 'np.featured.more_label' | t
+    endif
+    if title == blank
+      assign title = 'np.featured.more_title' | t
+    endif
+  else
+    if label == blank
+      assign label = 'np.featured.bestsellers_label' | t
+    endif
+    if title == blank
+      assign title = 'np.featured.bestsellers_title' | t
+    endif
+  endif
+
+  assign view_all_url = section.settings.view_all_link
+  if view_all_url == blank
+    if section.settings.collection != blank
+      assign view_all_url = section.settings.collection.url
+    else
+      assign view_all_url = routes.all_products_collection_url
+    endif
+  endif
+
+  assign anchor = section.settings.anchor_id
+-%}
+<div {% if anchor != blank %}id="{{ anchor }}"{% endif %} class="{% if section.settings.reveal %}np-reveal{% endif %} {% if anchor != blank %}scroll-mt-32{% endif %}">
+  <section class="container-page py-16">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <span class="section-label text-[var(--color-paprika-dark)]">
+          {% render 'icon', name: 'star', class: 'h-3.5 w-3.5' %} {{ label }}
+        </span>
+        <h2 class="mt-2 font-display text-3xl font-semibold text-[var(--color-charcoal)] sm:text-4xl">{{ title }}</h2>
+      </div>
+      <a href="{{ view_all_url }}" class="hidden items-center gap-1 text-sm font-medium text-[var(--color-paprika-dark)] hover:underline sm:flex">
+        {{ 'np.common.see_all' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+      </a>
+    </div>
+
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+      {%- for product in source.products limit: section.settings.products_to_show -%}
+        {% render 'np-product-card', product: product, index: forloop.index0 %}
+      {%- else -%}
+        {%- comment -%} A store without products: placeholder cards so the section still shows its design {%- endcomment -%}
+        {%- for placeholder in (1..4) -%}
+          <div class="card-surface overflow-hidden" aria-hidden="true">
+            {%- render 'np-product-image', alt: '', class: 'aspect-square w-full', sizes: '25vw', index: forloop.index0, icon: 'leaf' -%}
+            <div class="flex flex-col gap-2 p-4">
+              <div class="h-4 w-3/4 rounded bg-[var(--color-line)]"></div>
+              <div class="h-3 w-1/3 rounded bg-[var(--color-line)]"></div>
+            </div>
+          </div>
+        {%- endfor -%}
+        <p class="col-span-full text-center text-sm text-[var(--color-charcoal-soft)]">{{ 'np.collection.empty_category' | t }}</p>
+      {%- endfor -%}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Default texts",
+      "options": [
+        { "value": "bestsellers", "label": "Bestsellers" },
+        { "value": "more", "label": "Worth trying" }
+      ],
+      "default": "bestsellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Leave empty to use all products."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 4,
+      "default": 8,
+      "label": "Products to show"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "\"See all\" link",
+      "info": "Leave empty to link to the collection."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "info": "Lets menu links jump here, e.g. #bestsellers."
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Fade in on scroll",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products"
+    }
+  ]
+}
+{% endschema %}

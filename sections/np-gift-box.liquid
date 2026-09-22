@@ -1,0 +1,95 @@
+{%- liquid
+  assign min_items = section.settings.min_items
+  assign sources = section.blocks
+-%}
+<section class="container-page py-10">
+  <np-gift-box
+    class="block"
+    data-min="{{ min_items }}"
+    data-currency="{{ cart.currency.iso_code }}"
+    data-label-add="{{ 'np.gift_box.add_box' | t }}"
+    data-label-added="{{ 'np.gift_box.added' | t }}"
+    data-hint="{{ 'np.gift_box.min_items_hint' | t: min: min_items }}"
+    data-label-total="{{ 'np.gift_box.total' | t }}"
+    data-count-one="{{ 'np.gift_box.products' | t: count: 1 }}"
+    data-count-few="{{ 'np.gift_box.products' | t: count: 3 }}"
+    data-count-other="{{ 'np.gift_box.products' | t: count: 5 }}"
+  >
+    {%- comment -%} Tiles from the selected collections (or all products when none are selected) {%- endcomment -%}
+    {%- capture tiles -%}
+      {%- if sources.size > 0 -%}
+        {%- for block in sources -%}
+          {%- if block.settings.collection != blank -%}
+            {%- for product in block.settings.collection.products limit: 50 -%}
+              {%- render 'np-gift-tile', product: product -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for product in collections.all.products limit: 50 -%}
+          {%- render 'np-gift-tile', product: product -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      {{ tiles }}
+    </div>
+
+    <div class="sticky bottom-4 mt-8 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-5 shadow-lg shadow-black/5">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="font-display text-lg font-semibold text-[var(--color-charcoal)]">
+            {{ 'np.gift_box.your_box' | t }}: <span data-gift-count>{{ 'np.gift_box.products' | t: count: 0 }}</span>
+          </p>
+          <p class="text-sm text-[var(--color-charcoal-soft)]" data-gift-hint>{{ 'np.gift_box.min_items_hint' | t: min: min_items }}</p>
+        </div>
+        <button type="button" data-gift-add disabled class="btn-primary">
+          <span data-gift-add-icon>{% render 'icon', name: 'gift', class: 'h-4 w-4' %}</span>
+          <span data-gift-add-label>{{ 'np.gift_box.add_box' | t }}</span>
+        </button>
+      </div>
+      <p data-cart-error hidden role="alert" class="mt-3 rounded-xl bg-[var(--color-paprika-light)] px-3 py-2 text-sm text-[var(--color-paprika-dark)]"></p>
+    </div>
+  </np-gift-box>
+</section>
+
+{% schema %}
+{
+  "name": "Gift box builder",
+  "enabled_on": {
+    "templates": ["collection", "page"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "min_items",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "Minimum products in a box"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "source",
+      "name": "Product source",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Products of these collections can be added to the box (max. 50 per collection). Without any source, all products are offered."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift box builder"
+    }
+  ]
+}
+{% endschema %}

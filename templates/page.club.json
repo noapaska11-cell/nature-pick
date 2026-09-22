@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "club"
+      }
+    },
+    "main": {
+      "type": "np-club",
+      "settings": {
+        "collection_1": "naturliga-kryddor",
+        "collection_2": "torkad-frukt"
+      }
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

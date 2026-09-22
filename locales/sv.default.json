@@ -1,0 +1,1075 @@
+{
+  "accessibility": {
+    "skip_to_text": "Gå vidare till innehåll",
+    "close": "Stäng",
+    "unit_price_separator": "per",
+    "vendor": "Säljare:",
+    "error": "Fel",
+    "refresh_page": "När du gör ett urval uppdateras sidan.",
+    "link_messages": {
+      "new_window": "Öppnas i ett nytt fönster.",
+      "external": "Öppnar extern webbplats."
+    },
+    "loading": "Laddar ...",
+    "skip_to_product_info": "Gå vidare till produktinformation",
+    "total_reviews": "totalt antal recensioner",
+    "star_reviews_info": "{{ rating_value }} av {{ rating_max }} stjärnor",
+    "collapsible_content_title": "Innehåll som kan döljas",
+    "complementary_products": "Kompletterande produkter"
+  },
+  "blogs": {
+    "article": {
+      "blog": "Blogg",
+      "read_more_title": "Läs mer: {{ title }}",
+      "comments": {
+        "one": "{{ count }} kommentar",
+        "other": "{{ count }} kommentarer"
+      },
+      "moderated": "Notera att kommentarer behöver godkännas innan de publiceras.",
+      "comment_form_title": "Lämna en kommentar",
+      "name": "Namn",
+      "email": "Email",
+      "message": "Kommentar",
+      "post": "Lägg upp kommentar",
+      "back_to_blog": "Tillbaka till blogg",
+      "share": "Dela denna artikel",
+      "success": "Din kommentar har lagts upp! Tack!",
+      "success_moderated": "Din kommentar har lagts upp. Vi kommer publicera den lite senare, eftersom att bloggen är modererad."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Konto",
+      "details": "Kontouppgifter",
+      "view_addresses": "Visa adresser",
+      "return": "Återgå till kontouppgifter"
+    },
+    "account_fallback": "Konto",
+    "activate_account": {
+      "title": "Aktivera konto",
+      "subtext": "Skapa ditt lösenord för att aktivera ditt konto.",
+      "password": "Lösenord",
+      "password_confirm": "Bekräfta lösenordet",
+      "submit": "Aktivera konto",
+      "cancel": "Avvisa inbjudan"
+    },
+    "addresses": {
+      "title": "Adresser",
+      "default": "Standard",
+      "add_new": "Lägg till en ny adress",
+      "edit_address": "Redigera adress",
+      "first_name": "Förnamn",
+      "last_name": "Efternamn",
+      "company": "Företag",
+      "address1": "Adress 1",
+      "address2": "Adress 2",
+      "city": "Stad",
+      "country": "Land/Region",
+      "province": "Provins",
+      "zip": "Postnummer",
+      "phone": "Telefon",
+      "set_default": "Ange som standardadress",
+      "add": "Lägg till adress",
+      "update": "Uppdatera adress",
+      "cancel": "Avbryt",
+      "edit": "Redigera",
+      "delete": "Radera",
+      "delete_confirm": "Är du säker på att du vill radera den här adressen?"
+    },
+    "log_in": "Logga in",
+    "log_out": "Logga ut",
+    "login_page": {
+      "cancel": "Avbryt",
+      "create_account": "Skapa konto",
+      "email": "E-postadress",
+      "forgot_password": "Har du glömt ditt lösenord?",
+      "guest_continue": "Fortsätt",
+      "guest_title": "Fortsätt som gäst",
+      "password": "Lösenord",
+      "title": "Inloggning",
+      "sign_in": "Logga in",
+      "submit": "Skicka",
+      "alternate_provider_separator": "eller"
+    },
+    "orders": {
+      "title": "Orderhistorik",
+      "order_number": "Order",
+      "order_number_link": "Ordernummer {{ number }}",
+      "date": "Datum",
+      "payment_status": "Betalningsstatus",
+      "fulfillment_status": "Distributionsstatus",
+      "total": "Totalt",
+      "none": "Du har ännu inte lagt någon order."
+    },
+    "recover_password": {
+      "title": "Återställ ditt lösenord",
+      "subtext": "Vi skickar dig ett e-postmeddelande så att du kan återställa ditt lösenord",
+      "success": "Vi har skickat dig ett e-postmeddelande med en länk för att uppdatera ditt lösenord."
+    },
+    "register": {
+      "title": "Skapa konto",
+      "first_name": "Förnamn",
+      "last_name": "Efternamn",
+      "email": "E-postadress",
+      "password": "Lösenord",
+      "submit": "Skapa"
+    },
+    "reset_password": {
+      "title": "Återställ kontolösenord",
+      "subtext": "Ange ett nytt lösenord",
+      "password": "Lösenord",
+      "password_confirm": "Bekräfta lösenordet",
+      "submit": "Återställ lösenord"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date_html": "Beställd den {{ date }}",
+      "cancelled_html": "Ordern avbröts den {{ date }}",
+      "cancelled_reason": "Anledning: {{ reason }}",
+      "billing_address": "Faktureringsadress",
+      "payment_status": "Betalningsstatus",
+      "shipping_address": "Leveransadress",
+      "fulfillment_status": "Distributionsstatus",
+      "discount": "Rabatt",
+      "shipping": "Frakt",
+      "tax": "Skatt",
+      "product": "Produkt",
+      "sku": "SKU",
+      "price": "Pris",
+      "quantity": "Kvantitet",
+      "total": "Totalt",
+      "fulfilled_at_html": "Distribuerad {{ date }}",
+      "track_shipment": "Spåra försändelse",
+      "tracking_url": "Spårningslänk",
+      "tracking_company": "Transportör",
+      "tracking_number": "Spårningsnummer",
+      "subtotal": "Delsumma",
+      "total_duties": "Tullavgifter",
+      "total_refunded": "Återbetald"
+    }
+  },
+  "gempages": {
+    "Carousel": {
+      "no_slider": "No Slider"
+    },
+    "CarouselV3": {
+      "no_slider": "No Slider"
+    },
+    "Newsletter": {
+      "err_msg_default": "Can’t send email. Please try again later.",
+      "success_msg_default": "Thanks for subscribing"
+    },
+    "IconListV2": {
+      "icons_not_found": "Icons not found"
+    },
+    "IconList": {
+      "icons_not_found": "Icons not found"
+    },
+    "IconListHoz": {
+      "icons_not_found": "Icons not found"
+    },
+    "Product": {
+      "product_not_found": "Product not found"
+    },
+    "ProductList": {
+      "product_not_found": "Product Not Found!",
+      "no_products_found": "No products found!",
+      "no_related_products": "No related products!"
+    },
+    "ProductListV3": {
+      "product_not_found": "Product Not Found!",
+      "no_products_found": "No products found!",
+      "no_related_products": "No related products!"
+    },
+    "ProductTitle": {
+      "product_not_found": "Product Not Found"
+    },
+    "ProductVariants": {
+      "please_select": "Please select an option"
+    },
+    "StockCounter": {
+      "let_buy_now": "<mark>HURRY!</mark> LET BUY NOW"
+    },
+    "Breadcrumb": {
+      "home": "Home"
+    }
+  },
+  "general": {
+    "password_page": {
+      "login_form_heading": "Ange lösenord för att komma i butiken:",
+      "login_password_button": "Ange lösenord för att komma in",
+      "login_form_password_label": "Lösenord",
+      "login_form_password_placeholder": "Ditt lösenord",
+      "login_form_error": "Fel lösenord!",
+      "login_form_submit": "Ange",
+      "admin_link_html": "Är du butiksägare? <a href=\"/admin\" class=\"link underlined-link\">Logga in här</a>",
+      "powered_by_shopify_html": "Denna butik kommer drivas av {{ shopify }}"
+    },
+    "social": {
+      "alt_text": {
+        "share_on_facebook": "Dela på Facebook",
+        "share_on_twitter": "Dela på X",
+        "share_on_pinterest": "Spara en pin på Pinterest"
+      },
+      "links": {
+        "twitter": "X (Twitter)",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok"
+      }
+    },
+    "continue_shopping": "Fortsätt shoppa",
+    "pagination": {
+      "label": "Paginering",
+      "page": "Sida {{ number }}",
+      "next": "Nästa sida",
+      "previous": "Föregående sida"
+    },
+    "search": {
+      "search": "Sök",
+      "reset": "Rensa sökord"
+    },
+    "cart": {
+      "view": "Visa varukorg ({{ count }})",
+      "item_added": "Artikeln har lagts till i varukorgen",
+      "view_empty_cart": "Visa varukorg"
+    },
+    "share": {
+      "copy_to_clipboard": "Kopiera länk",
+      "share_url": "Länk",
+      "success_message": "Länken kopierades till urklipp",
+      "close": "Stäng dela"
+    },
+    "slider": {
+      "of": "av",
+      "next_slide": "Bild till höger",
+      "previous_slide": "Bild till vänster",
+      "name": "Bild"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Här är ditt presentkort värt {{ value }} för {{ shop }}!",
+      "subtext": "Ditt presentkort",
+      "gift_card_code": "Presentkortskod",
+      "shop_link": "Besök webbshop",
+      "add_to_apple_wallet": "Lägg till i Apple Wallet",
+      "qr_image_alt": "QR-kod – skanna för att lösa in presentkort",
+      "copy_code": "Kopiera presentkortskod",
+      "expired": "Har gått ut",
+      "copy_code_success": "Koden kopierades",
+      "how_to_use_gift_card": "Använd presentkortskoden online eller QR-koden i butik",
+      "expiration_date": "Går ut {{ expires_on }}"
+    }
+  },
+  "localization": {
+    "country_label": "Land/Region",
+    "language_label": "Språk",
+    "update_language": "Uppdatera språk",
+    "update_country": "Uppdatera land/region",
+    "search": "Sök",
+    "popular_countries_regions": "Populära länder/regioner",
+    "country_results_count": "{{ count }} länder/regioner hittades"
+  },
+  "newsletter": {
+    "label": "E-post",
+    "success": "Tack för att du prenumererar",
+    "button_label": "Prenumerera"
+  },
+  "onboarding": {
+    "product_title": "Exempel på produktnamn",
+    "collection_title": "Namn på produktserien"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Lägg i varukorgen",
+      "description": "Beskrivning",
+      "on_sale": "Rea",
+      "quantity": {
+        "label": "Kvantitet",
+        "input_label": "Kvantitet för {{ product }}",
+        "increase": "Öka kvantitet för {{ product }}",
+        "decrease": "Minska kvantitet för {{ product }}",
+        "minimum_of": "Minimum på {{ quantity }}",
+        "maximum_of": "Maximum på {{ quantity }}",
+        "multiples_of": "Ökningar i steg om {{ quantity }}",
+        "in_cart_html": "<span class=\"quantity-cart\">{{ quantity }}</span> i varukorg",
+        "note": "Visa kvantitetsregler",
+        "min_of": "Min. {{ quantity }}",
+        "max_of": "Max. {{ quantity }}",
+        "in_cart_aria_label": "Kvantitet ({{ quantity }} i varukorg)"
+      },
+      "price": {
+        "from_price_html": "Från {{ price }}",
+        "regular_price": "Ordinarie pris",
+        "sale_price": "Försäljningspris",
+        "unit_price": "Enhetspris"
+      },
+      "share": "Dela den här produkten",
+      "sold_out": "Slutsåld",
+      "unavailable": "Inte tillgängliga",
+      "vendor": "Säljare",
+      "video_exit_message": "{{ title }} öppnar helskärmsvideo i samma fönster.",
+      "xr_button": "Visa i ditt utrymme",
+      "xr_button_label": "Visa i ditt utrymme, laddar artiklar i fönster med förstärkt verklighet",
+      "pickup_availability": {
+        "view_store_info": "Visa butiksinformation",
+        "check_other_stores": "Kontrollerar tillgänglighet i andra butiker",
+        "pick_up_available": "Hämtning tillgänglig",
+        "pick_up_available_at_html": "Hämtning tillgänglig på <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Det går för närvarande inte att få hämtning på <span class=\"color-foreground\">{{ location_name }}</span>",
+        "unavailable": "Det gick inte att ladda hämtningstillgänglighet",
+        "refresh": "Uppdatera"
+      },
+      "media": {
+        "open_media": "Öppna mediet {{ index }} i modalfönster",
+        "play_model": "Spela 3D-visaren",
+        "play_video": "Spela video",
+        "gallery_viewer": "Gallerivisning",
+        "load_image": "Ladda bilden {{ index }} i gallerivisning",
+        "load_model": "Ladda 3D-modellen {{ index }} i gallerivisning",
+        "load_video": "Spela videon {{ index }} i gallerivisning",
+        "image_available": "Bilden {{ index }} är nu tillgänglig i gallerivisning"
+      },
+      "nested_label": "{{ title }} för {{ parent_title }}",
+      "view_full_details": "Visa alla uppgifter",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Frakt</a> beräknas i kassan.",
+      "choose_options": "Välj alternativ",
+      "choose_product_options": "Välj alternativ för {{ product_name }}",
+      "value_unavailable": "{{ option_value }} – inte tillgängligt",
+      "variant_sold_out_or_unavailable": "Varianten är slutsåld eller inte tillgänglig",
+      "inventory_in_stock": "I lager",
+      "inventory_in_stock_show_count": "",
+      "inventory_low_stock": "Låg lagernivå",
+      "inventory_low_stock_show_count": "Låg lagernivå: {{ quantity }}  50 kvar",
+      "inventory_out_of_stock": "Slut i lager",
+      "inventory_out_of_stock_continue_selling": "I lager",
+      "sku": "Lagerhållningsenhet",
+      "volume_pricing": {
+        "title": "Volymprissättning",
+        "note": "Volymprissättning är tillgängligt",
+        "minimum": "Fler än {{ quantity }}",
+        "price_range": "{{ minimum }}–{{ maximum }}",
+        "price_at_each_html": "för {{ price }}/st"
+      },
+      "product_variants": "Produktvarianter",
+      "taxes_included": "Skatter ingår.",
+      "duties_included": "Tullavgifter ingår.",
+      "duties_and_taxes_included": "Tullavgifter och skatter ingår."
+    },
+    "modal": {
+      "label": "Mediagalleri"
+    },
+    "facets": {
+      "apply": "Tillämpa",
+      "clear": "Rensa",
+      "clear_all": "Ta bort alla",
+      "from": "Från",
+      "filter_and_sort": "Filtrera och sortera",
+      "filter_by_label": "Filter:",
+      "filter_button": "Filter",
+      "filters_selected": {
+        "one": "{{ count }} har valts",
+        "other": "{{ count }} har valts"
+      },
+      "max_price": "Det högsta priset är {{ price }}",
+      "product_count": {
+        "one": "{{ product_count }} av {{ count }} produkt",
+        "other": "{{ product_count }} av {{ count }} produkter"
+      },
+      "product_count_simple": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkter"
+      },
+      "reset": "Återställ",
+      "sort_button": "Sortera",
+      "sort_by_label": "Sortera efter:",
+      "to": "Till",
+      "clear_filter": "Ta bort filter",
+      "filter_selected_accessibility": "{{ type }} ({{ count }}) filter valda",
+      "show_more": "Visa mer",
+      "show_less": "Visa mindre",
+      "filter_and_operator_subtitle": "Matcha alla"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Jag vill skicka detta som en gåva",
+      "email_label": "Mottagarens e-postadress",
+      "email": "E-postadress",
+      "name_label": "Mottagarens namn (valfritt)",
+      "name": "Namn",
+      "message_label": "Meddelande (valfritt)",
+      "message": "Meddelande",
+      "max_characters": "Max. {{ max_chars }} tecken",
+      "email_label_optional_for_no_js_behavior": "Mottagarens e-postadress (valfritt)",
+      "send_on": "ÅÅÅÅ-MM-DD",
+      "send_on_label": "Skicka den (valfritt)",
+      "expanded": "Mottagarformulär för presentkort öppnat",
+      "collapsed": "Mottagarformulär för presentkort stängt"
+    }
+  },
+  "sections": {
+    "header": {
+      "announcement": "Meddelande",
+      "menu": "Meny",
+      "cart_count": {
+        "one": "{{ count }} artikel",
+        "other": "{{ count }} artiklar"
+      }
+    },
+    "cart": {
+      "title": "Din varukorg",
+      "caption": "Varukorgsartiklar",
+      "remove_title": "Ta bort {{ title }}",
+      "note": "Beställ särskilda instruktioner",
+      "checkout": "Gå till kassan",
+      "empty": "Din varukorg är tom",
+      "cart_error": "Ett fel uppstod när du uppdaterade din varukorg. Försök igen.",
+      "cart_quantity_error_html": "Du kan endast lägga till {{ quantity }} av denna artikel i din varukorg.",
+      "headings": {
+        "product": "Produkt",
+        "price": "Pris",
+        "total": "Totalt",
+        "quantity": "Kvantitet",
+        "image": "Produktbild"
+      },
+      "update": "Uppdatera",
+      "login": {
+        "title": "Har du ett konto?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Logga in</a> för att gå till kassan snabbare."
+      },
+      "estimated_total": "Beräknad totalsumma",
+      "new_estimated_total": "Nytt beräknat totalbelopp",
+      "duties_and_taxes_included_shipping_at_checkout_with_policy_html": "Tullavgifter och skatter ingår. Rabatter och <a href=\"{{ link }}\">fraktkostnad</a> beräknas i kassan.",
+      "duties_and_taxes_included_shipping_at_checkout_without_policy": "Tullavgifter och skatter ingår. Rabatter och fraktkostnad beräknas i kassan.",
+      "taxes_included_shipping_at_checkout_with_policy_html": "Skatter ingår. Rabatter och <a href=\"{{ link }}\">fraktkostnad</a> beräknas i kassan.",
+      "taxes_included_shipping_at_checkout_without_policy": "Skatter ingår. Rabatter och fraktkostnad beräknas i kassan.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html": "Tullavgifter ingår. Skatter, rabatter och <a href=\"{{ link }}\">fraktkostnad</a> beräknas i kassan.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy": "Tullavgifter ingår. Skatter, rabatter och fraktkostnad beräknas i kassan.",
+      "taxes_at_checkout_shipping_at_checkout_with_policy_html": "Skatter, rabatter och <a href=\"{{ link }}\">fraktkostnad</a> beräknas i kassan.",
+      "taxes_at_checkout_shipping_at_checkout_without_policy": "Skatter, rabatter och fraktkostnad beräknas i kassan."
+    },
+    "footer": {
+      "payment": "Betalningsmetoder"
+    },
+    "featured_blog": {
+      "view_all": "Visa alla",
+      "onboarding_title": "Blogginlägg",
+      "onboarding_content": "Ge en sammanfattning av dina bloggposter till dina kunder"
+    },
+    "featured_collection": {
+      "view_all": "Visa alla",
+      "view_all_label": "Visa alla produkter i produktserien {{ collection_name }}"
+    },
+    "collection_list": {
+      "view_all": "Visa alla"
+    },
+    "collection_template": {
+      "title": "Produktserie",
+      "empty": "Inga produkter hittades",
+      "use_fewer_filters_html": "Använd färre filter eller <a class=\"{{ class }}\" href=\"{{ link }}\">ta bort alla</a>"
+    },
+    "video": {
+      "load_video": "Ladda video: {{ description }}"
+    },
+    "slideshow": {
+      "load_slide": "Ladda bild",
+      "previous_slideshow": "Föregående bild",
+      "next_slideshow": "Nästa bild",
+      "pause_slideshow": "Pausa bildspelet",
+      "play_slideshow": "Spela bildspel",
+      "carousel": "Karusell",
+      "slide": "Bild"
+    },
+    "page": {
+      "title": "Sidrubrik"
+    },
+    "announcements": {
+      "previous_announcement": "Tidigare meddelande",
+      "next_announcement": "Kommande meddelande",
+      "carousel": "Karusell",
+      "announcement": "Meddelande",
+      "announcement_bar": "Meddelandefält"
+    },
+    "quick_order_list": {
+      "product_total": "Delsumma för produkt",
+      "view_cart": "Visa varukorg",
+      "each": "{{ money }}/st.",
+      "product": "Produkt",
+      "variant": "Variant",
+      "variant_total": "Totalbelopp för variant",
+      "items_added": {
+        "one": "{{ quantity }} artikel lades till",
+        "other": "{{ quantity }} artiklar lades till"
+      },
+      "items_removed": {
+        "one": "{{ quantity }} artikel togs bort",
+        "other": "{{ quantity }} artiklar togs bort"
+      },
+      "product_variants": "Produktvarianter",
+      "total_items": "Totalt antal artiklar",
+      "remove_all_items_confirmation": "Ta bort alla {{ quantity }} artiklar från din varukorg?",
+      "remove_all": "Ta bort alla",
+      "cancel": "Avbryt",
+      "remove_all_single_item_confirmation": "Vill du ta bort 1 artikel från varukorgen?",
+      "min_error": "Den här artikeln har minst {{ min }}",
+      "max_error": "Den här artikeln har max {{ max }}",
+      "step_error": "Du kan endast lägga till den här artikeln med ökningar om {{ step }}"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Sidan hittades inte",
+      "subtext": "404"
+    },
+    "search": {
+      "no_results": "Inga resultat hittades för \"{{ terms }}\". Kontrollera stavningen eller använd ett annat ord eller fras.",
+      "results_with_count": {
+        "one": "{{ count }} resultat",
+        "other": "{{ count }} resultat"
+      },
+      "title": "Sökresultat",
+      "page": "Sida",
+      "products": "Produkter",
+      "search_for": "Sök efter \"{{ terms }}\"",
+      "results_with_count_and_term": {
+        "one": "hittat {{ count }} resultat för \"{{ terms }}\"",
+        "other": "hittat {{ count }} resultat för \"{{ terms }}\""
+      },
+      "results_pages_with_count": {
+        "one": "{{ count }}-sida",
+        "other": "{{ count }} sidor"
+      },
+      "results_products_with_count": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkter"
+      },
+      "suggestions": "Förslag",
+      "pages": "Sidor",
+      "results_suggestions_with_count": {
+        "one": "{{ count }} förslag",
+        "other": "{{ count }} förslag"
+      }
+    },
+    "cart": {
+      "cart": "Varukorg"
+    },
+    "contact": {
+      "form": {
+        "name": "Namn",
+        "email": "E-postadress",
+        "phone": "Telefonnummer",
+        "comment": "Kommentar",
+        "send": "Skicka",
+        "post_success": "Tack för att du kontaktar oss. Vi återkommer till dig så snart som möjligt.",
+        "error_heading": "Justera följande:",
+        "title": "Kontaktformulär"
+      }
+    }
+  },
+  "np": {
+    "common": {
+      "skip_link": "Hoppa till huvudinnehåll",
+      "free_shipping_bar": "Fri frakt från {{ amount }}",
+      "add_to_cart": "Lägg i varukorgen",
+      "added": "Tillagd i varukorgen",
+      "out_of_stock": "Inte tillgänglig just nu",
+      "out_of_stock_badge": "Slutsåld",
+      "b2b_badge": "B2B",
+      "b2b_price_aria": "B2B-pris: {{ wholesale }} (ordinarie pris {{ retail }})",
+      "notify_me": "Meddela mig",
+      "notify_me_email_placeholder": "Din e-post",
+      "notify_me_confirmed": "Vi meddelar dig när produkten är tillbaka i lager.",
+      "quick_view": "Snabbtitt",
+      "bestseller": "Bästsäljare",
+      "reviews": "recensioner",
+      "home": "Startsida",
+      "see_all": "Se alla",
+      "all_products": "Alla produkter",
+      "badge_new": "Nyhet",
+      "badge_sale": "Rea",
+      "add_to_wishlist_aria": "Lägg till {{ name }} i önskelistan",
+      "remove_from_wishlist_aria": "Ta bort {{ name }} från önskelistan",
+      "quick_view_aria": "Snabbtitt: {{ name }}",
+      "add_to_cart_aria": "Lägg till {{ name }} i varukorgen",
+      "notify_me_aria": "Meddela mig när i lager igen: {{ name }}",
+      "decrease_qty": "Minska antal",
+      "increase_qty": "Öka antal",
+      "close_quick_view_aria": "Stäng snabbtitt",
+      "close": "Stäng",
+      "email": "E-postadress",
+      "dismiss_toast_aria": "Stäng aviseringen",
+      "breadcrumb": "Sökväg",
+      "eu_vat": "VAT-nr"
+    },
+    "nav": {
+      "shop": "Butik",
+      "bestsellers": "Bästsäljare",
+      "recipes": "Recept",
+      "origin": "Vårt ursprung",
+      "contact": "Kontakt",
+      "wishlist": "Önskelista",
+      "cart": "Öppna varukorgen",
+      "search": "Sök",
+      "menu": "Meny",
+      "b2b": "B2B"
+    },
+    "footer": {
+      "tagline": "Naturliga kryddor, nötter, torkad frukt och soltorkade grönsaker med bekräftat ursprung. Ett svenskt företag med en transparent leverantörskedja.",
+      "categories_title": "Kategorier",
+      "help_title": "Kundservice",
+      "newsletter_title": "Naturliga smaker i din inkorg",
+      "newsletter_text": "Nyheter, recept och enstaka rabatter. Inget spam.",
+      "company_line_html": "Nature Pick är ett varumärke som ägs av <span class=\"np-em\">{{ company }}</span>, {{ address }} · VAT-nr: {{ vat }}",
+      "copyright": "© {{ year }} Nature Pick. Alla rättigheter förbehållna.",
+      "link_contact": "Kontakt",
+      "link_shipping": "Frakt och returer",
+      "link_recipes": "Recept",
+      "link_origin": "Produkternas ursprung",
+      "link_spice_club": "Kryddklubben",
+      "link_faq": "Vanliga frågor",
+      "link_terms": "Köpvillkor",
+      "link_privacy": "Integritetspolicy",
+      "link_b2b": "B2B-samarbete"
+    },
+    "hero": {
+      "eyebrow": "From Sunny Eastern Fields",
+      "title": "Autentiska smaker från Centralasien",
+      "subtitle": "Kryddor, nötter och torkad frukt noggrant utvalda i Uzbekistan och Centralasien — levererade direkt till din dörr.",
+      "cta": "Se bästsäljare"
+    },
+    "trust_bar": {
+      "label": "Varför Nature Pick",
+      "item1_title": "Äkta ursprung",
+      "item1_text": "Utvalda från regionerna där dessa smaker naturligt hör hemma.",
+      "item2_title": "Enkla ingredienser",
+      "item2_text": "Utan onödig komplexitet eller konstgjorda tillsatser. Bara riktig mat.",
+      "item3_title": "Österländskt arv",
+      "item3_text": "Traditionella centralasiatiska smaker anpassade till moderna europeiska kök.",
+      "item4_title": "Omsorgsfullt förpackade",
+      "item4_text": "Utvalda och förpackade med omsorg om kvaliteten innan de når dig."
+    },
+    "category_grid": {
+      "label": "Kategorier",
+      "title": "Välj din kategori"
+    },
+    "featured": {
+      "bestsellers_label": "Mest köpta",
+      "bestsellers_title": "Bästsäljare",
+      "more_label": "Upptäck mer",
+      "more_title": "Värt att prova"
+    },
+    "origin_map": {
+      "label": "Smakens resa",
+      "title": "Från Ferganadalen till ditt kök",
+      "hint": "Klicka på en punkt på rutten för att se det steget i resan.",
+      "step1_place": "Uzbekistan",
+      "step1_title": "Där allt börjar",
+      "step1_text": "Mandlar, aprikoser och kryddor som växer på den bördiga jorden i Ferganadalen.",
+      "step2_place": "Skörd",
+      "step2_title": "Mognad i solen",
+      "step2_text": "Frukt och grönsaker torkas med traditionella metoder, utan att skynda på.",
+      "step3_place": "Urval",
+      "step3_title": "Utvalt tillsammans med vår lokala partner",
+      "step3_text": "Sara Europe Exim förkastar varje parti som inte uppfyller våra standarder.",
+      "step4_place": "Förpackning",
+      "step4_title": "Kvalitetskontroll inom EU",
+      "step4_text": "Förpackning och kvalitetskontroll sker inom Europeiska unionen.",
+      "step5_place": "Europa",
+      "step5_title": "Direkt till din dörr",
+      "step5_text": "Skickas från Sverige direkt till din dörr."
+    },
+    "brand_story": {
+      "label": "Var vi kommer ifrån",
+      "title": "Från Uzbekistan, med kärlek",
+      "text": "Vår resa börjar i Uzbekistan — en region känd för mandlar, aprikoser, torkad frukt och kryddor med intensiv smak. Tillsammans med vår lokala partner, Sara Europe Exim, väljer vi ut råvarorna vid källan innan de förpackas omsorgsfullt och skickas till ditt kök.",
+      "point1": "Råvaror utvalda direkt i sitt ursprungsområde",
+      "point2": "Samarbete med vår lokala partner, Sara Europe Exim, kring urval och export",
+      "point3": "Traditionella centralasiatiska smaker förpackade med det europeiska köket i åtanke",
+      "cta": "Upptäck vårt ursprung"
+    },
+    "testimonials": {
+      "label": "Kundrecensioner",
+      "title": "Älskad av våra kunder",
+      "quote1": "Mandlarna har en helt annan, mer intensiv smak än de från en vanlig butik. Jag beställer regelbundet.",
+      "author1": "Anna, Warszawa",
+      "quote2": "Soltorkade tomater är perfekta till hemlagad pasta. Man märker att produkterna håller hög kvalitet och att förpackningen är stabil.",
+      "author2": "Marek, Kraków",
+      "quote3": "Paprikapulvret doftar helt annorlunda än det från stormarknaden. Beställningen kom snabbare än jag förväntat mig.",
+      "author3": "Kasia, Wrocław"
+    },
+    "recipes_teaser": {
+      "label": "Recept från öst",
+      "title": "Laga något med Nature Pick",
+      "cta": "Alla recept"
+    },
+    "faq_section": {
+      "label": "Frågor och svar",
+      "title": "Vanliga frågor",
+      "text": "Hittade du inte svaret? Skriv till oss — vi hjälper gärna till innan du beställer."
+    },
+    "newsletter_cta": {
+      "label": "-10% på din första beställning",
+      "title": "Få 10% rabatt på din första beställning",
+      "text": "Registrera dig för att få din rabattkod samt nyheter om produkter, recept och säsongsvaror.",
+      "placeholder": "Din e-postadress",
+      "submit": "Registrera",
+      "confirmed": "Tack för din registrering!"
+    },
+    "collection": {
+      "all_products_title": "Alla produkter",
+      "all_products_description": "Hela Nature Picks sortiment på ett ställe — från kryddor till färdiga presentset. Varje produkt visar ursprungsland, ingredienser och allergener.",
+      "product_count": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkter"
+      },
+      "filter_all": "Alla",
+      "filter_in_stock_only": "Endast i lager",
+      "sort_label": "Sortera",
+      "sort_popular": "Mest populära",
+      "sort_price_asc": "Pris: lågt till högt",
+      "sort_price_desc": "Pris: högt till lågt",
+      "sort_rating": "Högst betygsatta",
+      "no_results": "Inga produkter matchar valda filter.",
+      "empty_category": "Inga produkter i den här kategorin."
+    },
+    "product": {
+      "price_per_kg": "Pris per kg",
+      "how_to_use": "Så använder du den",
+      "shipping_time": "Snabb frakt från Sverige",
+      "return_days": "14 dagars öppet köp",
+      "spec_weight": "Vikt",
+      "spec_ingredients": "Ingredienser",
+      "spec_origin": "Ursprungsland",
+      "spec_storage": "Förvaring",
+      "spec_allergens": "Allergener",
+      "spec_availability": "Tillgänglighet",
+      "available_text": "I lager, redo att skickas",
+      "nutrition_title": "Näringsvärden",
+      "nutrition_note": "Genomsnittliga värden per 100 g produkt.",
+      "nutrition_energy": "Energi",
+      "nutrition_fat": "Fett",
+      "nutrition_saturates": "varav mättat fett",
+      "nutrition_carbs": "Kolhydrater",
+      "nutrition_sugars": "varav sockerarter",
+      "nutrition_fiber": "Fiber",
+      "nutrition_protein": "Protein",
+      "nutrition_salt": "Salt",
+      "related_title": "Du kanske också gillar",
+      "view_full_details": "Se fullständig produktinformation",
+      "gallery_thumb_aria": "Visa bild {{ index }}",
+      "default_origin": "Uzbekistan"
+    },
+    "gift_box": {
+      "your_box": "Ditt paket",
+      "products": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkter"
+      },
+      "min_items_hint": "Välj minst {{ min }} produkter för att skapa ditt paket.",
+      "total": "Totalt",
+      "add_box": "Lägg paketet i varukorgen",
+      "added": "Paket tillagt"
+    },
+    "wishlist": {
+      "title": "Önskelista",
+      "empty_title": "Din önskelista är tom",
+      "empty_text": "Klicka på hjärtat på en produkt för att spara den till senare.",
+      "browse": "Bläddra bland produkter",
+      "count": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkter"
+      }
+    },
+    "cart": {
+      "title": "Varukorg",
+      "summary": "Sammanfattning",
+      "your_cart": "Din varukorg",
+      "empty": "Din varukorg är tom.",
+      "empty_title": "Din varukorg är tom",
+      "browse": "Bläddra bland produkter",
+      "free_shipping_unlocked": "Du har låst upp fri frakt!",
+      "free_shipping_remaining": "Lägg till {{ amount }} till för fri frakt",
+      "subtotal": "Delsumma",
+      "shipping": "Frakt",
+      "free": "Gratis",
+      "total": "Totalt",
+      "checkout": "Gå till kassan",
+      "view_cart": "Visa varukorg",
+      "go_to_cart": "Gå till varukorgen",
+      "secure": "Säker betalning, krypterad data",
+      "shipping_note": "Snabb frakt från Sverige",
+      "returns_note": "14 dagars retur utan att ange orsak",
+      "remove": "Ta bort",
+      "close_aria": "Stäng varukorgen",
+      "remove_aria": "Ta bort från varukorgen",
+      "calculated_at_checkout": "Beräknas i kassan",
+      "note_label": "Ordermeddelande (valfritt)"
+    },
+    "quick_contact": {
+      "title": "Har du en fråga?",
+      "subtitle": "Vi har ingen livechatt, men vi svarar snabbt.",
+      "send_message": "Skicka meddelande",
+      "faq": "Vanliga frågor",
+      "open_aria": "Öppna snabbkontakt",
+      "close_aria": "Stäng snabbkontakt"
+    },
+    "contact_form": {
+      "name": "Fullständigt namn",
+      "email": "E-postadress",
+      "order_number": "Ordernummer (valfritt)",
+      "message": "Hur kan vi hjälpa dig?",
+      "submit": "Skicka meddelande",
+      "sent_title": "Meddelande skickat",
+      "sent_text": "Tack för att du hör av dig. Vi svarar inom 24 timmar på vardagar."
+    },
+    "cookie_consent": {
+      "text_html": "Vi använder cookies som är nödvändiga för att butiken ska fungera samt, med ditt samtycke, cookies för analys och marknadsföring. Mer i vår <a href=\"{{ privacy_url }}\" class=\"np-underline-link\">Integritetspolicy</a>.",
+      "reject_all": "Endast nödvändiga",
+      "accept_all": "Acceptera alla"
+    },
+    "waitlist_form": {
+      "placeholder": "Din e-postadress",
+      "submit": "Anmäl mig",
+      "confirmed": "Du står på listan — vi hör av oss!"
+    },
+    "faq": {
+      "item1": {
+        "question": "Vilka produkter erbjuder Nature Pick?",
+        "answer": "Naturliga kryddor, nötter, kärnor, torkad frukt och soltorkade grönsaker samt färdiga presentset. Hela sortimentet hittar du under \"Alla produkter\"."
+      },
+      "item2": {
+        "question": "Var kommer era produkter ifrån?",
+        "answer": "Många av våra produkter — bland annat mandlar — kommer från Uzbekistan, där vi väljer ut dem tillsammans med vår lokala partner, Sara Europe Exim. Övriga råvaror kommer från kontrollerade regionala leverantörer — exakt ursprungsland för varje produkt anges på produktsidan. Förpackning och kvalitetskontroll sker inom EU."
+      },
+      "item3": {
+        "question": "Vilka länder levererar ni till?",
+        "answer": "Vi skickar från Sverige till Sverige, Tyskland, Polen och många andra europeiska länder. Fraktkostnader och leveranstider för ditt land visas i kassan, och hela översikten finns på sidan ”Frakt & returer”."
+      },
+      "item4": {
+        "question": "Erbjuder ni fri frakt?",
+        "answer": "Ja — fri frakt gäller från ett minsta ordervärde som beror på ditt land. Beloppet visas i varukorgen, och fraktkostnaden beräknas alltid i kassan innan du anger dina betalningsuppgifter."
+      },
+      "item5": {
+        "question": "Kan jag returnera en produkt?",
+        "answer": "Du har 14 dagar på dig att frånträda avtalet enligt EU:s konsumenträttigheter, utan att ange någon anledning. Detaljer och returformulär finns på sidan \"Frakt och returer\"."
+      },
+      "item6": {
+        "question": "Vilka betalningsmetoder kan jag använda?",
+        "answer": "Vi accepterar de betalningsmetoder som visas i kassan — kort och lokala alternativ för ditt land. Alla betalningar krypteras och hanteras av en extern betalningsleverantör."
+      },
+      "item7": {
+        "question": "Hur kan jag kontakta kundtjänst?",
+        "answer": "Snabbast via formuläret på sidan \"Kontakt\" eller via e-post till {{ email }}. Vi svarar inom 24 timmar på vardagar."
+      },
+      "item8": {
+        "question": "Vem står bakom varumärket Nature Pick?",
+        "answer": "Nature Pick är ett varumärke som tillhör det svenska företaget {{ company }} ({{ address }}, VAT-nr: {{ vat }}), som väljer ut och distribuerar naturliga livsmedel på flera europeiska marknader, inklusive Polen."
+      },
+      "page_eyebrow": "FAQ",
+      "page_title": "Vanliga frågor",
+      "page_description": "Svar på de vanligaste frågorna om beställningar, leverans och Nature Picks produkter.",
+      "all_questions_title": "Alla frågor"
+    },
+    "currency_switcher": {
+      "label": "Land och valuta",
+      "note": "Priser och valuta beror på valt land."
+    },
+    "contact_page": {
+      "meta_title": "Kontakt",
+      "meta_description": "Kontakta Nature Picks kundtjänst — kontaktformulär, e-post och företagsuppgifter.",
+      "eyebrow": "Kontakt",
+      "title": "Hur kan vi hjälpa dig?",
+      "description": "Vi svarar på meddelanden inom 24 timmar på vardagar (mån–fre).",
+      "email_title": "E-post",
+      "response_time_title": "Svarstid",
+      "response_time_text": "Inom 24 timmar på vardagar",
+      "company_title": "Företag",
+      "phone_title": "Telefon"
+    },
+    "about_page": {
+      "meta_title": "Vårt ursprung",
+      "meta_description": "Upptäck Nature Picks historia — från fälten i Uzbekistan, via urval och förpackning, till leverans till din dörr.",
+      "eyebrow": "Vårt ursprung",
+      "title": "Autentiska smaker från Centralasien",
+      "description": "Nature Pick är ett varumärke som för traditionella smaker från Uzbekistan och Centralasien till europeiska bord — med tydligt angivet ursprung för varje produkt.",
+      "section_label": "Från Uzbekistan, med kärlek",
+      "section_title": "En historia som börjar vid källan",
+      "story_p1_html": "Vår resa börjar i Uzbekistan — en region känd för mandlar, aprikoser, torkad frukt och kryddor av exceptionell kvalitet. Tillsammans med vår lokala partner, <strong class=\"np-strong\">Sara Europe Exim</strong>, väljer vi ut råvaror direkt vid källan och säkerställer att de når Europa i oförändrad, autentisk kvalitet.",
+      "story_p2": "Vår webbutik betjänar kunder i hela Europa: vi skickar från Sverige, och fraktkostnader och leveranstider för ditt land visas i kassan.",
+      "cta_contact": "Kontakta oss",
+      "journey1_title": "VÅRT URSPRUNG",
+      "journey1_text": "Uzbekistan — en region känd för mandlar, aprikoser, torkad frukt och intensivt smaksatta kryddor.",
+      "journey2_title": "VÅRA PRODUKTER",
+      "journey2_text": "Noggrant utvalda kryddor, nötter, torkad frukt och soltorkade grönsaker.",
+      "journey3_title": "VÅRA MÄNNISKOR",
+      "journey3_text": "NP Market AB och vår lokala partner i Uzbekistan, Sara Europe Exim.",
+      "journey4_title": "VÅRT LÖFTE",
+      "journey4_text": "Öppenhet kring ursprung, enkla ingredienser och kvalitet — utan undantag.",
+      "journey5_title": "VÅR VÄG",
+      "journey5_text": "Från öst till europeiska bord: urval, förpackning och leverans direkt till din dörr.",
+      "registration_title": "Företagets registreringsuppgifter",
+      "registration_text": "{{ company }} · {{ address }} · {{ vat_label }}: {{ vat }}",
+      "cta_privacy": "Integritetspolicy"
+    },
+    "origin_page": {
+      "meta_title": "Produkternas ursprung",
+      "meta_description": "Var Nature Picks produkter kommer ifrån och hur de tar sig från Uzbekistan till ditt bord.",
+      "eyebrow": "Ursprung",
+      "title": "Skanna och läs historien",
+      "description": "Samma QR-kod som du hittar på förpackningen leder hit.",
+      "qr_caption": "Koden från Nature Picks förpackningar",
+      "why_title": "Varför vi visar detta",
+      "why_text": "Vi vill inte att \"naturligt ursprung\" bara ska vara en fras på etiketten. Den här QR-koden leder till den här sidan — en beskrivning av regionen, partnern och processen produkten går igenom innan den når dig. Det är samma historia för varje förpackning av en viss produkt, inte data för en enskild leverans — vi föredrar ärligt att inte lova spårning vi inte har.",
+      "region_title": "Ursprungsregion",
+      "region_text": "Uzbekistan — mandlar, aprikoser och kryddor från Ferganadalen.",
+      "partner_title": "Lokal partner",
+      "partner_text": "Sara Europe Exim väljer ut råvaror direkt vid källan.",
+      "packing_title": "Förpackat inom EU",
+      "packing_text": "Kvalitetskontroll och förpackning sker inom Europeiska unionen.",
+      "delivery_title": "Leverans till din dörr",
+      "delivery_text": "Skickas från Sverige; leveranstiden för ditt land visas i kassan.",
+      "cta_full_story": "Läs hela Nature Picks historia"
+    },
+    "b2b_page": {
+      "meta_title": "B2B-samarbete",
+      "meta_description": "Grossistbeställningar från Nature Pick för restauranger, butiker och distributörer.",
+      "eyebrow": "B2B-samarbete",
+      "title": "Grossistbeställningar för företag",
+      "description": "Vi levererar naturliga kryddor, nötter och torkad frukt i större kvantiteter — med individuella priser och leveransvillkor. Det här är en separat kanal från detaljhandeln.",
+      "audience_title": "Vem erbjudandet passar",
+      "audience1": "Livsmedelsbutiker och delikatessbutiker",
+      "audience2": "Restauranger och catering",
+      "audience3": "Grossister och distributörer",
+      "audience4": "Egna varumärken (private label)",
+      "form_note": "Fyll i formuläret så hör vårt team av dig inom 2 arbetsdagar med en individuell offert och samarbetsvillkor."
+    },
+    "b2b_auth": {
+      "tab_register": "Registrera företag",
+      "tab_login": "Logga in",
+      "tab_quote": "Begär offert",
+      "company_name": "Företagsnamn",
+      "tax_id": "Org.nr (valfritt)",
+      "email": "E-postadress",
+      "password": "Lösenord",
+      "register_submit": "Registrera företag",
+      "login_submit": "Logga in",
+      "register_hint": "Vi kontrollerar ditt företag manuellt och svarar via e-post, vanligtvis inom 2 arbetsdagar. När det är godkänt loggar du in med samma e-postadress för att se grossistpriserna.",
+      "active_title": "B2B-läge aktivt",
+      "active_text": "Inloggad som {{ company }}. Ditt företagskonto är aktivt.",
+      "browse_cta": "Bläddra i butiken",
+      "logout": "Logga ut",
+      "header_active": "Grossistpriser aktiva — {{ company }}",
+      "header_logout": "Logga ut",
+      "login_hint": "Är ditt konto redan godkänt? Logga in med ditt företagskonto för att se dina grossistpriser.",
+      "oib": "OIB / organisationsnummer",
+      "vat_number": "VAT-nummer",
+      "vat_hint": "VAT-nummer med landsprefix, t.ex. HR12345678901. Kroatiska företag anger sitt OIB, övriga länder sitt organisationsnummer. Alla fält är obligatoriska.",
+      "error_id": "Ange ditt organisationsnummer (5–20 tecken).",
+      "verifying": "Vi verifierar ditt företag …",
+      "result_approved_title": "Företaget är verifierat",
+      "result_approved_text": "Ditt företagskonto är klart. Logga in med e-postadressen du angav — vi skickar en inloggningskod eller en aktiveringslänk — för att se grossistpriserna.",
+      "result_pending_title": "Tack — vi granskar ditt företag",
+      "result_pending_text": "Vi kunde inte bekräfta dina uppgifter automatiskt. Vårt team granskar dem och svarar via e-post, vanligtvis inom 2 arbetsdagar.",
+      "result_exists_title": "Du har redan ett företagskonto",
+      "result_exists_text": "Den här e-postadressen är redan registrerad för grossist. Logga in för att se dina priser.",
+      "sent_title": "Tack — vi granskar ditt företag",
+      "sent_text": "Vi har tagit emot din förfrågan. Vi kontrollerar dina uppgifter och svarar via e-post, vanligtvis inom 2 arbetsdagar. När företaget är godkänt loggar du in med samma e-postadress för att se grossistpriserna.",
+      "error_required": "Fyll i det här fältet.",
+      "error_email": "Ange en giltig e-postadress.",
+      "error_oib": "OIB måste ha 11 siffror och en giltig kontrollsiffra.",
+      "error_vat": "Ange VAT-numret med landsprefix, t.ex. HR12345678901.",
+      "error_generic": "Något gick fel. Försök igen om en stund."
+    },
+    "spice_club_page": {
+      "meta_title": "Kryddklubben",
+      "meta_description": "Ett månatligt överraskningspaket med kryddor och torkad frukt från Centralasien — gå med i väntelistan.",
+      "eyebrow": "Kommer snart",
+      "title": "Nature Picks Kryddklubb",
+      "description": "Ett månatligt paket med en noggrant utvald produkt från Centralasien. Vi bygger fortfarande — anmäl dig och visa oss att det är värt att lansera.",
+      "how_title": "Så kommer det att fungera",
+      "step1_title": "En ny smak varje månad",
+      "step1_text": "En produkt som ännu inte finns i vårt ordinarie sortiment, rakt till din brevlåda.",
+      "step2_title": "Utan bindningstid",
+      "step2_text": "Säg upp när du vill — med ett klick, inga frågor.",
+      "step3_title": "Varje produkts historia",
+      "step3_text": "Varje paket kommer med ett litet kort om ursprung och användning.",
+      "waitlist_label": "Väntelista",
+      "waitlist_title": "Var först när vi lanserar",
+      "waitlist_text": "Ingen bindningstid eller betalning nu — bara ett mejl när Kryddklubben är redo för anmälan."
+    },
+    "shipping_returns_page": {
+      "meta_title": "Frakt & returer",
+      "meta_description": "Nature Picks frakt- och returpolicy — leveranskostnader per land och reglerna för att frånträda ett köp.",
+      "eyebrow": "Frakt & returer",
+      "title": "Frakt & returer",
+      "contact_prompt": "Något oklart eller en ovanlig situation? Skriv till oss — vi läser varje meddelande.",
+      "cta_contact": "Kontakta oss",
+      "shipping_title": "Shipping policy",
+      "refund_title": "Leverans och ångerrätt"
+    },
+    "search": {
+      "placeholder": "Sök produkter...",
+      "no_results": "Inga resultat för den här sökningen.",
+      "close_aria": "Stäng sökning",
+      "open_aria": "Sök"
+    },
+    "categories": {
+      "notter_snacks": {
+        "name": "Nötter & snacks",
+        "tagline": "Krispiga, rostade, utan onödiga tillsatser",
+        "description": "Mandlar, jordnötter och kärnor rostade i små satser för att bevara naturlig smak och knaprighet."
+      },
+      "naturliga_kryddor": {
+        "name": "Naturliga kryddor",
+        "tagline": "Intensiv arom rakt ner i grytan",
+        "description": "Malda och torkade kryddor — från söt paprika till gurkmeja — utan konserveringsmedel eller konstgjorda fyllmedel."
+      },
+      "torkad_frukt": {
+        "name": "Torkad frukt",
+        "tagline": "Naturlig sötma till ett hälsosamt mellanmål",
+        "description": "Gojibär och annan torkad frukt, torkad utan tillsatt socker och redo att ätas direkt ur förpackningen."
+      },
+      "soltorkade_gronsaker": {
+        "name": "Soltorkade grönsaker",
+        "tagline": "Sommarens koncentrerade smak",
+        "description": "Soltorkade tomater, lök och paprikaflingor — perfekt för såser, röror och grytor."
+      },
+      "baljvaxter": {
+        "name": "Baljväxter",
+        "tagline": "Växtbaserat protein varje dag",
+        "description": "Rostade kikärter och andra baljväxter — ett mättande mellanmål eller en bas för hemgjord hummus."
+      },
+      "ortteer": {
+        "name": "Örtteer",
+        "tagline": "Naturliga blandningar att brygga",
+        "description": "Torkade örter och örtblandningar för vardagligt bryggande."
+      },
+      "sotsaker_delikatesser": {
+        "name": "Sötsaker & delikatesser",
+        "tagline": "Små glädjeämnen av naturliga ingredienser",
+        "description": "Utvalda delikatesser till kaffet, till efterrätt eller som present."
+      },
+      "gavopaket": {
+        "name": "Presentset",
+        "tagline": "Bygg din egen present av naturliga produkter",
+        "description": "Välj minst 3 produkter som skickas tillsammans — en färdig, personlig present."
+      }
+    },
+    "recipes": {
+      "page_title": "Recept från Östern",
+      "page_description": "Enkla rätter och infusioner med våra kryddor, nötter och torkad frukt — med en ingredienslista du kan lägga direkt i varukorgen.",
+      "ingredients_title": "Ingredienser",
+      "steps_title": "Gör så här"
+    },
+    "blog": {
+      "no_articles": "Inga inlägg ännu."
+    }
+  }
+}

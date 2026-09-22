@@ -1,0 +1,40 @@
+{%- comment -%}
+  Predictive search results (React <SearchModal /> list). Rendered by the Section Rendering API
+  (/search/suggest?section_id=np-predictive-search) and injected into the search modal.
+{%- endcomment -%}
+<div id="np-predictive-search-results">
+  {%- if predictive_search.performed -%}
+    {%- assign found_products = predictive_search.resources.products -%}
+    {%- if found_products.size == 0 -%}
+      <p class="px-3 py-8 text-center text-sm text-[var(--color-charcoal-soft)]">{{ 'np.search.no_results' | t }}</p>
+    {%- else -%}
+      <ul class="flex flex-col gap-1" role="list">
+        {%- for product in found_products limit: 8 -%}
+          {%- capture weight_label -%}{%- render 'np-weight', grams: product.selected_or_first_available_variant.weight -%}{%- endcapture -%}
+          {%- assign weight_label = weight_label | strip -%}
+          <li>
+            <a href="{{ product.url }}" class="flex items-center gap-3 rounded-2xl p-2 hover:bg-[var(--color-cream-soft)]">
+              {%- render 'np-product-image', image: product.featured_media, alt: product.title, class: 'h-14 w-14 flex-shrink-0 rounded-xl', sizes: '56px', widths: '56, 112, 168', index: forloop.index0 -%}
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium text-[var(--color-charcoal)]">{{ product.title | escape }}</p>
+                {%- if weight_label != '' -%}
+                  <p class="text-xs text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
+                {%- endif -%}
+              </div>
+              <span class="flex-shrink-0 text-sm font-semibold text-[var(--color-charcoal)]">{{ product.price | money_without_trailing_zeros }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options%5Bprefix%5D=last" class="mt-1 flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-semibold text-[var(--color-paprika-dark)] hover:bg-[var(--color-cream-soft)]">
+        {{ 'templates.search.search_for' | t: terms: predictive_search.terms }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+      </a>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Predictive search"
+}
+{% endschema %}

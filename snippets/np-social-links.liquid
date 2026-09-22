@@ -1,0 +1,29 @@
+{%- comment -%}Round social buttons (footer). Links come from Theme settings > Social media.{%- endcomment -%}
+{%- if settings.social_instagram_link != blank
+  or settings.social_facebook_link != blank
+  or settings.social_tiktok_link != blank
+  or settings.social_youtube_link != blank
+-%}
+  <div class="flex items-center gap-3">
+    {%- if settings.social_instagram_link != blank -%}
+      <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'general.social.links.instagram' | t }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:bg-white">
+        {% render 'icon', name: 'instagram', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+    {%- if settings.social_facebook_link != blank -%}
+      <a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'general.social.links.facebook' | t }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:bg-white">
+        {% render 'icon', name: 'facebook', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+    {%- if settings.social_tiktok_link != blank -%}
+      <a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'general.social.links.tiktok' | t }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:bg-white">
+        {% render 'icon', name: 'tiktok', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+    {%- if settings.social_youtube_link != blank -%}
+      <a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'general.social.links.youtube' | t }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-line)] text-[var(--color-charcoal)] hover:bg-white">
+        {% render 'icon', name: 'youtube', class: 'h-4 w-4' %}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

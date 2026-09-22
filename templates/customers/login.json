@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-login",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

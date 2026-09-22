@@ -1,0 +1,326 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Nature Pick",
+    "theme_version": "1.0.0",
+    "theme_author": "Nature Pick",
+    "theme_documentation_url": "https://naturepick.se",
+    "theme_support_url": "https://naturepick.se"
+  },
+  {
+    "name": "Logo & favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_size",
+        "min": 32,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "Logo height",
+        "default": 56
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "32 x 32 px PNG"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Social sharing image",
+        "info": "1200 x 630 px. Used when a page has no image of its own."
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The design tokens of the storefront. Changing them recolors the whole shop."
+      },
+      {
+        "type": "color",
+        "id": "color_cream",
+        "label": "Page background",
+        "default": "#f6f1e7"
+      },
+      {
+        "type": "color",
+        "id": "color_cream_soft",
+        "label": "Soft background (footer, bands)",
+        "default": "#e6dfd5"
+      },
+      {
+        "type": "color",
+        "id": "color_paper",
+        "label": "Cards and panels",
+        "default": "#fcfaf7"
+      },
+      {
+        "type": "color",
+        "id": "color_paprika",
+        "label": "Accent (buttons, badges)",
+        "default": "#e9a824"
+      },
+      {
+        "type": "color",
+        "id": "color_paprika_dark",
+        "label": "Accent, dark (hover, links)",
+        "default": "#bf8a1e"
+      },
+      {
+        "type": "color",
+        "id": "color_paprika_light",
+        "label": "Accent, light (highlights)",
+        "default": "#faeccf"
+      },
+      {
+        "type": "color",
+        "id": "color_olive",
+        "label": "Green (top bar, brand story)",
+        "default": "#2f4a33"
+      },
+      {
+        "type": "color",
+        "id": "color_olive_dark",
+        "label": "Green, dark",
+        "default": "#273e2b"
+      },
+      {
+        "type": "color",
+        "id": "color_olive_light",
+        "label": "Green, light",
+        "default": "#b8cbb4"
+      },
+      {
+        "type": "color",
+        "id": "color_charcoal",
+        "label": "Text and dark sections",
+        "default": "#2f4a33"
+      },
+      {
+        "type": "color",
+        "id": "color_charcoal_soft",
+        "label": "Secondary text",
+        "default": "#83907f"
+      },
+      {
+        "type": "color",
+        "id": "color_line",
+        "label": "Borders and dividers",
+        "default": "#e1dcd9"
+      },
+      {
+        "type": "color",
+        "id": "color_gold",
+        "label": "Gold (stars, B2B)",
+        "default": "#e9a824"
+      },
+      {
+        "type": "color",
+        "id": "color_gold_on_dark",
+        "label": "Gold on dark backgrounds",
+        "default": "#edb647"
+      }
+    ]
+  },
+  {
+    "name": "Company & contact",
+    "settings": [
+      {
+        "type": "text",
+        "id": "company_name",
+        "label": "Company name",
+        "default": "NP Market AB"
+      },
+      {
+        "type": "text",
+        "id": "company_address",
+        "label": "Company address",
+        "default": "Fibergatan 3, 267 73 Billesholm, Sweden"
+      },
+      {
+        "type": "text",
+        "id": "company_vat",
+        "label": "EU VAT number",
+        "default": "SE559315126801"
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Contact e-mail",
+        "default": "info@naturepick.se"
+      },
+      {
+        "type": "text",
+        "id": "contact_phone",
+        "label": "Contact phone",
+        "default": "+46 76 045 81 40"
+      }
+    ]
+  },
+  {
+    "name": "Navigation",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "menu_categories",
+        "label": "Categories menu",
+        "info": "Used for the shop dropdown, the mobile menu, the footer and the category pills on collection pages."
+      }
+    ]
+  },
+  {
+    "name": "Cart & shipping",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Cart page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "textarea",
+        "id": "free_shipping_thresholds",
+        "label": "Free shipping thresholds",
+        "info": "One line per market: COUNTRY:AMOUNT:CURRENCY, e.g. SE:599:SEK or DE:59:EUR. A line only applies while the visitor sees prices in that currency. Countries without a line show no free-shipping bar.",
+        "default": "SE:599:SEK\nDE:59:EUR\nPL:59:EUR\nDK:90:EUR\nNO:90:EUR\nBE:150:EUR\nFI:150:EUR\nFR:150:EUR\nLU:150:EUR\nNL:150:EUR\nIT:150:EUR\nAT:150:EUR\nPT:150:EUR\nCH:150:EUR\nSI:150:EUR\nCZ:150:EUR\nHU:150:EUR\nES:150:EUR"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_cart_note",
+        "label": "Cart note on the cart page",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "B2B / wholesale",
+    "settings": [
+      {
+        "type": "text",
+        "id": "b2b_customer_tag",
+        "label": "Customer tag of approved business customers",
+        "default": "b2b",
+        "info": "You approve a company by adding this tag to its customer in the Shopify admin (Customers)."
+      },
+      {
+        "type": "text",
+        "id": "b2b_endpoint",
+        "label": "B2B verification service URL (optional)",
+        "info": "Leave empty (default): registrations are sent to the store inbox and approved by hand in the Shopify admin. Only fill this in if you run the optional b2b-verify-service (see its README), e.g. https://<your-service>/api/b2b/register."
+      },
+      {
+        "type": "range",
+        "id": "b2b_discount_percent",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "%",
+        "label": "Wholesale discount shown on prices",
+        "default": 0,
+        "info": "0 = do not show wholesale prices. Only use this when a matching automatic discount for customers with the tag exists in Shopify - the storefront price is informational, the discount itself is applied by Shopify at checkout."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "default": "https://www.instagram.com/naturepickmarket/"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "default": "https://www.facebook.com/profile.php?id=61567376463484"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      }
+    ]
+  },
+  {
+    "name": "Storefront features",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_cookie_banner",
+        "label": "Cookie banner",
+        "info": "Connected to Shopify's Customer Privacy API. Turn it off if you use Shopify's built-in cookie banner instead.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_quick_contact",
+        "label": "Quick contact button (bottom left)",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_wishlist",
+        "label": "Wishlist hearts",
+        "info": "Saved in the visitor's browser.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quick_view",
+        "label": "Quick view on product cards",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "soften_uppercase_titles",
+        "label": "Show ALL-CAPS product titles in sentence case",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Product pages",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_default_origin",
+        "label": "Show a default country of origin",
+        "info": "Used in the product specification when a product has no metafield custom.origin.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "default_origin",
+        "label": "Default country of origin",
+        "info": "Leave empty for the translated default (Uzbekistan)."
+      }
+    ]
+  }
+]

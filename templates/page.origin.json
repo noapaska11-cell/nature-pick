@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "origin"
+      }
+    },
+    "main": {
+      "type": "np-origin",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

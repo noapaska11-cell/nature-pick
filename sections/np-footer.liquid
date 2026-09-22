@@ -1,0 +1,142 @@
+{%- liquid
+  assign shop_menu = linklists[settings.menu_categories]
+  if shop_menu == blank
+    assign shop_menu = linklists['main-menu']
+  endif
+  assign help_menu = linklists[section.settings.help_menu]
+  assign company = settings.company_name
+  assign address = settings.company_address
+  assign vat = settings.company_vat
+  assign footer_year = 'now' | date: '%Y'
+  assign tagline = section.settings.tagline
+  if tagline == blank
+    assign tagline = 'np.footer.tagline' | t
+  endif
+-%}
+
+<footer class="border-t border-[var(--color-line)] bg-[var(--color-cream-soft)]">
+  <div class="container-page py-14">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
+      <div>
+        {%- if settings.logo != blank -%}
+          {{ settings.logo | image_url: width: 240 | image_tag: loading: 'lazy', alt: shop.name, class: 'h-16 w-16 object-contain', width: 64, height: 64 }}
+        {%- else -%}
+          <img src="{{ 'np-logo.webp' | asset_url }}" width="600" height="600" loading="lazy" alt="{{ shop.name | escape }}" class="h-16 w-16 object-contain">
+        {%- endif -%}
+        <p class="mt-3 max-w-xs text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ tagline }}</p>
+
+        {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+          <ul class="mt-6 flex flex-wrap items-center gap-2" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li class="flex h-7 items-center overflow-hidden rounded-md border border-[var(--color-line)] bg-white px-1">
+                {{ type | payment_type_svg_tag: class: 'h-5 w-auto' }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <div class="mt-4">
+          {% render 'np-social-links' %}
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold text-[var(--color-charcoal)]">{{ 'np.footer.categories_title' | t }}</h2>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {%- if shop_menu != blank and shop_menu.links.size > 0 -%}
+            {%- for link in shop_menu.links limit: 6 -%}
+              <li><a href="{{ link.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for collection in collections limit: 6 -%}
+              {%- unless collection.handle == 'frontpage' or collection.products_count == 0 -%}
+                <li><a href="{{ collection.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ collection.title }}</a></li>
+              {%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold text-[var(--color-charcoal)]">{{ 'np.footer.help_title' | t }}</h2>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {%- if help_menu != blank and help_menu.links.size > 0 -%}
+            {%- for link in help_menu.links -%}
+              <li><a href="{{ link.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- if pages.contact != blank -%}
+              <li><a href="{{ pages.contact.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_contact' | t }}</a></li>
+            {%- endif -%}
+            {%- if pages['shipping-returns'] != blank -%}
+              <li><a href="{{ pages['shipping-returns'].url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_shipping' | t }}</a></li>
+            {%- elsif shop.shipping_policy.url != blank -%}
+              <li><a href="{{ shop.shipping_policy.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_shipping' | t }}</a></li>
+            {%- endif -%}
+            {%- if blogs.recipes != blank -%}
+              <li><a href="{{ blogs.recipes.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_recipes' | t }}</a></li>
+            {%- endif -%}
+            {%- if pages.origin != blank -%}
+              <li><a href="{{ pages.origin.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_origin' | t }}</a></li>
+            {%- endif -%}
+            {%- if pages['spice-club'] != blank -%}
+              <li><a href="{{ pages['spice-club'].url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_spice_club' | t }}</a></li>
+            {%- endif -%}
+            {%- if pages.faq != blank -%}
+              <li><a href="{{ pages.faq.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_faq' | t }}</a></li>
+            {%- endif -%}
+            {%- if shop.terms_of_service.url != blank -%}
+              <li><a href="{{ shop.terms_of_service.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_terms' | t }}</a></li>
+            {%- endif -%}
+            {%- if shop.privacy_policy.url != blank -%}
+              <li><a href="{{ shop.privacy_policy.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_privacy' | t }}</a></li>
+            {%- endif -%}
+            {%- if pages.b2b != blank -%}
+              <li><a href="{{ pages.b2b.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.footer.link_b2b' | t }}</a></li>
+            {%- endif -%}
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-sm font-semibold text-[var(--color-charcoal)]">{{ 'np.footer.newsletter_title' | t }}</h2>
+        <p class="mt-3 text-sm text-[var(--color-charcoal-soft)]">{{ 'np.footer.newsletter_text' | t }}</p>
+        {% render 'np-newsletter-form', form_id: 'FooterNewsletter' %}
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col gap-4 border-t border-[var(--color-line)] pt-6 text-xs text-[var(--color-charcoal-soft)] md:flex-row md:items-center md:justify-between">
+      <p>{{ 'np.footer.company_line_html' | t: company: company, address: address, vat: vat }}</p>
+      <p>{{ 'np.footer.copyright' | t: year: footer_year }}</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "info": "Leave empty to use the translated default text."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show accepted payment methods",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "help_menu",
+      "label": "Customer service menu",
+      "info": "Leave empty to build the list automatically from the pages: contact, shipping-returns, origin, spice-club, faq, b2b and the store policies."
+    }
+  ]
+}
+{% endschema %}

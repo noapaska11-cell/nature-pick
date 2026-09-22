@@ -1,0 +1,21 @@
+{%- assign hero_eyebrow = 'np.category_grid.label' | t -%}
+{%- assign hero_title = 'np.category_grid.title' | t -%}
+{%- render 'np-page-hero', eyebrow: hero_eyebrow, title: hero_title, description: nil -%}
+<section class="container-page py-14">
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    {%- for collection in collections -%}
+      {%- unless collection.handle == 'frontpage' or collection.products_count == 0 -%}
+        {%- render 'np-category-card', collection: collection, index: forloop.index0 -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection list",
+  "enabled_on": {
+    "templates": ["list-collections"]
+  }
+}
+{% endschema %}

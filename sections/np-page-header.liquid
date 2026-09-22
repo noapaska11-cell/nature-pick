@@ -1,0 +1,105 @@
+{%- comment -%}
+  Title band for content pages. The "content" setting selects which translated texts are used
+  (eyebrow / title / description in all languages); any text typed in the settings wins.
+{%- endcomment -%}
+{%- liquid
+  assign preset = section.settings.content
+  assign eyebrow = section.settings.eyebrow
+  assign title = section.settings.title
+  assign description = section.settings.description
+
+  case preset
+    when 'faq'
+      assign default_eyebrow = 'np.faq.page_eyebrow' | t
+      assign default_title = 'np.faq.page_title' | t
+      assign default_description = 'np.faq.page_description' | t
+    when 'about'
+      assign default_eyebrow = 'np.about_page.eyebrow' | t
+      assign default_title = 'np.about_page.title' | t
+      assign default_description = 'np.about_page.description' | t
+    when 'origin'
+      assign default_eyebrow = 'np.origin_page.eyebrow' | t
+      assign default_title = 'np.origin_page.title' | t
+      assign default_description = 'np.origin_page.description' | t
+    when 'contact'
+      assign default_eyebrow = 'np.contact_page.eyebrow' | t
+      assign default_title = 'np.contact_page.title' | t
+      assign default_description = 'np.contact_page.description' | t
+    when 'b2b'
+      assign default_eyebrow = 'np.b2b_page.eyebrow' | t
+      assign default_title = 'np.b2b_page.title' | t
+      assign default_description = 'np.b2b_page.description' | t
+    when 'club'
+      assign default_eyebrow = 'np.spice_club_page.eyebrow' | t
+      assign default_title = 'np.spice_club_page.title' | t
+      assign default_description = 'np.spice_club_page.description' | t
+    when 'shipping'
+      assign default_eyebrow = 'np.shipping_returns_page.eyebrow' | t
+      assign default_title = 'np.shipping_returns_page.title' | t
+      assign default_description = ''
+    when 'wishlist'
+      assign default_eyebrow = 'np.wishlist.title' | t
+      assign default_title = 'np.wishlist.title' | t
+      assign default_description = ''
+    else
+      assign default_eyebrow = page.title
+      assign default_title = page.title
+      assign default_description = ''
+  endcase
+
+  if eyebrow == blank
+    assign eyebrow = default_eyebrow
+  endif
+  if title == blank
+    assign title = default_title
+  endif
+  if description == blank
+    assign description = default_description
+  endif
+-%}
+{%- render 'np-page-hero', eyebrow: eyebrow, title: title, description: description -%}
+
+{% schema %}
+{
+  "name": "Page header",
+  "settings": [
+    {
+      "type": "select",
+      "id": "content",
+      "label": "Translated texts",
+      "options": [
+        { "value": "custom", "label": "Page title (custom)" },
+        { "value": "faq", "label": "FAQ" },
+        { "value": "about", "label": "About / Our origin" },
+        { "value": "origin", "label": "Product origin (QR)" },
+        { "value": "contact", "label": "Contact" },
+        { "value": "b2b", "label": "B2B" },
+        { "value": "club", "label": "Spice Club" },
+        { "value": "shipping", "label": "Shipping & returns" },
+        { "value": "wishlist", "label": "Wishlist" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Breadcrumb label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page header"
+    }
+  ]
+}
+{% endschema %}

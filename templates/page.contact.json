@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "contact"
+      }
+    },
+    "main": {
+      "type": "np-contact",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

@@ -1,0 +1,299 @@
+{%- liquid
+  assign shop_menu = linklists[settings.menu_categories]
+  if shop_menu == blank
+    assign shop_menu = linklists['main-menu']
+  endif
+  assign nav_menu = linklists[section.settings.nav_menu]
+
+  assign wishlist_href = section.settings.wishlist_url
+  if wishlist_href == blank
+    assign wishlist_href = pages.wishlist.url
+  endif
+
+  assign b2b_href = section.settings.b2b_url
+  if b2b_href == blank
+    assign b2b_href = pages.b2b.url
+  endif
+
+  assign b2b_active = false
+  assign b2b_company = ''
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+      assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
+    endif
+  endif
+
+  capture np_threshold
+    render 'np-threshold'
+  endcapture
+  assign np_threshold = np_threshold | strip
+  if np_threshold != ''
+    assign threshold_money = np_threshold | plus: 0 | times: 100 | money_without_trailing_zeros
+    assign default_announcement = 'np.common.free_shipping_bar' | t: amount: threshold_money
+  else
+    assign default_announcement = 'np.hero.eyebrow' | t
+  endif
+  assign announcement_text = section.settings.announcement | default: default_announcement
+
+  assign logo_style = 'height:' | append: settings.logo_size | append: 'px'
+
+  assign b2b_link_class = 'flex items-center gap-1.5 rounded-full border border-[var(--color-gold)]/50 px-3 py-1.5 text-sm font-semibold text-[var(--color-gold)] hover:bg-[var(--color-gold)]/10'
+  assign icon_button_class = 'relative flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10'
+  assign badge_class = 'absolute -right-0.5 -top-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[var(--color-paprika)] px-1 text-[10px] font-bold text-white'
+-%}
+
+<header class="border-b border-white/10 bg-[var(--color-charcoal)]/95 backdrop-blur" data-header>
+  {%- if section.settings.show_announcement or b2b_active -%}
+    <div class="border-b border-white/10 text-white {% if b2b_active %}bg-[var(--color-charcoal)]{% else %}bg-[var(--color-olive)]{% endif %}">
+      <div class="container-page flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center text-xs font-medium tracking-wide sm:text-sm">
+        {%- if b2b_active -%}
+          <span class="flex items-center gap-1.5">
+            {% render 'icon', name: 'building', class: 'h-3.5 w-3.5 flex-shrink-0 text-[var(--color-gold-on-dark)]' %}
+            {{ 'np.b2b_auth.header_active' | t: company: b2b_company }}
+          </span>
+          <a href="{{ routes.account_logout_url }}" class="underline decoration-white/50 underline-offset-2 hover:decoration-white">{{ 'np.b2b_auth.header_logout' | t }}</a>
+        {%- else -%}
+          <span>{{ announcement_text }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="container-page flex h-18 items-center justify-between gap-4 py-3">
+    <a href="{{ routes.root_url }}" class="flex flex-shrink-0 items-center" aria-label="{{ shop.name | escape }}">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 300 | image_tag: loading: 'eager', fetchpriority: 'high', alt: shop.name, class: 'w-auto object-contain', style: logo_style, sizes: '120px', widths: '120, 240, 300' }}
+      {%- else -%}
+        <img src="{{ 'np-logo.webp' | asset_url }}" width="600" height="600" alt="{{ shop.name | escape }}" fetchpriority="high" class="w-auto object-contain" style="{{ logo_style }}">
+      {%- endif -%}
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="{{ 'np.nav.menu' | t }}">
+      {%- if shop_menu != blank and shop_menu.links.size > 0 -%}
+        <div class="np-dropdown relative" data-dropdown>
+          <button type="button" data-dropdown-toggle aria-haspopup="true" aria-expanded="false" class="flex items-center gap-1 text-sm font-medium text-white hover:text-[var(--color-gold-on-dark)]">
+            {{ 'np.nav.shop' | t }}
+            {% render 'icon', name: 'chevron-down', class: 'h-3.5 w-3.5' %}
+          </button>
+          <div data-dropdown-panel class="absolute left-1/2 top-full z-10 w-[36rem] -translate-x-1/2 pt-3">
+            <div class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-4 shadow-xl">
+              <div class="grid grid-cols-2 gap-1">
+                {%- for link in shop_menu.links -%}
+                  {%- liquid
+                    assign tagline = ''
+                    if link.type == 'collection_link'
+                      assign tagline = link.object.metafields.custom.tagline.value
+                      if tagline == blank
+                        assign tagline_key = 'np.categories.' | append: link.object.handle | replace: '-', '_' | append: '.tagline'
+                        assign tagline = tagline_key | t: default: '@@'
+                        if tagline == '@@'
+                          assign tagline = ''
+                        endif
+                      endif
+                    endif
+                  -%}
+                  <a href="{{ link.url }}" class="rounded-xl px-3 py-2.5 hover:bg-[var(--color-cream)]">
+                    <p class="text-sm font-medium text-[var(--color-charcoal)]">{{ link.title }}</p>
+                    {%- if tagline != blank -%}
+                      <p class="text-xs text-[var(--color-charcoal-soft)]">{{ tagline }}</p>
+                    {%- endif -%}
+                  </a>
+                {%- endfor -%}
+              </div>
+              <a href="{{ routes.all_products_collection_url }}" class="mt-1 flex items-center justify-between rounded-xl border-t border-[var(--color-line)] px-3 pt-3 text-sm font-semibold text-[var(--color-paprika-dark)]">
+                {{ 'np.common.all_products' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- render 'np-nav-links', menu: nav_menu, variant: 'desktop' -%}
+
+      {%- if section.settings.show_b2b and b2b_href != blank -%}
+        <a href="{{ b2b_href }}" class="{{ b2b_link_class }}">
+          {% render 'icon', name: 'building', class: 'h-3.5 w-3.5' %}
+          {{ 'np.nav.b2b' | t }}
+        </a>
+      {%- endif -%}
+    </nav>
+
+    <div class="flex items-center gap-1.5">
+      {%- if section.settings.show_language -%}
+        {% render 'np-localization', kind: 'language', variant: 'desktop', form_id: 'HeaderLanguageForm' %}
+      {%- endif -%}
+      {%- if section.settings.show_country -%}
+        {% render 'np-localization', kind: 'country', variant: 'desktop', form_id: 'HeaderCountryForm' %}
+      {%- endif -%}
+
+      <button type="button" data-search-open aria-label="{{ 'np.nav.search' | t }}" class="{{ icon_button_class }}">
+        {% render 'icon', name: 'search', class: 'h-5 w-5' %}
+      </button>
+
+      {%- if section.settings.show_account -%}
+        <a href="{{ routes.account_url }}" aria-label="{{ 'customer.account_fallback' | t }}" class="hidden sm:flex {{ icon_button_class }}">
+          {% render 'icon', name: 'user', class: 'h-5 w-5' %}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_wishlist and settings.show_wishlist and wishlist_href != blank -%}
+        <a href="{{ wishlist_href }}" aria-label="{{ 'np.nav.wishlist' | t }}" data-wishlist-link class="hidden sm:flex {{ icon_button_class }}">
+          {% render 'icon', name: 'heart', class: 'h-5 w-5' %}
+          <span data-wishlist-count hidden class="{{ badge_class }}">0</span>
+        </a>
+      {%- endif -%}
+
+      {%- if settings.cart_type == 'page' -%}
+        <a href="{{ routes.cart_url }}" aria-label="{{ 'np.nav.cart' | t }}" class="{{ icon_button_class }}">
+          {% render 'icon', name: 'cart', class: 'h-5 w-5' %}
+          <span data-cart-badge {% if cart.item_count == 0 %}hidden{% endif %} class="{{ badge_class }}">{{ cart.item_count }}</span>
+        </a>
+      {%- else -%}
+        <button type="button" data-cart-open aria-haspopup="dialog" aria-label="{{ 'np.nav.cart' | t }}" class="{{ icon_button_class }}">
+          {% render 'icon', name: 'cart', class: 'h-5 w-5' %}
+          <span data-cart-badge {% if cart.item_count == 0 %}hidden{% endif %} class="{{ badge_class }}">{{ cart.item_count }}</span>
+        </button>
+      {%- endif -%}
+
+      <button type="button" data-menu-toggle aria-expanded="false" aria-controls="np-mobile-menu" aria-label="{{ 'np.nav.menu' | t }}" class="{{ icon_button_class }} lg:hidden">
+        <span data-menu-icon-open>{% render 'icon', name: 'menu', class: 'h-5 w-5' %}</span>
+        <span data-menu-icon-close hidden>{% render 'icon', name: 'close', class: 'h-5 w-5' %}</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="np-mobile-menu" hidden class="border-t border-[var(--color-line)] bg-[var(--color-paper)] lg:hidden">
+    <div class="container-page flex max-h-[80vh] flex-col gap-1 overflow-y-auto py-3">
+      {%- if shop_menu != blank and shop_menu.links.size > 0 -%}
+        <p class="px-2 pt-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ 'np.category_grid.label' | t }}</p>
+        {%- for link in shop_menu.links -%}
+          <a href="{{ link.url }}" class="rounded-lg px-2 py-2 text-sm text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ link.title }}</a>
+        {%- endfor -%}
+        <hr class="my-2 border-[var(--color-line)]">
+      {%- endif -%}
+
+      {%- render 'np-nav-links', menu: nav_menu, variant: 'mobile' -%}
+
+      {%- if section.settings.show_b2b and b2b_href != blank -%}
+        <a href="{{ b2b_href }}" class="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-[var(--color-gold)] hover:bg-[var(--color-cream)]">
+          {% render 'icon', name: 'building', class: 'h-4 w-4' %}
+          {{ 'np.nav.b2b' | t }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_account -%}
+        <a href="{{ routes.account_url }}" class="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">
+          {% render 'icon', name: 'user', class: 'h-4 w-4' %}
+          {%- if customer -%}{{ 'customer.account_fallback' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_wishlist and settings.show_wishlist and wishlist_href != blank -%}
+        <a href="{{ wishlist_href }}" class="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">
+          {% render 'icon', name: 'heart', class: 'h-4 w-4' %}
+          {{ 'np.nav.wishlist' | t }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_language and localization.available_languages.size > 1 -%}
+        <hr class="my-2 border-[var(--color-line)]">
+        <p class="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ 'localization.language_label' | t }}</p>
+        <div class="px-2">
+          {% render 'np-localization', kind: 'language', variant: 'mobile', form_id: 'MobileLanguageForm' %}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_country and localization.available_countries.size > 1 -%}
+        <hr class="my-2 border-[var(--color-line)]">
+        <p class="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ 'np.currency_switcher.label' | t }}</p>
+        <div class="px-2">
+          {% render 'np-localization', kind: 'country', variant: 'mobile', form_id: 'MobileCountryForm' %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement",
+      "label": "Announcement text",
+      "info": "Leave empty to show the free-shipping message for the visitor's country (Theme settings > Cart & shipping)."
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "nav_menu",
+      "label": "Main links",
+      "info": "Leave empty to use the default links: Bestsellers, Recipes (blog 'recipes'), Our origin (page 'about') and Contact (page 'contact')."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_b2b",
+      "label": "Show B2B link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "b2b_url",
+      "label": "B2B page",
+      "info": "Leave empty to use the page with the handle 'b2b'."
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_language",
+      "label": "Show language switcher",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country",
+      "label": "Show country / currency switcher",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist icon",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "wishlist_url",
+      "label": "Wishlist page",
+      "info": "Leave empty to use the page with the handle 'wishlist'."
+    }
+  ]
+}
+{% endschema %}

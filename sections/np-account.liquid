@@ -1,0 +1,77 @@
+{%- liquid
+  assign is_b2b = false
+  if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    assign is_b2b = true
+  endif
+-%}
+<div class="container-page py-14">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="font-display text-3xl font-semibold text-[var(--color-charcoal)]">{{ 'customer.account.title' | t }}</h1>
+      {%- if is_b2b -%}
+        <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-charcoal)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+          {% render 'icon', name: 'building', class: 'h-3.5 w-3.5 text-[var(--color-gold-on-dark)]' %} {{ 'np.common.b2b_badge' | t }}
+        </p>
+      {%- endif -%}
+    </div>
+    <a href="{{ routes.account_logout_url }}" class="btn-secondary">{{ 'customer.log_out' | t }}</a>
+  </div>
+
+  <div class="mt-8 grid gap-10 lg:grid-cols-[1fr_20rem]">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'customer.orders.title' | t }}</h2>
+      {%- paginate customer.orders by 20 -%}
+        {%- if customer.orders.size > 0 -%}
+          <div class="mt-4 overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)]">
+            <table class="w-full min-w-[520px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-[var(--color-line)] bg-[var(--color-cream-soft)]">
+                  <th class="px-4 py-2.5 font-medium text-[var(--color-charcoal)]">{{ 'customer.orders.order_number' | t }}</th>
+                  <th class="px-4 py-2.5 font-medium text-[var(--color-charcoal)]">{{ 'customer.orders.date' | t }}</th>
+                  <th class="px-4 py-2.5 font-medium text-[var(--color-charcoal)]">{{ 'customer.orders.payment_status' | t }}</th>
+                  <th class="px-4 py-2.5 font-medium text-[var(--color-charcoal)]">{{ 'customer.orders.fulfillment_status' | t }}</th>
+                  <th class="px-4 py-2.5 text-right font-medium text-[var(--color-charcoal)]">{{ 'customer.orders.total' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr class="border-b border-[var(--color-line)] last:border-0">
+                    <td class="px-4 py-3"><a href="{{ order.customer_url }}" aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}" class="font-semibold text-[var(--color-paprika-dark)] hover:underline">{{ order.name }}</a></td>
+                    <td class="px-4 py-3 text-[var(--color-charcoal-soft)]">{{ order.created_at | time_tag: format: 'date' }}</td>
+                    <td class="px-4 py-3 text-[var(--color-charcoal-soft)]">{{ order.financial_status_label }}</td>
+                    <td class="px-4 py-3 text-[var(--color-charcoal-soft)]">{{ order.fulfillment_status_label }}</td>
+                    <td class="px-4 py-3 text-right font-medium text-[var(--color-charcoal)]">{{ order.total_price | money }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+          {% render 'np-pagination', paginate: paginate %}
+        {%- else -%}
+          <p class="mt-4 text-[var(--color-charcoal-soft)]">{{ 'customer.orders.none' | t }}</p>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+
+    <aside class="h-fit rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+      <h2 class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'customer.account.details' | t }}</h2>
+      <p class="mt-3 text-sm font-medium text-[var(--color-charcoal)]">{{ customer.name | escape }}</p>
+      <p class="text-sm text-[var(--color-charcoal-soft)]">{{ customer.email }}</p>
+      {%- if customer.default_address != blank -%}
+        <div class="mt-3 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ customer.default_address | format_address }}</div>
+      {%- endif -%}
+      <a href="{{ routes.account_addresses_url }}" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-paprika-dark)] hover:underline">
+        {{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }}) {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
+      </a>
+    </aside>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account",
+  "enabled_on": {
+    "templates": ["customers/account"]
+  }
+}
+{% endschema %}

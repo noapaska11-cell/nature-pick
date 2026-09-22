@@ -1,0 +1,35 @@
+{%- comment -%}
+  Free-shipping progress bar (React <FreeShippingProgress />).
+  Thresholds are configured per country in Theme settings > Cart & shipping (amount in that
+  market's currency), so every Shopify market gets a correct target. Renders nothing when the
+  visitor's country has no threshold.
+  Params: cart
+{%- endcomment -%}
+{%- capture np_threshold -%}{%- render 'np-threshold' -%}{%- endcapture -%}
+{%- assign np_threshold = np_threshold | strip -%}
+{%- if np_threshold != '' -%}
+  {%- liquid
+    assign threshold_cents = np_threshold | plus: 0 | times: 100
+    assign cart_total = cart.total_price
+    assign remaining = threshold_cents | minus: cart_total
+    assign percent = cart_total | times: 100.0 | divided_by: threshold_cents | round
+    if percent > 100
+      assign percent = 100
+    endif
+    assign remaining_text = remaining | money_without_trailing_zeros
+  -%}
+  <div data-free-shipping>
+    <p class="flex items-center gap-1.5 text-xs font-medium text-[var(--color-charcoal)]">
+      {%- if remaining <= 0 -%}
+        {% render 'icon', name: 'check', class: 'h-3.5 w-3.5 text-[var(--color-olive-dark)]' %}
+        {{ 'np.cart.free_shipping_unlocked' | t }}
+      {%- else -%}
+        {% render 'icon', name: 'truck', class: 'h-3.5 w-3.5' %}
+        {{ 'np.cart.free_shipping_remaining' | t: amount: remaining_text }}
+      {%- endif -%}
+    </p>
+    <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-line)]" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent }}">
+      <div class="h-full rounded-full bg-[var(--color-olive)] transition-all duration-500" style="width: {{ percent }}%"></div>
+    </div>
+  </div>
+{%- endif -%}

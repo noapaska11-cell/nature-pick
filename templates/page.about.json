@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "about"
+      }
+    },
+    "main": {
+      "type": "np-about",
+      "settings": {
+        "collection_1": "notter-snacks",
+        "collection_2": "soltorkade-gronsaker"
+      }
+    }
+  },
+  "order": [
+    "header",
+    "main"
+  ]
+}

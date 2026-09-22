@@ -1,0 +1,34 @@
+{%- paginate blog.articles by 12 -%}
+  {%- render 'np-page-hero', eyebrow: blog.title, title: blog.title, description: nil -%}
+
+  <section class="container-page py-14">
+    {%- if blog.all_tags.size > 0 -%}
+      <div class="mb-8 flex flex-wrap gap-2">
+        <a href="{{ blog.url }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags == blank %}border-[var(--color-charcoal)] bg-[var(--color-charcoal)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ 'np.collection.filter_all' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags contains tag %}border-[var(--color-charcoal)] bg-[var(--color-charcoal)] text-white{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if blog.articles.size == 0 -%}
+      <p class="py-16 text-center text-[var(--color-charcoal-soft)]">{{ 'np.blog.no_articles' | t }}</p>
+    {%- else -%}
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {%- for article in blog.articles -%}
+          {% render 'np-article-card', article: article, index: forloop.index0, sizes: '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw' %}
+        {%- endfor -%}
+      </div>
+      {% render 'np-pagination', paginate: paginate %}
+    {%- endif -%}
+  </section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog",
+  "enabled_on": {
+    "templates": ["blog"]
+  }
+}
+{% endschema %}

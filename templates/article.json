@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "np-article",
+      "settings": {
+        "show_author": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

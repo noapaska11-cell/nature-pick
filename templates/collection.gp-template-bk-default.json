@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "banner": {
+      "type": "np-collection-banner",
+      "settings": {
+        "show_count": true
+      }
+    },
+    "grid": {
+      "type": "np-collection-grid",
+      "settings": {
+        "products_per_page": 24,
+        "show_category_pills": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "grid"
+  ]
+}

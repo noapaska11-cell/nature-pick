@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "banner": {
+      "type": "np-collection-banner",
+      "settings": {
+        "show_count": false
+      }
+    },
+    "builder": {
+      "type": "np-gift-box",
+      "blocks": {
+        "s1": {
+          "type": "source",
+          "settings": {
+            "collection": "naturliga-kryddor"
+          }
+        },
+        "s2": {
+          "type": "source",
+          "settings": {
+            "collection": "ortteer"
+          }
+        },
+        "s3": {
+          "type": "source",
+          "settings": {
+            "collection": "notter-snacks"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "min_items": 3
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "builder"
+  ]
+}

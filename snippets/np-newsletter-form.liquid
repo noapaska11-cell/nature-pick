@@ -1,0 +1,42 @@
+{%- comment -%}
+  Newsletter sign-up (React <NewsletterForm />). Uses Shopify's native customer form, so new
+  subscribers land in Shopify > Customers with the "newsletter" tag and marketing consent.
+
+  Params: dark (true for dark backgrounds), form_id (unique per form on the page), tag (default 'newsletter')
+{%- endcomment -%}
+{%- liquid
+  assign nl_tag = tag | default: 'newsletter'
+  assign nl_id = form_id | default: 'NewsletterForm'
+-%}
+{%- form 'customer', id: nl_id, class: 'mt-4' -%}
+  <input type="hidden" name="contact[tags]" value="{{ nl_tag }}">
+  {%- if form.posted_successfully? -%}
+    <p class="flex items-center gap-2 text-sm font-medium {% if dark %}text-white{% else %}text-[var(--color-olive-dark)]{% endif %}" role="status">
+      {% render 'icon', name: 'check', class: 'h-4 w-4' %} {{ 'np.newsletter_cta.confirmed' | t }}
+    </p>
+  {%- else -%}
+    <div class="flex items-center gap-1 rounded-full border p-1 {% if dark %}border-white/30 bg-white/10{% else %}border-[var(--color-line)] bg-[var(--color-paper)]{% endif %}">
+      <label for="{{ nl_id }}-email" class="sr-only">{{ 'np.common.email' | t }}</label>
+      <input
+        id="{{ nl_id }}-email"
+        type="email"
+        name="contact[email]"
+        required
+        autocomplete="email"
+        value="{{ form.email }}"
+        placeholder="{{ 'np.newsletter_cta.placeholder' | t }}"
+        class="w-full flex-1 rounded-full bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-2 {% if dark %}text-white placeholder:text-white/60 focus-visible:ring-white{% else %}text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-soft)] focus-visible:ring-[var(--color-paprika)]{% endif %}"
+      >
+      <button
+        type="submit"
+        aria-label="{{ 'np.newsletter_cta.submit' | t }}"
+        class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-paprika)] text-white hover:bg-[var(--color-paprika-dark)]"
+      >
+        {% render 'icon', name: 'arrow-right', class: 'h-4 w-4' %}
+      </button>
+    </div>
+    {%- if form.errors -%}
+      <div class="mt-2 text-xs {% if dark %}text-white{% else %}text-[var(--color-paprika-dark)]{% endif %}" role="alert">{{ form.errors | default_errors }}</div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endform -%}

@@ -1,0 +1,54 @@
+{%- comment -%}
+  Header navigation links (desktop row / mobile list).
+  Uses the "Main links" menu when set (child links become a dropdown); otherwise falls back to the
+  storefront's default links: Bestsellers, Recipes, Our origin, Contact - each shown only if its
+  target exists (pages with handles about / contact, blog with handle recipes).
+
+  Params: menu (linklist or blank), variant ('desktop' | 'mobile')
+{%- endcomment -%}
+{%- liquid
+  assign nav_variant = variant | default: 'desktop'
+  if nav_variant == 'mobile'
+    assign link_class = 'rounded-lg px-2 py-2 text-sm font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]'
+  else
+    assign link_class = 'text-sm font-medium text-white hover:text-[var(--color-gold-on-dark)]'
+  endif
+-%}
+{%- if menu != blank and menu.links.size > 0 -%}
+  {%- for link in menu.links -%}
+    {%- if link.links.size > 0 and nav_variant == 'desktop' -%}
+      <div class="np-dropdown relative" data-dropdown>
+        <button type="button" data-dropdown-toggle aria-haspopup="true" aria-expanded="false" class="flex items-center gap-1 {{ link_class }}">
+          {{ link.title }}
+          {% render 'icon', name: 'chevron-down', class: 'h-3.5 w-3.5' %}
+        </button>
+        <div data-dropdown-panel class="absolute left-1/2 top-full z-10 w-60 -translate-x-1/2 pt-3">
+          <div class="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-2 shadow-xl">
+            <a href="{{ link.url }}" class="rounded-xl px-3 py-2 text-sm font-semibold text-[var(--color-paprika-dark)] hover:bg-[var(--color-cream)]">{{ link.title }}</a>
+            {%- for child in link.links -%}
+              <a href="{{ child.url }}" class="rounded-xl px-3 py-2 text-sm text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ child.title }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    {%- else -%}
+      <a href="{{ link.url }}" class="{{ link_class }}" {% if link.current %}aria-current="page"{% endif %}>{{ link.title }}</a>
+      {%- if link.links.size > 0 and nav_variant == 'mobile' -%}
+        {%- for child in link.links -%}
+          <a href="{{ child.url }}" class="ml-3 {{ link_class }} !font-normal">{{ child.title }}</a>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- else -%}
+  <a href="{{ routes.root_url }}#bestsellers" class="{{ link_class }}">{{ 'np.nav.bestsellers' | t }}</a>
+  {%- if blogs.recipes != blank -%}
+    <a href="{{ blogs.recipes.url }}" class="{{ link_class }}">{{ 'np.nav.recipes' | t }}</a>
+  {%- endif -%}
+  {%- if pages.about != blank -%}
+    <a href="{{ pages.about.url }}" class="{{ link_class }}">{{ 'np.nav.origin' | t }}</a>
+  {%- endif -%}
+  {%- if pages.contact != blank -%}
+    <a href="{{ pages.contact.url }}" class="{{ link_class }}">{{ 'np.nav.contact' | t }}</a>
+  {%- endif -%}
+{%- endif -%}
