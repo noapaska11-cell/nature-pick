@@ -1,8 +1,24 @@
 {%- comment -%}
   Cart page (React <CartClient />) on top of Shopify's real cart. Quantity buttons talk to
   /cart/change.js (script re-renders this section through the Section Rendering API);
-  the checkout button posts the standard cart form to Shopify's hosted checkout.
+  the checkout button posts the standard cart form to Shopify's hosted checkout - disabled for a
+  B2B customer whose cart is under Theme settings > B2B / wholesale > "B2B minimum order value".
 {%- endcomment -%}
+{%- liquid
+  assign b2b_active = false
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+    endif
+  endif
+  assign b2b_minimum_met = true
+  if b2b_active and settings.b2b_minimum_order > 0
+    assign b2b_minimum_cents = settings.b2b_minimum_order | times: 100
+    if cart.total_price < b2b_minimum_cents
+      assign b2b_minimum_met = false
+    endif
+  endif
+-%}
 <div data-cart-page data-section-id="{{ section.id }}" data-cart-count="{{ cart.item_count }}">
   {%- if cart.item_count == 0 -%}
     <div class="container-page flex flex-col items-center gap-4 py-24 text-center">
@@ -20,6 +36,10 @@
           {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
           {%- if progress_html contains 'data-free-shipping' -%}
             <div class="mb-6 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3">{{ progress_html }}</div>
+          {%- endif -%}
+
+          {%- if b2b_active -%}
+            <div class="mb-6">{% render 'np-b2b-minimum-order', cart: cart %}</div>
           {%- endif -%}
 
           <p data-cart-error hidden role="alert" class="mb-3 rounded-xl bg-[var(--color-paprika-light)] px-3 py-2 text-sm text-[var(--color-paprika-dark)]"></p>
@@ -102,7 +122,19 @@
             <span>{{ 'np.cart.total' | t }}</span>
             <span>{{ cart.total_price | money_with_currency }}</span>
           </div>
-          <button type="submit" name="checkout" class="btn-primary mt-5 w-full">{{ 'np.cart.checkout' | t }}</button>
+          {%- comment -%}
+            data-b2b-minimum-met carries the server's B2B-view verdict; naturepick.js only enforces it while
+            the price-view toggle (header, B2B customers only) is set to "B2B" - switched to "regular prices"
+            there is no minimum, so the button becomes clickable again without a page reload.
+          {%- endcomment -%}
+          <button
+            type="submit"
+            name="checkout"
+            data-checkout-button
+            {% if b2b_active %}data-b2b-minimum-met="{{ b2b_minimum_met }}"{% endif %}
+            {% unless b2b_minimum_met %}disabled aria-disabled="true"{% endunless %}
+            class="btn-primary mt-5 w-full{% unless b2b_minimum_met %} pointer-events-none opacity-50{% endunless %}"
+          >{{ 'np.cart.checkout' | t }}</button>
           <div class="mt-4 flex flex-col gap-1.5 text-xs text-[var(--color-charcoal-soft)]">
             <span class="flex items-center gap-1.5">{% render 'icon', name: 'shield', class: 'h-3.5 w-3.5' %} {{ 'np.cart.secure' | t }}</span>
             <span class="flex items-center gap-1.5">{% render 'icon', name: 'truck', class: 'h-3.5 w-3.5' %} {{ 'np.cart.shipping_note' | t }}</span>

@@ -314,6 +314,10 @@
           }
         }
       });
+      // cart line items aren't [data-np-price] elements, so the price-view MutationObserver never sees
+      // this swap - re-apply the B2B minimum-order gate here directly (applyB2bMinimumGate is a hoisted
+      // function declaration further down, always defined by the time a cart change can call this)
+      applyB2bMinimumGate();
     },
 
     setCount(count) {
@@ -714,7 +718,9 @@
 
     updateTotals() {
       const buy = $('[data-swap="buy"]', this);
-      const unit = buy ? Number(buy.dataset.unitPrice) : NaN;
+      if (!buy) return;
+      const useRetail = currentPriceView() === 'retail' && buy.dataset.unitPriceRetail !== undefined;
+      const unit = Number(useRetail ? buy.dataset.unitPriceRetail : buy.dataset.unitPrice);
       if (!Number.isFinite(unit)) return;
       const input = $('input[name="quantity"]', this);
       const quantity = Math.max(1, parseInt(input && input.value, 10) || 1);
@@ -1076,8 +1082,268 @@
   // form field names of Shopify's contact form for each B2B field (see snippets/np-contact-form.liquid)
   const B2B_NATIVE_FIELDS = { company: 'contact[name]', email: 'contact[email]', oib: 'contact[OIB]', vat: 'contact[VAT number]' };
 
+  /* B2B company login: e-mail + OIB, no password, no Shopify customer account. The verification service checks the
+     pair against the Shopify customer the admin panel approved and returns a signed token, stored in the browser
+     (see storage helper above) so <np-b2b-session> can show the "logged in" view without a full page reload cycle. */
+  const B2B_SESSION_KEY = 'np-b2b-session';
+
+  class NPB2BLogin extends HTMLElement {
+    connectedCallback() {
+      this.form = $('[data-b2b-login-form]', this);
+      if (!this.form) return;
+      this.form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        this.submit();
+      });
+      this.form.addEventListener('input', (event) => {
+        if (event.target.name) this.setError(event.target.name, '');
+        this.showFormError('');
+      });
+    }
+
+    message(key) {
+      return this.dataset['msg' + key.charAt(0).toUpperCase() + key.slice(1)] || this.dataset.msgGeneric || '';
+    }
+
+    setError(field, text) {
+      const target = $(`[data-error-for="${field}"]`, this);
+      const input = $(`[name="${field}"]`, this.form);
+      if (target) {
+        target.textContent = text;
+        target.hidden = !text;
+      }
+      if (input) input.setAttribute('aria-invalid', text ? 'true' : 'false');
+    }
+
+    showFormError(text) {
+      const box = $('[data-b2b-login-error]', this);
+      if (!box) return;
+      box.textContent = text;
+      box.hidden = !text;
+    }
+
+    values() {
+      const data = new FormData(this.form);
+      return { email: String(data.get('email') || '').trim(), oib: String(data.get('oib') || '').trim() };
+    }
+
+    validate(v) {
+      const errors = {};
+      if (!v.email) errors.email = 'required';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = 'email';
+      if (!v.oib) errors.oib = 'required';
+      return errors;
+    }
+
+    setBusy(busy) {
+      this.busy = busy;
+      const button = $('[data-b2b-login-submit]', this);
+      const label = $('[data-b2b-login-submit-label]', this);
+      const icon = $('[data-b2b-login-submit-icon]', this);
+      button.disabled = busy;
+      label.textContent = busy ? this.dataset.labelVerifying : this.dataset.labelSubmit;
+      if (icon) {
+        if (busy) {
+          icon.dataset.icon = icon.innerHTML;
+          icon.innerHTML = '<span class="np-spinner block"></span>';
+        } else if (icon.dataset.icon) {
+          icon.innerHTML = icon.dataset.icon;
+        }
+      }
+    }
+
+    async submit() {
+      if (this.busy) return;
+      const values = this.values();
+      const errors = this.validate(values);
+      ['email', 'oib'].forEach((field) => this.setError(field, errors[field] ? this.message(errors[field]) : ''));
+      const firstInvalid = Object.keys(errors)[0];
+      if (firstInvalid) {
+        $(`[name="${firstInvalid}"]`, this.form).focus();
+        return;
+      }
+      this.showFormError('');
+      this.setBusy(true);
+      try {
+        const response = await fetch(this.dataset.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.assign({ locale: NP.locale }, values)),
+        });
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (e) {
+          /* not JSON */
+        }
+        if (data.status === 'ok' && data.token) {
+          storage.set(B2B_SESSION_KEY, JSON.stringify({ token: data.token, company: data.company || '' }));
+          window.location.reload(); // <np-b2b-session> picks the stored token up on the next load
+          return;
+        }
+        const key = { 'not-found': 'notFound', pending: 'pending', rejected: 'rejected' }[data.status];
+        this.showFormError(this.message(key || 'generic'));
+      } catch (e) {
+        this.showFormError(this.message('generic'));
+      } finally {
+        this.setBusy(false);
+      }
+    }
+  }
+
+  /* Shows the logged-in ("B2B shop") panel instead of the register/login tabs when a stored login is present, and
+     re-checks it against the service in the background: a company the owner revokes loses the wholesale view again
+     on its next visit without waiting for the 30-day token to expire. */
+  class NPB2BSession extends HTMLElement {
+    connectedCallback() {
+      this.guest = $('[data-b2b-guest]', this);
+      this.active = $('[data-b2b-active]', this);
+      if (!this.guest || !this.active) return;
+      const logoutButton = $('[data-b2b-logout]', this);
+      if (logoutButton) logoutButton.addEventListener('click', () => this.logout());
+
+      const stored = this.readSession();
+      if (!stored) {
+        this.showGuest();
+        return;
+      }
+      this.showActive(stored.company); // optimistic: avoids a flash of the tabs while the background check runs
+      this.verify(stored.token);
+    }
+
+    readSession() {
+      let parsed;
+      try {
+        parsed = JSON.parse(storage.get(B2B_SESSION_KEY) || '');
+      } catch (e) {
+        return null;
+      }
+      return parsed && parsed.token ? parsed : null;
+    }
+
+    showGuest() {
+      this.guest.hidden = false;
+      this.active.hidden = true;
+    }
+
+    showActive(company) {
+      this.guest.hidden = true;
+      this.active.hidden = false;
+      const text = $('[data-b2b-active-text]', this.active);
+      if (text && this.dataset.activeTextTemplate) text.textContent = this.dataset.activeTextTemplate.replace('%COMPANY%', company || '');
+    }
+
+    logout() {
+      storage.set(B2B_SESSION_KEY, '');
+      this.showGuest();
+    }
+
+    async verify(token) {
+      if (!this.dataset.endpoint) return; // no verification service configured: trust the cached session as-is
+      try {
+        const response = await fetch(this.dataset.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (data.status === 'invalid') this.logout();
+        else if (data.status === 'ok') this.showActive(data.company);
+        // "error" (Shopify briefly unreachable): keep the optimistic view and try again on the next page load
+      } catch (e) {
+        /* network error: keep the optimistic view */
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------ B2B price view */
+  /* Lets an approved B2B customer (header toggle, only shown once real B2B pricing is active)
+     switch every price on the site between the wholesale price (default) and the regular retail
+     price, e.g. to see what an end customer would pay. Pure display preference, remembered in this
+     browser - it never changes what Shopify actually charges (cart and checkout always show the
+     real Shopify-computed price). A MutationObserver re-applies it to prices that appear later
+     (product cards loaded via AJAX, quick view, search, collection re-renders, ...).
+     Declared here, before customElements.define() below, because an already-upgraded <np-product>
+     can call updateTotals() -> currentPriceView() synchronously the moment it is defined. */
+  const PRICE_VIEW_KEY = 'np-price-view'; // 'b2b' (default) | 'retail'
+
+  const currentPriceView = () => (storage.get(PRICE_VIEW_KEY) === 'retail' ? 'retail' : 'b2b');
+
+  function applyPriceView(view, root = document) {
+    $$('[data-np-price][data-b2b-price]', root).forEach((el) => {
+      const strike = $('[data-price-strike]', el);
+      const main = $('[data-price-main]', el);
+      const badge = $('[data-price-badge]', el);
+      if (!main) return;
+      const retail = view === 'retail';
+      main.textContent = retail ? el.dataset.retailText : el.dataset.b2bText;
+      if (strike) strike.hidden = retail;
+      if (badge) badge.hidden = retail;
+    });
+    $$('[data-price-view-toggle]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(view === 'retail'));
+      button.textContent = view === 'retail' ? button.dataset.labelShowB2b : button.dataset.labelShowRetail;
+    });
+    $$('[data-swap="buy"][data-unit-price-retail]').forEach((buy) => {
+      const productEl = buy.closest('np-product');
+      if (productEl && productEl.updateTotals) productEl.updateTotals();
+    });
+    applyB2bMinimumGate();
+  }
+
+  /* The B2B minimum order (Theme settings > B2B / wholesale > "B2B minimum order value") only applies
+     while viewing B2B prices: switched to "regular prices" there is no minimum. data-b2b-minimum-met
+     carries the server's B2B-view verdict (rendered with the cart, via Section Rendering API on every
+     add/change); this only decides whether that verdict is currently enforced. Called from
+     applyPriceView() (toggle, initial load) and from cart.applySections() (after every cart change),
+     since cart line items are not [data-np-price] elements the price MutationObserver would catch. */
+  function applyB2bMinimumGate() {
+    const retailView = currentPriceView() === 'retail';
+    $$('[data-b2b-minimum-order]').forEach((el) => {
+      el.hidden = retailView;
+    });
+    $$('[data-checkout-button][data-b2b-minimum-met]').forEach((button) => {
+      const blocked = !retailView && button.dataset.b2bMinimumMet === 'false';
+      button.disabled = blocked;
+      button.setAttribute('aria-disabled', String(blocked));
+      button.classList.toggle('pointer-events-none', blocked);
+      button.classList.toggle('opacity-50', blocked);
+    });
+  }
+
+  function setPriceView(view) {
+    storage.set(PRICE_VIEW_KEY, view);
+    applyPriceView(view);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyPriceView(currentPriceView()));
+  } else {
+    applyPriceView(currentPriceView());
+  }
+
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType !== 1) continue;
+        if (node.matches?.('[data-np-price][data-b2b-price]') || node.querySelector?.('[data-np-price][data-b2b-price]')) {
+          applyPriceView(currentPriceView());
+          return;
+        }
+      }
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+
+  document.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-price-view-toggle]');
+    if (!toggle) return;
+    setPriceView(currentPriceView() === 'retail' ? 'b2b' : 'retail');
+  });
+
   if (!customElements.get('np-b2b-native')) customElements.define('np-b2b-native', NPB2BNative);
   if (!customElements.get('np-b2b-register')) customElements.define('np-b2b-register', NPB2BRegister);
+  if (!customElements.get('np-b2b-login')) customElements.define('np-b2b-login', NPB2BLogin);
+  if (!customElements.get('np-b2b-session')) customElements.define('np-b2b-session', NPB2BSession);
   if (!customElements.get('np-wishlist')) customElements.define('np-wishlist', NPWishlist);
   if (!customElements.get('np-product')) customElements.define('np-product', NPProduct);
   if (!customElements.get('np-recommendations')) customElements.define('np-recommendations', NPRecommendations);

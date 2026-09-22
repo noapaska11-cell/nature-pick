@@ -1,0 +1,36 @@
+{%- comment -%}
+  B2B minimum order notice, shown only to B2B customers when Theme settings > B2B / wholesale >
+  "B2B minimum order value" is greater than 0. Renders nothing for a retail visitor or when no
+  minimum is configured. Sets data-minimum-met="true"/"false" so callers (the checkout button) can
+  read the outcome without recomputing it.
+  Params: cart
+{%- endcomment -%}
+{%- liquid
+  assign b2b_active = false
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+    endif
+  endif
+-%}
+{%- if b2b_active and settings.b2b_minimum_order > 0 -%}
+  {%- liquid
+    assign minimum_cents = settings.b2b_minimum_order | times: 100
+    assign minimum_met = false
+    if cart.total_price >= minimum_cents
+      assign minimum_met = true
+    endif
+    assign remaining_cents = minimum_cents | minus: cart.total_price
+    assign minimum_text = minimum_cents | money_without_trailing_zeros
+    assign remaining_text = remaining_cents | money_without_trailing_zeros
+  -%}
+  <div data-b2b-minimum-order data-minimum-met="{{ minimum_met }}" class="flex items-center gap-2 rounded-xl px-4 py-3 text-sm {% if minimum_met %}bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]{% else %}bg-[var(--color-paprika-light)] text-[var(--color-paprika-dark)]{% endif %}">
+    {%- if minimum_met -%}
+      {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %}
+      <span>{{ 'np.cart.b2b_minimum_met' | t: minimum: minimum_text }}</span>
+    {%- else -%}
+      {% render 'icon', name: 'building', class: 'h-4 w-4 flex-shrink-0' %}
+      <span>{{ 'np.cart.b2b_minimum_not_met' | t: remaining: remaining_text, minimum: minimum_text }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}

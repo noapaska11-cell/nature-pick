@@ -66,23 +66,55 @@ Sve boje su i dalje Theme setting (Customize -> Theme settings -> Colors),
 pa ih možete naknadno fino podesiti bez ikakvog koda.
 
 B2B PRIJAVA I ODOBRAVANJE (najbitniji dio)
-Na stranici B2B firma ispuni 4 OBAVEZNA polja: naziv firme, e-mail, OIB
-(matični broj) i VAT broj. Tema provjerava format (kontrolna znamenka OIB-a,
-prefiks države kod VAT-a) prije slanja.
-Dva načina rada — oba već ugrađena, biraš u Theme settings -> B2B:
-  1) Bez servera (zadano): zahtjev ide Shopify kontakt formom na e-mail
-     trgovine. Vi (šef) ručno provjerite firmu (VIES za VAT, sudski/trgovački
-     registar za OIB) i u Shopify adminu (Customers) dodate kupcu tag "b2b".
-     To je i "admin panel" — sam Shopify admin, jer samo on smije upisivati
-     tagove na kupce (teorija: tema ne smije nositi Admin API token).
-  2) Automatska provjera (opcionalno): mala besplatna služba u
-     Desktop\naturepick\b2b-verify-service — sama provjerava VAT+naziv+OIB
-     preko EU VIES-a; kad se sve poklapa, firma se odmah odobri; kad ne,
-     zahtjev ide u poseban admin panel (/admin/) gdje šef klikne Odobri ili
-     Odbij. Upute za postavljanje (Netlify, ~15 min) su u tom folderu,
-     README.md. Ako je ne postavite, sve i dalje radi preko opcije 1.
-Nakon odobrenja firma se prijavljuje svojom e-mail adresom i vidi B2B
-oznake/cijene. Testirajte jednom s jednim kupcem kojem ručno dodate tag b2b.
+Gumb "B2B" u headeru (gore, i u mobilnom izborniku) vodi na B2B stranicu.
+Ondje su tri kartice: Registracija, Prijava, Zatraži ponudu.
+
+REGISTRACIJA — 4 OBAVEZNA polja, ništa nije neobavezno: naziv firme, e-mail,
+OIB (matični broj) i VAT broj. Tema provjerava format (kontrolna znamenka
+OIB-a, prefiks države kod VAT-a) prije slanja. SVAKA registracija ide na
+ručni pregled u admin panel — automatsko odobravanje je isključeno dok ga
+sami ne uključite (AUTO_APPROVE_VERIFIED u servisu, vidi README servisa).
+
+PRIJAVA — samo 2 polja: e-mail i OIB tvrtke, ISTI kao pri registraciji.
+Nema lozinke, nema Shopify računa kupca u tom prvom koraku. Prijava ne
+uspijeva dok firma nije registrirana I odobrena u admin panelu. Nakon
+uspješne prijave na istoj stranici pojavljuje se gumb "B2B shop" te ponuda
+da se firma prijavi i u pravi Shopify račun (istom e-adresom, Shopify sam
+šalje jednokratni kod — jedan klik) — TEK TADA firma po cijeloj stranici
+(ne samo B2B stranici) vidi veleprodajne cijene iz cjenika, jer to jedino
+Shopify-ov tag na kupcu može upravljati (isti mehanizam kao proizvodi).
+
+VELEPRODAJNE CIJENE — već postavljeno iz vašeg PDF cjenika (B2B WHOLESALE
+PRICE LIST 2026-2027, 100 proizvoda, šifra:cijena) u Theme settings -> B2B
+/ wholesale -> "Wholesale price list" — ništa nije dirano na živom
+Shopifyju, samo prikaz cijene na stranici za odobrenu i Shopify-prijavljenu
+B2B firmu. Ako se doda/promijeni proizvod ili cijena, samo izmijenite tu
+listu (SKU:cijena, jedan red po proizvodu) u Customizeru, bez dirania koda.
+MINIMALNA NARUDŽBA je postavljena na 1000 (Theme settings -> ista sekcija,
+"B2B minimum order value") — na stranici košarice i u bočnoj košarici B2B
+kupac vidi koliko mu još nedostaje, a gumb za plaćanje je onemogućen dok
+ne dosegne taj iznos.
+
+VAŽNO — da bi PRIJAVA i ADMIN PANEL uopće radili, morate postaviti servis:
+  Desktop\naturepick\b2b-verify-service — upute za postavljanje (Netlify,
+  ~15 min) su u tom folderu, README.md. Bez njega registracija i dalje radi
+  (šalje se e-mailom kao Shopify kontakt obrazac), ALI prijava ne radi —
+  kartica "Prijava" tada samo ispisuje da čekate odobrenje, jer nema servisa
+  koji bi provjerio e-mail+OIB. Servis besplatno radi na Netlifyju.
+Nakon postavljanja servisa, u Theme settings -> B2B / wholesale upišite
+njegovu adresu (.../api/b2b/register) u polje "B2B verification service
+URL" — prijava i provjera sesije se automatski izvedu iz iste adrese.
+
+ADMIN PANEL (nakon što postavite servis): https://<vaš-servis>.netlify.app
+/admin/ — lozinka koju sami izaberete (ADMIN_PASSWORD). Tri kartice: Na
+čekanju, Odobreno, Odbijeno. Na čekanju odobravate ili odbijate; odobrenu
+firmu možete kasnije "Opozvati" (gubi pristup); odbijenu možete naknadno
+odobriti ako se predomislite.
+Testirajte jednom cijeli tok: registrirajte testnu firmu, odobrite je u
+/admin/, prijavite se na B2B stranici tom e-adresom i OIB-om, pa klikom
+dovršite i Shopify prijavu (isti e-mail, kod koji stigne e-poštom) — tek
+tada provjerite prikazuju li se veleprodajne cijene iz cjenika na
+proizvodima i radi li minimalna narudžba u košarici.
 VAŽNO: B2B traka i gumb u headeru pojavljuju se automatski čim je NOVA tema
 aktivna u Previewu — ako ih ne vidite, gledate ili staru temu, ili je zip
 bio krivo zapakiran (vidi gore).

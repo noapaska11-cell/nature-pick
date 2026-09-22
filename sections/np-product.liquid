@@ -48,16 +48,27 @@
     endfor
   endif
 
-  assign b2b_active = false
-  if customer and settings.b2b_discount_percent > 0
+  assign b2b_customer = false
+  if customer
     if customer.b2b? or customer.tags contains settings.b2b_customer_tag
-      assign b2b_active = true
+      assign b2b_customer = true
     endif
   endif
+  assign b2b_active = false
   assign unit_cents = current_variant.price
-  if b2b_active
-    assign b2b_multiplier = 100 | minus: settings.b2b_discount_percent
-    assign unit_cents = unit_cents | times: b2b_multiplier | divided_by: 100
+  if b2b_customer
+    capture wholesale_major
+      render 'np-b2b-wholesale-price', sku: current_variant.sku
+    endcapture
+    assign wholesale_major = wholesale_major | strip
+    if wholesale_major != ''
+      assign unit_cents = wholesale_major | plus: 0 | times: 100 | round
+      assign b2b_active = true
+    elsif settings.b2b_discount_percent > 0
+      assign b2b_multiplier = 100 | minus: settings.b2b_discount_percent
+      assign unit_cents = unit_cents | times: b2b_multiplier | divided_by: 100
+      assign b2b_active = true
+    endif
   endif
   assign unit_price_text = unit_cents | money_without_trailing_zeros
 
@@ -243,7 +254,7 @@
             </div>
           {%- endunless -%}
 
-          <div data-swap="buy" data-unit-price="{{ unit_cents }}">
+          <div data-swap="buy" data-unit-price="{{ unit_cents }}" {% if b2b_active %}data-unit-price-retail="{{ current_variant.price }}"{% endif %}>
             {%- if current_variant.available -%}
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {% render 'np-quantity', size: 'md', id: qty_id %}
