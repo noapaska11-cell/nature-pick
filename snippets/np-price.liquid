@@ -64,7 +64,7 @@
   <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-text="{{ wholesale_text }}" aria-label="{{ 'np.common.b2b_price_aria' | t: wholesale: wholesale_text, retail: price_text | strip_html }}">
     <span aria-hidden="true" data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
     <span aria-hidden="true" data-price-main>{{ wholesale_text }}</span>
-    <span aria-hidden="true" data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-charcoal)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-white">{{ 'np.common.b2b_badge' | t }}</span>
+    <span aria-hidden="true" data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-olive)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-white">{{ 'np.common.b2b_badge' | t }}</span>
   </span>
 {%- elsif compare_at > price -%}
   <span class="{{ class }}" data-np-price>

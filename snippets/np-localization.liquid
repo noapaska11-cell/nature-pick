@@ -25,7 +25,7 @@
             value="{{ language.iso_code }}"
             lang="{{ language.iso_code }}"
             {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %}
-            class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm {% if language.iso_code == localization.language.iso_code %}bg-[var(--color-charcoal)] text-white{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
+            class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm {% if language.iso_code == localization.language.iso_code %}bg-[var(--color-olive)] text-white{% else %}text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]{% endif %}"
           >
             <span aria-hidden="true">{{ lang_flag | strip }}</span> {{ language.endonym_name | capitalize }}
           </button>
