@@ -86,8 +86,8 @@
                       assign tagline = link.object.metafields.custom.tagline.value
                       if tagline == blank
                         assign tagline_key = 'np.categories.' | append: link.object.handle | replace: '-', '_' | append: '.tagline'
-                        assign tagline = tagline_key | t: default: '@@'
-                        if tagline == '@@'
+                        assign tagline = tagline_key | t
+                        if tagline contains 'Translation missing'
                           assign tagline = ''
                         endif
                       endif

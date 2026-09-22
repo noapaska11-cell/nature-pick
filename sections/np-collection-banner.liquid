@@ -12,8 +12,8 @@
     assign banner_description = collection.description
     if banner_description == blank
       assign description_key = 'np.categories.' | append: collection.handle | replace: '-', '_' | append: '.description'
-      assign banner_description = description_key | t: default: '@@'
-      if banner_description == '@@'
+      assign banner_description = description_key | t
+      if banner_description contains 'Translation missing'
         assign banner_description = ''
       endif
     endif
