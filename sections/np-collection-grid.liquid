@@ -1,20 +1,27 @@
 {%- liquid
   assign categories_menu = linklists[settings.menu_categories]
-  assign availability_filter = nil
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  assign active_filter_count = 0
   for filter in collection.filters
-    if filter.param_name == 'filter.v.availability'
-      assign availability_filter = filter
+    if filter.type == 'list'
+      for value in filter.values
+        if value.active
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+      endfor
+    elsif filter.type == 'price_range'
+      if filter.min_value.value != blank or filter.max_value.value != blank
+        assign active_filter_count = active_filter_count | plus: 1
+      endif
     endif
   endfor
-  assign in_stock_active = false
-  if availability_filter
-    for value in availability_filter.values
-      if value.value == '1' and value.active
-        assign in_stock_active = true
-      endif
-    endfor
-  endif
-  assign current_sort = collection.sort_by | default: collection.default_sort_by
+  assign has_filters = false
+  for filter in collection.filters
+    if filter.values.size > 0 or filter.type == 'price_range'
+      assign has_filters = true
+    endif
+  endfor
 -%}
 <section class="container-page py-10">
   {%- if section.settings.show_category_pills -%}
@@ -38,46 +45,77 @@
   {%- endif -%}
 
   {%- paginate collection.products by section.settings.products_per_page -%}
-    <form method="get" action="{{ collection.url }}" data-collection-form class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] pb-4">
-      {%- if availability_filter -%}
-        <label class="flex items-center gap-2 text-sm text-[var(--color-charcoal-soft)]">
-          <input type="checkbox" name="filter.v.availability" value="1" data-autosubmit {% if in_stock_active %}checked{% endif %} class="h-4 w-4 rounded">
-          {{ 'np.collection.filter_in_stock_only' | t }}
-        </label>
-      {%- else -%}
-        <span></span>
+    <form method="get" action="{{ collection.url }}" data-collection-form class="grid gap-8 {% if has_filters %}lg:grid-cols-[240px_1fr]{% endif %}">
+      {%- if has_filters -%}
+        <aside>
+          {%- comment -%} Desktop: always-visible sidebar {%- endcomment -%}
+          <div class="hidden lg:block">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <p class="text-sm font-semibold uppercase tracking-wide text-[var(--color-charcoal)]">{{ 'np.collection.filters_heading' | t }}</p>
+              {%- if active_filter_count > 0 -%}
+                <a href="{{ collection.url }}?sort_by={{ current_sort }}" class="text-xs font-medium text-[var(--color-paprika-dark)] hover:underline">{{ 'np.collection.clear_filters' | t }}</a>
+              {%- endif -%}
+            </div>
+            {%- render 'np-collection-filters', variant: 'desktop' -%}
+          </div>
+
+          {%- comment -%} Mobile/tablet: collapsible panel {%- endcomment -%}
+          <details class="lg:hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-[var(--color-charcoal)]">
+              <span class="flex items-center gap-2">
+                {% render 'icon', name: 'filter', class: 'h-4 w-4' %}
+                {{ 'np.collection.filters_heading' | t }}
+                {%- if active_filter_count > 0 -%}
+                  <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-charcoal)] px-1 text-xs font-semibold text-white">{{ active_filter_count }}</span>
+                {%- endif -%}
+              </span>
+              {% render 'icon', name: 'chevron-down', class: 'h-4 w-4' %}
+            </summary>
+            <div class="border-t border-[var(--color-line)] px-4 py-4">
+              {%- if active_filter_count > 0 -%}
+                <a href="{{ collection.url }}?sort_by={{ current_sort }}" class="mb-3 inline-block text-xs font-medium text-[var(--color-paprika-dark)] hover:underline">{{ 'np.collection.clear_filters' | t }}</a>
+              {%- endif -%}
+              {%- render 'np-collection-filters', variant: 'mobile' -%}
+            </div>
+          </details>
+        </aside>
       {%- endif -%}
 
-      {%- if collection.sort_options.size > 0 -%}
-        <label class="flex items-center gap-2 text-sm">
-          <span class="text-[var(--color-charcoal-soft)]">{{ 'np.collection.sort_label' | t }}:</span>
-          <span class="relative">
-            <select name="sort_by" data-autosubmit class="np-select rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 pl-3 pr-8 text-sm font-medium text-[var(--color-charcoal)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-paprika)]">
-              {%- for option in collection.sort_options -%}
-                <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>{{ option.name | escape }}</option>
-              {%- endfor -%}
-            </select>
-            {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
-          </span>
-        </label>
-      {%- endif -%}
-      <noscript><button type="submit" class="btn-secondary !px-4 !py-1.5 text-sm">{{ 'general.search.search' | t }}</button></noscript>
-    </form>
+      <div>
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] pb-4">
+          <p class="text-sm text-[var(--color-charcoal-soft)]">{{ 'np.collection.product_count' | t: count: collection.products_count }}</p>
+          {%- if collection.sort_options.size > 0 -%}
+            <label class="flex items-center gap-2 text-sm">
+              <span class="text-[var(--color-charcoal-soft)]">{{ 'np.collection.sort_label' | t }}:</span>
+              <span class="relative">
+                <select name="sort_by" data-autosubmit class="np-select rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] py-1.5 pl-3 pr-8 text-sm font-medium text-[var(--color-charcoal)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-paprika)]">
+                  {%- for option in collection.sort_options -%}
+                    <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>{{ option.name | escape }}</option>
+                  {%- endfor -%}
+                </select>
+                {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
+              </span>
+            </label>
+          {%- endif -%}
+          <noscript><button type="submit" class="btn-secondary !px-4 !py-1.5 text-sm">{{ 'general.search.search' | t }}</button></noscript>
+        </div>
 
-    {%- if collection.products.size == 0 -%}
-      <p class="py-16 text-center text-[var(--color-charcoal-soft)]">
-        {%- if collection.all_products_count == 0 -%}{{ 'np.collection.empty_category' | t }}{%- else -%}{{ 'np.collection.no_results' | t }}{%- endif -%}
-      </p>
-    {%- else -%}
-      <div class="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-        {%- for product in collection.products -%}
-          {%- assign is_eager = false -%}
-          {%- if forloop.index0 < 4 -%}{%- assign is_eager = true -%}{%- endif -%}
-          {% render 'np-product-card', product: product, index: forloop.index0, eager: is_eager %}
-        {%- endfor -%}
+        {%- if collection.products.size == 0 -%}
+          <p class="py-16 text-center text-[var(--color-charcoal-soft)]">
+            {%- if collection.all_products_count == 0 -%}{{ 'np.collection.empty_category' | t }}{%- else -%}{{ 'np.collection.no_results' | t }}{%- endif -%}
+          </p>
+        {%- else -%}
+          <div class="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+            {%- for product in collection.products -%}
+              {%- assign is_eager = false -%}
+              {%- if forloop.index0 < 4 -%}{%- assign is_eager = true -%}{%- endif -%}
+              {% render 'np-product-card', product: product, index: forloop.index0, eager: is_eager %}
+            {%- endfor -%}
+          </div>
+          {% render 'np-pagination', paginate: paginate %}
+        {%- endif -%}
       </div>
-      {% render 'np-pagination', paginate: paginate %}
-    {%- endif -%}
+    </form>
   {%- endpaginate -%}
 </section>
 

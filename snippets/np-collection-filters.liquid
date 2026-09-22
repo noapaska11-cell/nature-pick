@@ -1,0 +1,66 @@
+{%- comment -%}
+  Faceted filters for a collection, driven entirely by Shopify's own collection.filters
+  (product type, tags, vendor, availability, price range - whatever the store exposes).
+  Rendered twice from np-collection-grid.liquid (desktop sidebar + mobile <details> panel),
+  so ids are prefixed with `variant` to stay unique.
+  Params: variant - 'desktop' | 'mobile'
+{%- endcomment -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.type == 'list' and filter.values.size > 0 -%}
+    <fieldset class="mb-5 border-b border-[var(--color-line)] pb-5 last:mb-0 last:border-b-0 last:pb-0">
+      <legend class="mb-2.5 text-sm font-semibold text-[var(--color-charcoal)]">{{ filter.label }}</legend>
+      <div class="flex flex-col gap-1.5">
+        {%- for value in filter.values -%}
+          {%- if value.count > 0 or value.active -%}
+            <label class="flex items-center justify-between gap-2 text-sm {% if value.count == 0 and value.active == false %}text-[var(--color-charcoal-soft)]/50{% else %}text-[var(--color-charcoal-soft)]{% endif %}">
+              <span class="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  data-autosubmit
+                  {% if value.active %}checked{% endif %}
+                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                  class="h-4 w-4 rounded border-[var(--color-line)] text-[var(--color-olive)] focus-visible:ring-2 focus-visible:ring-[var(--color-paprika)]"
+                >
+                {{ value.label }}
+              </span>
+              <span class="text-xs">{{ value.count }}</span>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </fieldset>
+  {%- elsif filter.type == 'price_range' -%}
+    <fieldset class="mb-5 border-b border-[var(--color-line)] pb-5 last:mb-0 last:border-b-0 last:pb-0">
+      <legend class="mb-2.5 text-sm font-semibold text-[var(--color-charcoal)]">{{ filter.label }}</legend>
+      <div class="flex items-center gap-2">
+        <label class="sr-only" for="{{ variant }}-{{ filter.min_value.param_name }}">{{ 'np.collection.filter_price_min' | t }}</label>
+        <input
+          type="number"
+          inputmode="decimal"
+          min="0"
+          id="{{ variant }}-{{ filter.min_value.param_name }}"
+          name="{{ filter.min_value.param_name }}"
+          value="{{ filter.min_value.value }}"
+          placeholder="{{ filter.range_min | money_without_currency }}"
+          data-autosubmit
+          class="input-field !py-1.5 text-sm"
+        >
+        <span aria-hidden="true" class="text-[var(--color-charcoal-soft)]">–</span>
+        <label class="sr-only" for="{{ variant }}-{{ filter.max_value.param_name }}">{{ 'np.collection.filter_price_max' | t }}</label>
+        <input
+          type="number"
+          inputmode="decimal"
+          min="0"
+          id="{{ variant }}-{{ filter.max_value.param_name }}"
+          name="{{ filter.max_value.param_name }}"
+          value="{{ filter.max_value.value }}"
+          placeholder="{{ filter.range_max | money_without_currency }}"
+          data-autosubmit
+          class="input-field !py-1.5 text-sm"
+        >
+      </div>
+    </fieldset>
+  {%- endif -%}
+{%- endfor -%}
