@@ -30,8 +30,8 @@
   endif
   if card_tagline == blank
     assign tagline_key = 'np.categories.' | append: collection.handle | replace: '-', '_' | append: '.tagline'
-    assign card_tagline = tagline_key | t: default: '@@'
-    if card_tagline == '@@'
+    assign card_tagline = tagline_key | t
+    if card_tagline contains 'Translation missing'
       assign card_tagline = ''
     endif
   endif

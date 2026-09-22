@@ -3,6 +3,7 @@
   cookie banner, quick-contact widget and site-wide structured data.
   (They live outside the sticky header on purpose: the header uses backdrop-filter, which would
   otherwise trap position:fixed children.)
+  Rendered once from every layout (theme.liquid and the GemPages layouts) via {% render 'np-body-end' %}.
 {%- endcomment -%}
 
 {%- comment -%} Search modal (predictive search) {%- endcomment -%}
