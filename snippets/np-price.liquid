@@ -3,8 +3,8 @@
   - normal:   "199 kr"
   - on sale:  struck-through compare-at price + sale price
   - B2B:      struck-through retail price + wholesale price + "B2B" badge
-              (only when the logged-in customer is a B2B customer / carries the B2B tag AND a
-               wholesale percentage is configured in Theme settings > B2B).
+              (only for a logged-in customer who carries the B2B tag; the wholesale price comes
+               from the per-SKU price list in Theme settings > B2B, or the fallback percentage).
 
   Params:
     product   - product (uses selected_or_first_available_variant)
@@ -28,27 +28,43 @@
     assign compare_at = product.compare_at_price
   endif
 
-  assign b2b_active = false
-  if customer and settings.b2b_discount_percent > 0
+  assign b2b_customer = false
+  if customer
     if customer.b2b? or customer.tags contains settings.b2b_customer_tag
-      assign b2b_active = true
+      assign b2b_customer = true
     endif
   endif
 
+  assign b2b_active = false
   assign wholesale = price
-  if b2b_active
-    assign multiplier = 100 | minus: settings.b2b_discount_percent
-    assign wholesale = price | times: multiplier | divided_by: 100
+  if b2b_customer
+    capture wholesale_major
+      render 'np-b2b-wholesale-price', sku: target.sku
+    endcapture
+    assign wholesale_major = wholesale_major | strip
+    if wholesale_major != ''
+      assign wholesale = wholesale_major | plus: 0 | times: 100 | round
+      assign b2b_active = true
+    elsif settings.b2b_discount_percent > 0
+      assign multiplier = 100 | minus: settings.b2b_discount_percent
+      assign wholesale = price | times: multiplier | divided_by: 100
+      assign b2b_active = true
+    endif
   endif
 
   assign price_text = price | money_without_trailing_zeros
   assign wholesale_text = wholesale | money_without_trailing_zeros
 -%}
 {%- if b2b_active -%}
-  <span class="{{ class }}" data-np-price aria-label="{{ 'np.common.b2b_price_aria' | t: wholesale: wholesale_text, retail: price_text | strip_html }}">
-    <span aria-hidden="true" class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
-    <span aria-hidden="true">{{ wholesale_text }}</span>
-    <span aria-hidden="true" class="ml-2 inline-block align-middle rounded-full bg-[var(--color-charcoal)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-white">{{ 'np.common.b2b_badge' | t }}</span>
+  {%- comment -%}
+    data-retail-text / data-b2b-text let the B2B price-view toggle (naturepick.js, header switch) swap
+    every price on the site between wholesale and retail without a page reload - a display preference
+    only, it never changes what Shopify actually charges at checkout.
+  {%- endcomment -%}
+  <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-text="{{ wholesale_text }}" aria-label="{{ 'np.common.b2b_price_aria' | t: wholesale: wholesale_text, retail: price_text | strip_html }}">
+    <span aria-hidden="true" data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
+    <span aria-hidden="true" data-price-main>{{ wholesale_text }}</span>
+    <span aria-hidden="true" data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-charcoal)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-white">{{ 'np.common.b2b_badge' | t }}</span>
   </span>
 {%- elsif compare_at > price -%}
   <span class="{{ class }}" data-np-price>

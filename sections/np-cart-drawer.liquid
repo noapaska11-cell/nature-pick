@@ -3,6 +3,14 @@
   Static section (rendered from layout/theme.liquid). After every cart change the JS fetches this
   section through the Section Rendering API and swaps [data-cart-drawer-content].
 {%- endcomment -%}
+{%- liquid
+  assign b2b_active = false
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign b2b_active = true
+    endif
+  endif
+-%}
 <div id="np-cart-drawer" data-cart-drawer data-cart-count="{{ cart.item_count }}">
   <div class="np-overlay fixed inset-0 z-[65] bg-black/30" data-cart-close aria-hidden="true"></div>
   <aside class="np-drawer fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col bg-[var(--color-paper)] shadow-2xl" role="dialog" aria-modal="true" aria-label="{{ 'np.cart.title' | t }}" tabindex="-1" data-cart-panel>
@@ -18,6 +26,9 @@
         {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
         {%- if progress_html contains 'data-free-shipping' -%}
           <div class="border-b border-[var(--color-line)] px-5 py-3">{{ progress_html }}</div>
+        {%- endif -%}
+        {%- if b2b_active -%}
+          <div class="border-b border-[var(--color-line)] px-5 py-3">{% render 'np-b2b-minimum-order', cart: cart %}</div>
         {%- endif -%}
       {%- endif -%}
 

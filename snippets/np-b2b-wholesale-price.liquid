@@ -1,0 +1,30 @@
+{%- comment -%}
+  Looks up the per-product B2B wholesale price (major units, e.g. 19.00) for a variant SKU from
+  Theme settings > B2B / wholesale > "Wholesale price list". Each line is  SKU:PRICE.
+  Usage: {%- capture wholesale_price -%}{%- render 'np-b2b-wholesale-price', sku: variant.sku -%}{%- endcapture -%}
+  Outputs nothing when the SKU is blank or not in the list - the caller then falls back to the
+  wholesale discount percentage (or to the regular price).
+
+  Matches on the trailing digits of the code, not the whole string: the supplier's price list and the
+  live Shopify catalog were entered separately and disagree on the 2-letter prefix for the same product
+  (e.g. Shopify has "WN000002", the price list has "NP000002" - same product, same number). An exact
+  match is still tried first in case a SKU is ever entered to match the price list exactly.
+{%- endcomment -%}
+{%- liquid
+  assign found = ''
+  assign sku_clean = sku | strip | upcase
+  assign sku_suffix = sku_clean | slice: -6, 6
+  if sku_clean != ''
+    assign price_lines = settings.b2b_price_list | newline_to_br | split: '<br />'
+    for price_line in price_lines
+      assign parts = price_line | strip | split: ':'
+      assign part_sku = parts[0] | strip | upcase
+      assign part_suffix = part_sku | slice: -6, 6
+      if part_sku == sku_clean or part_suffix == sku_suffix
+        assign found = parts[1] | strip
+        break
+      endif
+    endfor
+  endif
+  echo found
+-%}

@@ -86,19 +86,19 @@
         "type": "color",
         "id": "color_olive",
         "label": "Green (top bar, brand story)",
-        "default": "#2f4a33"
+        "default": "#2e7d4f"
       },
       {
         "type": "color",
         "id": "color_olive_dark",
         "label": "Green, dark",
-        "default": "#273e2b"
+        "default": "#215f3c"
       },
       {
         "type": "color",
         "id": "color_olive_light",
         "label": "Green, light",
-        "default": "#b8cbb4"
+        "default": "#c7ddc2"
       },
       {
         "type": "color",
@@ -226,7 +226,14 @@
         "type": "text",
         "id": "b2b_endpoint",
         "label": "B2B verification service URL (optional)",
-        "info": "Leave empty (default): registrations are sent to the store inbox and approved by hand in the Shopify admin. Only fill this in if you run the optional b2b-verify-service (see its README), e.g. https://<your-service>/api/b2b/register."
+        "info": "Leave empty (default): registrations are sent to the store inbox and the B2B page's log-in tab only shows a hint, since nothing can check it yet. Fill this in to run the optional b2b-verify-service (see its README): every registration then waits in its admin panel for you to approve or reject, and an approved company logs in on the B2B page with its e-mail + OIB (no Shopify account, no password). Use the /register URL, e.g. https://<your-service>/api/b2b/register - the theme derives the log-in and session-check URLs from it automatically."
+      },
+      {
+        "type": "textarea",
+        "id": "b2b_price_list",
+        "label": "Wholesale price list (SKU:price per line)",
+        "default": "NP000001:19.00\nNP000002:24.00\nNP000003:27.00\nMP000004:19.00\nNP000005:15.00\nNP000015:33.00\nNP000020:23.00\nNP000021:45.00\nNP000025:17.00\nNP000026:17.00\nNP000027:19.00\nWN000028:15.00\nWN000031:11.00\nWN000032:11.00\nNP000033:17.00\nNP000034:17.00\nNP000035:26.00\nNP000036:26.00\nNP000037:16.00\nNP000132:22.00\nNP000042:13.00\nNP000043:14.00\nNP000044:14.00\nNP000045:18.00\nNP000046:10.00\nNP000047:10.00\nNP000048:16.00\nNP000049:19.00\nNP000050:21.00\nNP000051:22.00\nNP000052:13.00\nNP000053:15.00\nNP000054:32.00\nNP000055:16.00\nNP000056:16.00\nNP000057:29.00\nNP000058:9.00\nNP000059:9.00\nNP000060:9.00\nNP000061:13.00\nNP000062:11.00\nNP000063:10.00\nNP000064:16.00\nNP000065:18.00\nNP000131:19.00\nNP000067:11.00\nNP000068:9.00\nNP000069:9.00\nNP000070:9.00\nNP000071:9.00\nNP000072:13.00\nNP000073:19.00\nNP000074:11.00\nNP000075:16.00\nNP000076:15.00\nNP000077:13.00\nNP000078:13.00\nNP000080:9.00\nNP000081:16.00\nNP000082:13.00\nNP000083:21.00\nNP000084:17.00\nNP000085:26.00\nNP000086:21.00\nNP000087:17.00\nNP000088:16.00\nNP000089:21.00\nNP000090:16.00\nNP000092:195.00\nNP000093:21.00\nNP000094:17.00\nNP000095:22.00\nNP000096:23.00\nNP000097:18.00\nNP000098:17.00\nNP000099:12.00\nNP000100:21.00\nNP000101:15.00\nNP000102:27.00\nNP000106:17.00\nNP000107:18.00\nNP000108:19.00\nNP000109:28.00\nNP000110:21.00\nNP000111:24.00\nNP000112:89.00\nNP000113:27.00\nNP000114:49.00\nNP000115:249.00\nNP000116:23.00\nNP000119:14.00\nNP000120:15.00\nNP000121:19.00\nNP000122:18.00\nNP000123:119.00\nNP000124:109.00\nNP000125:23.00\nNP000126:16.00\nNP000128:19.00\nNP000129:17.00",
+        "info": "One line per product variant SKU: SKU:PRICE (major units, same currency as your storefront prices - e.g. NP000001:19.00). Shown to B2B customers instead of the retail price. A SKU not listed here falls back to the wholesale discount % below, or to the regular price if that is also 0. Display only - it does not change what Shopify charges at checkout; pair it with a matching Shopify discount for the b2b tag when you are ready to go live with wholesale pricing."
       },
       {
         "type": "range",
@@ -235,9 +242,16 @@
         "max": 60,
         "step": 1,
         "unit": "%",
-        "label": "Wholesale discount shown on prices",
+        "label": "Wholesale discount shown on prices (fallback)",
         "default": 0,
-        "info": "0 = do not show wholesale prices. Only use this when a matching automatic discount for customers with the tag exists in Shopify - the storefront price is informational, the discount itself is applied by Shopify at checkout."
+        "info": "Used only for a SKU that isn't in the price list above. 0 = do not show wholesale prices for those. Only use this when a matching automatic discount for customers with the tag exists in Shopify - the storefront price is informational, the discount itself is applied by Shopify at checkout."
+      },
+      {
+        "type": "number",
+        "id": "b2b_minimum_order",
+        "label": "B2B minimum order value",
+        "default": 1000,
+        "info": "Shown and enforced on the cart page for B2B customers only (checkout stays disabled below this). Major units in the cart's currency, e.g. 1000. 0 = no minimum."
       }
     ]
   },

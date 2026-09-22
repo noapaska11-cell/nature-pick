@@ -66,6 +66,14 @@
             {% render 'icon', name: 'building', class: 'h-3.5 w-3.5 flex-shrink-0 text-[var(--color-gold-on-dark)]' %}
             {{ 'np.b2b_auth.header_active' | t: company: b2b_company }}
           </span>
+          <button
+            type="button"
+            data-price-view-toggle
+            aria-pressed="false"
+            data-label-show-retail="{{ 'np.common.show_retail_prices' | t }}"
+            data-label-show-b2b="{{ 'np.common.show_b2b_prices' | t }}"
+            class="rounded-full border border-white/40 px-2.5 py-0.5 text-xs font-semibold text-white hover:bg-white/10"
+          >{{ 'np.common.show_retail_prices' | t }}</button>
           <a href="{{ routes.account_logout_url }}" class="underline decoration-white/50 underline-offset-2 hover:decoration-white">{{ 'np.b2b_auth.header_logout' | t }}</a>
         {%- else -%}
           <span>{{ announcement_text }}</span>
