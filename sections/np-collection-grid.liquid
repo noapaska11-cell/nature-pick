@@ -66,7 +66,7 @@
                 {% render 'icon', name: 'filter', class: 'h-4 w-4' %}
                 {{ 'np.collection.filters_heading' | t }}
                 {%- if active_filter_count > 0 -%}
-                  <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-olive)] px-1 text-xs font-semibold text-white">{{ active_filter_count }}</span>
+                  <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-olive)] px-1 text-xs font-semibold text-[var(--color-charcoal)]">{{ active_filter_count }}</span>
                 {%- endif -%}
               </span>
               {% render 'icon', name: 'chevron-down', class: 'h-4 w-4' %}
