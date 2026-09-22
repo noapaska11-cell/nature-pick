@@ -3,6 +3,12 @@
   if shop_menu == blank
     assign shop_menu = linklists['main-menu']
   endif
+  assign shop_menu_has_categories = false
+  for shop_link in shop_menu.links
+    if shop_link.type == 'collection_link'
+      assign shop_menu_has_categories = true
+    endif
+  endfor
   assign nav_menu = linklists[section.settings.nav_menu]
 
   assign wishlist_href = section.settings.wishlist_url
@@ -70,7 +76,7 @@
     </a>
 
     <nav class="hidden items-center gap-7 lg:flex" aria-label="{{ 'np.nav.menu' | t }}">
-      {%- if shop_menu != blank and shop_menu.links.size > 0 -%}
+      {%- if shop_menu_has_categories or collections.size > 0 -%}
         <div class="np-dropdown relative" data-dropdown>
           <button type="button" data-dropdown-toggle aria-haspopup="true" aria-expanded="false" class="flex items-center gap-1 text-sm font-medium text-white hover:text-[var(--color-gold-on-dark)]">
             {{ 'np.nav.shop' | t }}
@@ -79,27 +85,57 @@
           <div data-dropdown-panel class="absolute left-1/2 top-full z-10 w-[36rem] -translate-x-1/2 pt-3">
             <div class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-4 shadow-xl">
               <div class="grid grid-cols-2 gap-1">
-                {%- for link in shop_menu.links -%}
-                  {%- liquid
-                    assign tagline = ''
-                    if link.type == 'collection_link'
-                      assign tagline = link.object.metafields.custom.tagline.value
-                      if tagline == blank
-                        assign tagline_key = 'np.categories.' | append: link.object.handle | replace: '-', '_' | append: '.tagline'
-                        assign tagline = tagline_key | t
-                        if tagline contains 'Translation missing'
-                          assign tagline = ''
+                {%- comment -%}
+                  Prefer the merchant's own categories menu (Theme settings > Navigation) when it actually
+                  links to collections. Most stores never set that up, so fall back to the store's real
+                  collections directly - same resilience as the homepage category grid.
+                {%- endcomment -%}
+                {%- if shop_menu_has_categories -%}
+                  {%- for link in shop_menu.links -%}
+                    {%- liquid
+                      assign tagline = ''
+                      if link.type == 'collection_link'
+                        assign tagline = link.object.metafields.custom.tagline.value
+                        if tagline == blank
+                          assign tagline_key = 'np.categories.' | append: link.object.handle | replace: '-', '_' | append: '.tagline'
+                          assign tagline = tagline_key | t
+                          if tagline contains 'Translation missing'
+                            assign tagline = ''
+                          endif
                         endif
                       endif
-                    endif
-                  -%}
-                  <a href="{{ link.url }}" class="rounded-xl px-3 py-2.5 hover:bg-[var(--color-cream)]">
-                    <p class="text-sm font-medium text-[var(--color-charcoal)]">{{ link.title }}</p>
-                    {%- if tagline != blank -%}
-                      <p class="text-xs text-[var(--color-charcoal-soft)]">{{ tagline }}</p>
-                    {%- endif -%}
-                  </a>
-                {%- endfor -%}
+                    -%}
+                    <a href="{{ link.url }}" class="rounded-xl px-3 py-2.5 hover:bg-[var(--color-cream)]">
+                      <p class="text-sm font-medium text-[var(--color-charcoal)]">{{ link.title }}</p>
+                      {%- if tagline != blank -%}
+                        <p class="text-xs text-[var(--color-charcoal-soft)]">{{ tagline }}</p>
+                      {%- endif -%}
+                    </a>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- assign shown_categories = 0 -%}
+                  {%- for coll in collections -%}
+                    {%- unless coll.handle == 'frontpage' or coll.products_count == 0 or shown_categories >= 8 -%}
+                      {%- liquid
+                        assign tagline = coll.metafields.custom.tagline.value
+                        if tagline == blank
+                          assign tagline_key = 'np.categories.' | append: coll.handle | replace: '-', '_' | append: '.tagline'
+                          assign tagline = tagline_key | t
+                          if tagline contains 'Translation missing'
+                            assign tagline = ''
+                          endif
+                        endif
+                        assign shown_categories = shown_categories | plus: 1
+                      -%}
+                      <a href="{{ coll.url }}" class="rounded-xl px-3 py-2.5 hover:bg-[var(--color-cream)]">
+                        <p class="text-sm font-medium text-[var(--color-charcoal)]">{{ coll.title }}</p>
+                        {%- if tagline != blank -%}
+                          <p class="text-xs text-[var(--color-charcoal-soft)]">{{ tagline }}</p>
+                        {%- endif -%}
+                      </a>
+                    {%- endunless -%}
+                  {%- endfor -%}
+                {%- endif -%}
               </div>
               <a href="{{ routes.all_products_collection_url }}" class="mt-1 flex items-center justify-between rounded-xl border-t border-[var(--color-line)] px-3 pt-3 text-sm font-semibold text-[var(--color-paprika-dark)]">
                 {{ 'np.common.all_products' | t }} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
@@ -169,11 +205,21 @@
 
   <div id="np-mobile-menu" hidden class="border-t border-[var(--color-line)] bg-[var(--color-paper)] lg:hidden">
     <div class="container-page flex max-h-[80vh] flex-col gap-1 overflow-y-auto py-3">
-      {%- if shop_menu != blank and shop_menu.links.size > 0 -%}
+      {%- if shop_menu_has_categories or collections.size > 0 -%}
         <p class="px-2 pt-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-charcoal-soft)]">{{ 'np.category_grid.label' | t }}</p>
-        {%- for link in shop_menu.links -%}
-          <a href="{{ link.url }}" class="rounded-lg px-2 py-2 text-sm text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ link.title }}</a>
-        {%- endfor -%}
+        {%- if shop_menu_has_categories -%}
+          {%- for link in shop_menu.links -%}
+            <a href="{{ link.url }}" class="rounded-lg px-2 py-2 text-sm text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ link.title }}</a>
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign shown_categories_mobile = 0 -%}
+          {%- for coll in collections -%}
+            {%- unless coll.handle == 'frontpage' or coll.products_count == 0 or shown_categories_mobile >= 8 -%}
+              <a href="{{ coll.url }}" class="rounded-lg px-2 py-2 text-sm text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{{ coll.title }}</a>
+              {%- assign shown_categories_mobile = shown_categories_mobile | plus: 1 -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
         <hr class="my-2 border-[var(--color-line)]">
       {%- endif -%}
 
