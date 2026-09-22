@@ -99,6 +99,7 @@
 
 {%- comment -%} Structured data (home page only, like a single Organization/WebSite declaration) {%- endcomment -%}
 {%- if request.page_type == 'index' -%}
+  {%- assign search_action_target = shop.url | append: routes.search_url | append: '?q={search_term_string}' -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -128,7 +129,7 @@
       "url": {{ shop.url | json }},
       "potentialAction": {
         "@type": "SearchAction",
-        "target": {{ shop.url | append: routes.search_url | append: '?q={search_term_string}' | json }},
+        "target": {{ search_action_target | json }},
         "query-input": "required name=search_term_string"
       }
     }
