@@ -108,7 +108,7 @@
     "product": {
       "add_to_cart": "In den Warenkorb legen",
       "description": "Beschreibung",
-      "on_sale": "Sale",
+      "on_sale": "Angebot",
       "quantity": {
         "label": "Anzahl",
         "input_label": "Anzahl von {{ product }}",
@@ -433,7 +433,7 @@
       "guest_continue": "Fortfahren",
       "guest_title": "Als Gast fortsetzen",
       "password": "Passwort",
-      "title": "Login",
+      "title": "Anmeldung",
       "sign_in": "Anmelden",
       "submit": "Senden",
       "alternate_provider_separator": "oder"
@@ -577,7 +577,7 @@
       "please_select": "Bitte wählen Sie eine Option aus"
     },
     "StockCounter": {
-      "let_buy_now": "<mark>BEEIL DICH!</mark> JETZT KAUFEN LASSEN"
+      "let_buy_now": "<mark>BEEIL DICH!</mark> JETZT KAUFEN"
     }
   },
   "customer_accounts": {
@@ -697,7 +697,7 @@
       "link_b2b": "B2B-Zusammenarbeit"
     },
     "hero": {
-      "eyebrow": "From Sunny Eastern Fields",
+      "eyebrow": "Von sonnigen Feldern im Osten",
       "title": "Authentische Aromen Zentralasiens",
       "subtitle": "Gewürze, Nüsse und Trockenfrüchte, sorgfältig ausgewählt in Usbekistan und der zentralasiatischen Region — direkt zu dir nach Hause geliefert.",
       "cta": "Bestseller entdecken"
