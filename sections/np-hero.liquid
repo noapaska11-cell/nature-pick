@@ -20,19 +20,24 @@
     assign cta_link = '#bestsellers'
   endif
 -%}
-<section class="relative isolate flex min-h-[38rem] items-center overflow-hidden bg-[var(--color-charcoal)] sm:min-h-[46rem]">
-  <div class="absolute inset-0 -z-10">
+<section class="relative isolate overflow-hidden bg-[var(--color-charcoal)]">
+  {%- comment -%}
+    Desktop/tablet (sm+): full-bleed photo behind the text, darkened with a gradient for legibility.
+    Mobile: the same gradient over a narrow screen would swallow almost the whole photo, so instead
+    the photo runs as its own visible card below the text (see bottom of this section).
+  {%- endcomment -%}
+  <div class="absolute inset-0 -z-10 hidden sm:block">
     {%- if section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', alt: '', class: 'h-full w-full object-cover', sizes: '100vw', widths: '768, 1200, 1600, 2000, 2400' }}
     {%- else -%}
       {%- comment -%} Default brand photo until a merchant picks their own in Theme settings > Hero. {%- endcomment -%}
       <img src="{{ 'np-hero-bg.webp' | asset_url }}" width="1671" height="941" loading="eager" fetchpriority="high" alt="" class="h-full w-full object-cover">
     {%- endif -%}
-    <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-charcoal)] via-[var(--color-charcoal)]/80 to-[var(--color-charcoal)]/10 sm:via-[var(--color-charcoal)]/70 sm:to-transparent" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-charcoal)] via-[var(--color-charcoal)]/70 to-transparent" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-charcoal)]/50 via-transparent to-transparent" aria-hidden="true"></div>
   </div>
 
-  <div class="container-page py-20 sm:py-28">
+  <div class="container-page flex min-h-[32rem] flex-col justify-center py-14 sm:min-h-[46rem] sm:py-28">
     <div class="max-w-2xl border-l-2 border-[var(--color-gold)] pl-6 sm:pl-8">
       <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-gold-on-dark)]">
         {% render 'icon', name: 'leaf', class: 'h-3.5 w-3.5' %} {{ eyebrow }}
@@ -45,6 +50,17 @@
           {% render 'icon', name: 'arrow-right', class: 'h-4 w-4' %}
         </a>
       </div>
+    </div>
+
+    {%- comment -%} Mobile only: the photo as its own card, fully visible instead of gradient-darkened. {%- endcomment -%}
+    <div class="relative mt-8 h-56 overflow-hidden rounded-3xl sm:hidden">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', alt: '', class: 'h-full w-full object-cover', sizes: '100vw', widths: '600, 900, 1200' }}
+      {%- else -%}
+        <img src="{{ 'np-hero-bg.webp' | asset_url }}" width="1671" height="941" loading="eager" fetchpriority="high" alt="" class="h-full w-full object-cover">
+      {%- endif -%}
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-charcoal)]/40 via-transparent to-transparent" aria-hidden="true"></div>
+      <div class="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10" aria-hidden="true"></div>
     </div>
   </div>
 </section>
