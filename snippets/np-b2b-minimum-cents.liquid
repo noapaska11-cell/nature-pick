@@ -1,0 +1,27 @@
+{%- comment -%}
+  The B2B minimum order for this cart, as "CENTS:IN_CART_CURRENCY":
+  - a line "CURRENCY:AMOUNT" in Theme settings > B2B / wholesale > "B2B minimum order per currency" that matches
+    the cart's currency wins, e.g. EUR:1000 -> "100000:true" (a fixed amount, no exchange-rate drift);
+  - otherwise "B2B minimum order value" in the shop's currency -> "1100000:false" when the cart is in another
+    currency (naturepick.js converts it with Shopify's live rate), ":true" when the cart is in the shop's currency.
+  0 cents = no minimum.
+  Usage: {%- capture parts -%}{%- render 'np-b2b-minimum-cents', cart: cart -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign minimum_cents = settings.b2b_minimum_order | times: 100
+  assign in_cart_currency = false
+  if cart.currency.iso_code == shop.currency
+    assign in_cart_currency = true
+  endif
+  assign minimum_lines = settings.b2b_minimum_by_currency | newline_to_br | split: '<br />'
+  for minimum_line in minimum_lines
+    assign parts = minimum_line | strip | split: ':'
+    assign line_currency = parts[0] | strip | upcase
+    if line_currency == cart.currency.iso_code and parts[1] != blank
+      assign minimum_cents = parts[1] | strip | plus: 0 | times: 100 | round
+      assign in_cart_currency = true
+      break
+    endif
+  endfor
+  echo minimum_cents | append: ':' | append: in_cart_currency
+-%}

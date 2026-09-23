@@ -1334,7 +1334,8 @@
   /* Re-checks a minimum-order notice in the cart's own currency (see fromShopCents) and fills in its amounts */
   function syncB2bMinimum(el) {
     if (!NP.currency || NP.currency === NP.shopCurrency) return; // the server already compared like with like
-    const minimum = fromShopCents(el.dataset.minimumShopCents);
+    // a fixed amount for this currency (e.g. EUR:1000) is used as-is, the shop-currency amount is converted
+    const minimum = el.dataset.minimumInCartCurrency === 'true' ? Number(el.dataset.minimumCents) : fromShopCents(el.dataset.minimumCents);
     const total = wholesaleCartCents(el);
     if (minimum === null || total === null) return; // no rate: keep the server's verdict
     const met = total >= minimum;
@@ -1427,7 +1428,7 @@
       const response = await fetch(button.dataset.b2bCheckout, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ token: session.token, lines, locale: NP.locale }),
+        body: JSON.stringify({ token: session.token, lines, currency: NP.currency, locale: NP.locale }),
       });
       const data = await response.json().catch(() => ({}));
       if (data.status === 'ok' && data.url) {
