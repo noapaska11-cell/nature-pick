@@ -288,15 +288,29 @@
                   assign box_template = 'np.b2b_box.summary' | t: boxes: '%BOXES%', pcs: '%PCS%', unit: '%UNIT%', total: '%TOTAL%'
                   assign excl_vat_text = 'np.b2b_box.excl_vat' | t
                   assign box_template_b2b = box_template | append: ' ' | append: excl_vat_text
+                  # net weight of one piece from the price list (SKU:PRICE:BOX:GRAMS) -> total weight of the cartons
+                  capture piece_grams
+                    render 'np-b2b-wholesale-price', sku: current_variant.sku, field: 'grams'
+                  endcapture
+                  assign piece_grams = piece_grams | strip | plus: 0
+                  if piece_grams > 0
+                    assign box_template = box_template | append: ' · %WEIGHT%'
+                    assign box_template_b2b = box_template_b2b | append: ' · %WEIGHT%'
+                    assign carton_grams = piece_grams | times: box_size
+                    capture first_weight
+                      render 'np-weight', grams: carton_grams
+                    endcapture
+                    assign first_weight = first_weight | strip
+                  endif
                 -%}
                 {%- comment -%} naturepick.js (updateTotals) rewrites this for every carton count and price view {%- endcomment -%}
                 <div class="mt-3 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
                   <p class="flex items-center gap-2 font-semibold">
                     {% render 'icon', name: 'building', class: 'h-4 w-4 flex-shrink-0' %}
-                    {{ 'np.b2b_box.carton_of' | t: pcs: box_size }}
+                    {% render 'np-b2b-carton-label', sku: current_variant.sku, box: box_size %}
                   </p>
-                  <p class="mt-1" data-box-summary data-box-size="{{ box_size }}" data-template="{{ box_template_b2b | escape }}" data-template-retail="{{ box_template | escape }}">
-                    {{- box_template_b2b | replace: '%BOXES%', '1' | replace: '%PCS%', box_size | replace: '%UNIT%', single_unit_text | replace: '%TOTAL%', unit_price_text -}}
+                  <p class="mt-1" data-box-summary data-box-size="{{ box_size }}" data-piece-grams="{{ piece_grams }}" data-template="{{ box_template_b2b | escape }}" data-template-retail="{{ box_template | escape }}">
+                    {{- box_template_b2b | replace: '%BOXES%', '1' | replace: '%PCS%', box_size | replace: '%UNIT%', single_unit_text | replace: '%TOTAL%', unit_price_text | replace: '%WEIGHT%', first_weight -}}
                   </p>
                 </div>
               {%- endif -%}

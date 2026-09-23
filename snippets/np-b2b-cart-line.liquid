@@ -37,5 +37,15 @@
       endif
     -%}
     <p class="mt-1 text-xs font-medium text-[var(--color-olive-dark)]" data-b2b-cart-line data-unit-shop-cents="{{ unit_shop_cents }}" data-quantity="{{ item.quantity }}" data-cartons="{{ line_cartons }}" data-box="{{ line_box }}" data-template="{{ template | escape }}">{{ text }}</p>
+    {%- liquid
+      # total net weight of the line from the price list (grams per piece), e.g. 2 cartons x 36 x 125 g = 9 kg
+      capture piece_grams
+        render 'np-b2b-wholesale-price', sku: item.sku, field: 'grams'
+      endcapture
+      assign line_grams = piece_grams | strip | plus: 0 | times: item.quantity
+    -%}
+    {%- if line_grams > 0 -%}
+      <p class="text-xs text-[var(--color-charcoal-soft)]" data-b2b-cart-weight>{% render 'np-weight', grams: line_grams %}</p>
+    {%- endif -%}
   {%- endif -%}
 {%- endif -%}

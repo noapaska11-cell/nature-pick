@@ -111,6 +111,13 @@
     }
   }
 
+  /* "125 g" / "4.5 kg" - same format as snippets/np-weight.liquid */
+  function formatGrams(grams) {
+    if (!(grams > 0)) return '';
+    if (grams < 1000) return `${Math.round(grams)} g`;
+    return `${Math.round(grams / 10) / 100} kg`;
+  }
+
   /* B2B cartons (snippets/np-quantity.liquid with `box`): the visible [data-box-input] counts cartons, the hidden
      quantity field that Shopify's /cart/add receives is always cartons x pieces per carton. */
   function syncBoxQuantity(boxInput) {
@@ -775,7 +782,8 @@
           .replace('%BOXES%', String(Math.max(1, Math.round(quantity / box))))
           .replace('%PCS%', String(box))
           .replace('%UNIT%', formatMoney(unit))
-          .replace('%TOTAL%', total);
+          .replace('%TOTAL%', total)
+          .replace('%WEIGHT%', formatGrams((Number(el.dataset.pieceGrams) || 0) * quantity));
       });
     }
   }
@@ -1407,6 +1415,9 @@
         }
       }
       el.hidden = retailView || !el.textContent.trim();
+    });
+    $$('[data-b2b-cart-weight]').forEach((el) => {
+      el.hidden = retailView;
     });
   }
 

@@ -116,7 +116,7 @@
     {% render 'np-stars', product: product %}
     {%- if box_size > 1 -%}
       <p class="mt-1 flex items-center gap-1 text-xs font-medium text-[var(--color-olive-dark)]">
-        {% render 'icon', name: 'building', class: 'h-3.5 w-3.5' %} {{ 'np.b2b_box.carton_of' | t: pcs: box_size }}
+        {% render 'icon', name: 'building', class: 'h-3.5 w-3.5' %} {% render 'np-b2b-carton-label', sku: variant.sku, box: box_size %}
       </p>
     {%- endif -%}
 

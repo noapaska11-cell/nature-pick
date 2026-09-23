@@ -795,6 +795,7 @@
     },
     "b2b_box": {
       "carton_of": "Säljs per kartong à {{ pcs }} st",
+      "carton_of_weight": "Kartong à {{ pcs }} st × {{ piece }} = {{ carton }}",
       "cartons_label": "Antal kartonger (à {{ pcs }} st)",
       "summary": "%BOXES% kartong × %PCS% st × %UNIT% = %TOTAL%",
       "excl_vat": "exkl. moms",

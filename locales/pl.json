@@ -886,6 +886,7 @@
     },
     "b2b_box": {
       "carton_of": "Sprzedaż w kartonach po {{ pcs }} szt.",
+      "carton_of_weight": "Karton {{ pcs }} szt. × {{ piece }} = {{ carton }}",
       "cartons_label": "Liczba kartonów (po {{ pcs }} szt.)",
       "summary": "%BOXES% karton × %PCS% szt. × %UNIT% = %TOTAL%",
       "excl_vat": "netto (bez VAT)",

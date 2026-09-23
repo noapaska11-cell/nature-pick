@@ -764,6 +764,7 @@
     },
     "b2b_box": {
       "carton_of": "Prodaje se na kutije od {{ pcs }} kom",
+      "carton_of_weight": "Kutija od {{ pcs }} kom × {{ piece }} = {{ carton }}",
       "cartons_label": "Broj kutija (po {{ pcs }} kom)",
       "summary": "%BOXES% kutija × %PCS% kom × %UNIT% = %TOTAL%",
       "excl_vat": "bez PDV-a",
