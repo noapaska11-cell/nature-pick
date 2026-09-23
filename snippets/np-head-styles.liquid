@@ -55,6 +55,16 @@
 </style>
 
 <link rel="stylesheet" href="{{ 'naturepick.css' | asset_url }}">
+<style>
+  /* Phones: iOS Safari zooms the page when a focused field's text is under 16px. */
+  @media (max-width: 767px) {
+    input:not([type='checkbox']):not([type='radio']), select, textarea { font-size: 16px !important; }
+  }
+  /* Touch screens have no hover, so the card's quick-view button stays invisible yet still catches taps. */
+  @media (hover: none) {
+    .np-card-quick-view { display: none !important; }
+  }
+</style>
 
 <script>
   window.NP = {

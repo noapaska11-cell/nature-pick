@@ -98,7 +98,7 @@
         data-quick-view
         data-product-url="{{ product.url }}"
         aria-label="{{ 'np.common.quick_view_aria' | t: name: product_title }}"
-        class="absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-center gap-1.5 rounded-full bg-white/95 py-2 text-xs font-semibold text-[var(--color-charcoal)] opacity-0 transition-all duration-200 focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+        class="np-card-quick-view absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-center gap-1.5 rounded-full bg-white/95 py-2 text-xs font-semibold text-[var(--color-charcoal)] opacity-0 transition-all duration-200 focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
       >
         {% render 'icon', name: 'eye', class: 'h-3.5 w-3.5' %} {{ 'np.common.quick_view' | t }}
       </button>
