@@ -21,6 +21,10 @@
   assign weight_label = weight_label | strip
   assign qv_form_id = 'QuickViewForm-' | append: product.id
   assign qv_qty_id = qv_form_id | append: '-qty'
+  capture box_size
+    render 'np-b2b-box-size', sku: variant.sku
+  endcapture
+  assign box_size = box_size | strip | plus: 0
 -%}
 <div role="dialog" aria-modal="true" aria-labelledby="quickview-title" class="relative grid max-h-[90vh] w-full max-w-2xl grid-cols-1 gap-6 overflow-y-auto rounded-3xl bg-[var(--color-paper)] p-6 shadow-2xl sm:grid-cols-2 sm:p-7">
   <button type="button" data-quick-view-close aria-label="{{ 'np.common.close_quick_view_aria' | t }}" class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal)] hover:bg-[var(--color-line)]">
@@ -68,8 +72,13 @@
             {% render 'icon', name: 'chevron-down', class: 'pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-charcoal-soft)]' %}
           </div>
         {%- endif -%}
+        {%- if box_size > 1 -%}
+          <p class="mb-2 flex items-center gap-1.5 text-sm font-medium text-[var(--color-olive-dark)]">
+            {% render 'icon', name: 'building', class: 'h-4 w-4' %} {{ 'np.b2b_box.carton_of' | t: pcs: box_size }}
+          </p>
+        {%- endif -%}
         <div class="flex items-center gap-3">
-          {% render 'np-quantity', size: 'sm', id: qv_qty_id %}
+          {% render 'np-quantity', size: 'sm', id: qv_qty_id, box: box_size %}
           <button type="submit" class="btn-primary flex-1" data-add-button>
             {% render 'icon', name: 'cart', class: 'h-4 w-4' %} {{ 'np.common.add_to_cart' | t }}
           </button>

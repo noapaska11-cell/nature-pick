@@ -1,9 +1,10 @@
 {%- comment -%}
-  Looks up the per-product B2B wholesale price (major units, e.g. 19.00) for a variant SKU from
-  Theme settings > B2B / wholesale > "Wholesale price list". Each line is  SKU:PRICE.
+  Looks up a variant SKU in Theme settings > B2B / wholesale > "Wholesale price list". Each line is
+  SKU:PRICE:BOX - PRICE per piece excluding VAT in major units (e.g. 19.00), BOX = pieces per carton (optional).
   Usage: {%- capture wholesale_price -%}{%- render 'np-b2b-wholesale-price', sku: variant.sku -%}{%- endcapture -%}
-  Outputs nothing when the SKU is blank or not in the list - the caller then falls back to the
-  wholesale discount percentage (or to the regular price).
+         {%- capture box_size -%}{%- render 'np-b2b-wholesale-price', sku: variant.sku, field: 'box' -%}{%- endcapture -%}
+  Outputs nothing when the SKU is blank or not in the list (or, with field: 'box', has no carton size) - the caller
+  then falls back to the wholesale discount percentage (or to the regular price) and to single pieces.
 
   Matches on the trailing digits of the code, not the whole string: the supplier's price list and the
   live Shopify catalog were entered separately and disagree on the 2-letter prefix for the same product
@@ -14,6 +15,10 @@
   assign found = ''
   assign sku_clean = sku | strip | upcase
   assign sku_suffix = sku_clean | slice: -6, 6
+  assign part_index = 1
+  if field == 'box'
+    assign part_index = 2
+  endif
   if sku_clean != ''
     assign price_lines = settings.b2b_price_list | newline_to_br | split: '<br />'
     for price_line in price_lines
@@ -21,7 +26,13 @@
       assign part_sku = parts[0] | strip | upcase
       assign part_suffix = part_sku | slice: -6, 6
       if part_sku == sku_clean or part_suffix == sku_suffix
-        assign found = parts[1] | strip
+        assign found = parts[part_index] | strip
+        if field == 'box'
+          assign box_number = found | plus: 0
+          if box_number < 2
+            assign found = ''
+          endif
+        endif
         break
       endif
     endfor

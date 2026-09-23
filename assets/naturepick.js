@@ -111,6 +111,28 @@
     }
   }
 
+  /* B2B cartons (snippets/np-quantity.liquid with `box`): the visible [data-box-input] counts cartons, the hidden
+     quantity field that Shopify's /cart/add receives is always cartons x pieces per carton. */
+  function syncBoxQuantity(boxInput) {
+    const wrapper = boxInput.closest('[data-quantity]');
+    const hidden = wrapper && $('input[name="quantity"]', wrapper);
+    const box = parseInt(wrapper && wrapper.dataset.boxSize, 10) || 1;
+    if (!hidden) return;
+    const cartons = Math.max(1, parseInt(boxInput.value, 10) || 1);
+    hidden.value = String(cartons * box);
+    hidden.dispatchEvent(new Event('input', { bubbles: true }));
+    hidden.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  document.addEventListener('input', (event) => {
+    if (event.target.matches && event.target.matches('[data-box-input]')) syncBoxQuantity(event.target);
+  });
+  document.addEventListener('change', (event) => {
+    if (!(event.target.matches && event.target.matches('[data-box-input]'))) return;
+    event.target.value = Math.max(1, parseInt(event.target.value, 10) || 1); // no 0, empty or fractional cartons
+    syncBoxQuantity(event.target);
+  });
+
   /* Pluralised text from data-count-one / -few / -other attributes (rendered by Liquid for counts 1, 3, 5) */
   function pluralText(el, n) {
     let category = 'other';
@@ -687,6 +709,8 @@
     async refresh(variantId) {
       const quantityInput = $('input[name="quantity"]', this);
       const quantity = quantityInput ? quantityInput.value : 1;
+      const cartonsInput = $('[data-box-input]', this);
+      const cartons = cartonsInput ? cartonsInput.value : 1;
       try {
         const response = await fetch(`${this.url}?variant=${variantId}&section_id=${this.sectionId}`);
         if (!response.ok) return;
@@ -703,8 +727,15 @@
             else delete live.dataset[key];
           });
         });
-        const freshQuantity = $('input[name="quantity"]', this);
-        if (freshQuantity) freshQuantity.value = quantity;
+        const freshBoxes = $('[data-box-input]', this);
+        if (freshBoxes) {
+          // cartons: keep the carton count (the new variant may have another carton size)
+          freshBoxes.value = cartons;
+          syncBoxQuantity(freshBoxes);
+        } else {
+          const freshQuantity = $('input[name="quantity"]', this);
+          if (freshQuantity) freshQuantity.value = quantity;
+        }
         if (window.Shopify && window.Shopify.PaymentButton && window.Shopify.PaymentButton.init) window.Shopify.PaymentButton.init();
         this.updateTotals();
       } catch (e) {
@@ -736,6 +767,16 @@
       const total = formatMoney(unit * quantity);
       $$('[data-add-total]', this).forEach((el) => (el.textContent = total));
       $$('[data-sticky-total]', this).forEach((el) => (el.textContent = total));
+      // B2B cartons: "2 cartons x 36 pcs x 19 kr = 1 368 kr excl. VAT"
+      $$('[data-box-summary]', this).forEach((el) => {
+        const box = parseInt(el.dataset.boxSize, 10) || 1;
+        const template = useRetail ? el.dataset.templateRetail : el.dataset.template;
+        el.textContent = (template || '')
+          .replace('%BOXES%', String(Math.max(1, Math.round(quantity / box))))
+          .replace('%PCS%', String(box))
+          .replace('%UNIT%', formatMoney(unit))
+          .replace('%TOTAL%', total);
+      });
     }
   }
 
@@ -1350,8 +1391,28 @@
     });
   }
 
+  /* B2B cart lines (snippets/np-b2b-cart-line.liquid): in a currency other than the shop's the wholesale breakdown
+     is left empty by Liquid and filled in here with Shopify's live rate; hidden while viewing regular prices. */
+  function syncB2bCartLines(retailView) {
+    $$('[data-b2b-cart-line]').forEach((el) => {
+      if (!el.textContent.trim()) {
+        const unit = fromShopCents(el.dataset.unitShopCents);
+        const quantity = Number(el.dataset.quantity) || 0;
+        if (unit !== null) {
+          el.textContent = (el.dataset.template || '')
+            .replace('%CARTONS%', el.dataset.cartons || String(quantity))
+            .replace('%PCS%', el.dataset.box || '')
+            .replace('%UNIT%', formatMoney(unit))
+            .replace('%TOTAL%', formatMoney(unit * quantity));
+        }
+      }
+      el.hidden = retailView || !el.textContent.trim();
+    });
+  }
+
   function applyB2bMinimumGate() {
     const retailView = currentPriceView() === 'retail';
+    syncB2bCartLines(retailView);
     $$('[data-b2b-minimum-order]').forEach((el) => {
       syncB2bMinimum(el);
       el.hidden = retailView;
@@ -1440,6 +1501,7 @@
         show(button.dataset.msgLogin, `${button.dataset.b2bPageUrl}#login`);
       } else if (data.status === 'minimum') show(button.dataset.msgMinimum);
       else if (data.status === 'unavailable') show(button.dataset.msgUnavailable);
+      else if (data.status === 'cartons') show(button.dataset.msgCartons);
       else show(button.dataset.msgError);
     } catch (e) {
       show(button.dataset.msgError);
@@ -1662,6 +1724,13 @@
     const plus = target.closest('[data-qty-plus]');
     if (minus || plus) {
       const wrapper = target.closest('[data-quantity]');
+      const boxInput = $('[data-box-input]', wrapper);
+      if (boxInput) {
+        // B2B cartons: the visible field counts cartons, the hidden quantity field follows (syncBoxQuantity)
+        boxInput.value = Math.max(1, (parseInt(boxInput.value, 10) || 1) + (plus ? 1 : -1));
+        syncBoxQuantity(boxInput);
+        return;
+      }
       const input = $('input[name="quantity"]', wrapper);
       const min = parseInt(input.min, 10) || 1;
       const step = parseInt(input.step, 10) || 1;

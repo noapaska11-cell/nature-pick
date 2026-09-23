@@ -819,6 +819,14 @@
         "other": "{{ count }} products"
       }
     },
+    "b2b_box": {
+      "carton_of": "Sold per carton of {{ pcs }} pcs",
+      "cartons_label": "Number of cartons ({{ pcs }} pcs each)",
+      "summary": "%BOXES% carton × %PCS% pcs × %UNIT% = %TOTAL%",
+      "excl_vat": "excl. VAT",
+      "cart_line_cartons": "%CARTONS% carton × %PCS% pcs × %UNIT% = %TOTAL%",
+      "cart_line_pieces": "%CARTONS% pcs × %UNIT% = %TOTAL%"
+    },
     "cart": {
       "title": "Cart",
       "summary": "Summary",
@@ -845,11 +853,12 @@
       "note_label": "Order note (optional)",
       "b2b_minimum_met": "B2B minimum order ({{ minimum }}) reached - you can check out.",
       "b2b_minimum_not_met": "Add {{ remaining }} more to reach the B2B minimum order of {{ minimum }}.",
-      "b2b_total": "Wholesale price (B2B checkout)",
+      "b2b_total": "Wholesale price excl. VAT (B2B checkout)",
       "b2b_checkout_busy": "Preparing checkout…",
       "b2b_checkout_login": "Log in with your e-mail and company ID on the B2B page to pay wholesale prices.",
       "b2b_checkout_minimum": "The cart does not reach the B2B minimum order at wholesale prices.",
       "b2b_checkout_unavailable": "A product in your cart is no longer available. Update the cart and try again.",
+      "b2b_checkout_cartons": "Wholesale orders are in whole cartons – adjust the quantity of the line concerned.",
       "b2b_checkout_error": "Checkout could not be opened right now. Please try again shortly or contact us."
     },
     "quick_contact": {

@@ -1,0 +1,41 @@
+{%- comment -%}
+  Wholesale breakdown of one cart line for a B2B customer, e.g. "2 × carton of 36 pcs × 19 kr = 1 368 kr excl. VAT"
+  (cartons only when the SKU has a carton size). Renders nothing for a retail visitor or a SKU without a wholesale
+  price. The list price is in the shop's currency: in any other currency naturepick.js fills the text in with
+  Shopify's live rate (data-unit-shop-cents, see syncB2bCartLines).
+  Params: item, box (pieces per carton, 0 = single pieces)
+{%- endcomment -%}
+{%- liquid
+  assign line_b2b = false
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      assign line_b2b = true
+    endif
+  endif
+-%}
+{%- if line_b2b -%}
+  {%- capture unit_major -%}{%- render 'np-b2b-wholesale-price', sku: item.sku -%}{%- endcapture -%}
+  {%- assign unit_major = unit_major | strip -%}
+  {%- if unit_major != '' -%}
+    {%- liquid
+      assign unit_shop_cents = unit_major | plus: 0 | times: 100 | round
+      assign line_box = box | plus: 0
+      assign excl_vat_text = 'np.b2b_box.excl_vat' | t
+      if line_box > 1
+        assign line_cartons = item.quantity | divided_by: line_box
+        assign template = 'np.b2b_box.cart_line_cartons' | t: cartons: '%CARTONS%', pcs: '%PCS%', unit: '%UNIT%', total: '%TOTAL%'
+      else
+        assign line_cartons = item.quantity
+        assign template = 'np.b2b_box.cart_line_pieces' | t: qty: '%CARTONS%', unit: '%UNIT%', total: '%TOTAL%'
+      endif
+      assign template = template | append: ' ' | append: excl_vat_text
+      assign text = ''
+      if cart.currency.iso_code == shop.currency
+        assign unit_text = unit_shop_cents | money_without_trailing_zeros
+        assign total_text = unit_shop_cents | times: item.quantity | money_without_trailing_zeros
+        assign text = template | replace: '%CARTONS%', line_cartons | replace: '%PCS%', line_box | replace: '%UNIT%', unit_text | replace: '%TOTAL%', total_text
+      endif
+    -%}
+    <p class="mt-1 text-xs font-medium text-[var(--color-olive-dark)]" data-b2b-cart-line data-unit-shop-cents="{{ unit_shop_cents }}" data-quantity="{{ item.quantity }}" data-cartons="{{ line_cartons }}" data-box="{{ line_box }}" data-template="{{ template | escape }}">{{ text }}</p>
+  {%- endif -%}
+{%- endif -%}

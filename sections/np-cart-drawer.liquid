@@ -44,6 +44,23 @@
           <ul class="flex flex-col gap-4">
             {%- for item in cart.items -%}
               {%- capture weight_label -%}{%- render 'np-weight', grams: item.variant.weight -%}{%- endcapture -%}
+              {%- capture line_box -%}{%- render 'np-b2b-box-size', sku: item.sku -%}{%- endcapture -%}
+              {%- liquid
+                # B2B customer + carton size: the stepper moves whole cartons
+                assign line_box = line_box | strip | plus: 0
+                assign qty_minus = item.quantity | minus: 1
+                assign qty_plus = item.quantity | plus: 1
+                if line_box > 1
+                  assign line_cartons = item.quantity | divided_by: line_box
+                  assign qty_plus = line_cartons | plus: 1 | times: line_box
+                  assign whole = line_cartons | times: line_box
+                  if whole == item.quantity
+                    assign qty_minus = line_cartons | minus: 1 | times: line_box
+                  else
+                    assign qty_minus = whole
+                  endif
+                endif
+              -%}
               <li class="flex gap-3" data-cart-line data-line-key="{{ item.key }}">
                 <a href="{{ item.url }}" class="block h-20 w-20 flex-shrink-0" tabindex="-1" aria-hidden="true">
                   {%- render 'np-product-image', image: item.image, alt: item.image.alt, class: 'h-20 w-20 rounded-xl', sizes: '80px', widths: '80, 160, 240' -%}
@@ -67,13 +84,14 @@
                       {% render 'icon', name: 'check', class: 'h-3 w-3' %} {{ allocation.discount_application.title | escape }}
                     </p>
                   {%- endfor -%}
+                  {%- render 'np-b2b-cart-line', item: item, box: line_box -%}
                   <div class="mt-2 flex items-center justify-between">
                     <div class="flex items-center rounded-full border border-[var(--color-line)]">
-                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | minus: 1 }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-2.5 py-1 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ qty_minus }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-2.5 py-1 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
                         {% render 'icon', name: 'minus', class: 'h-3.5 w-3.5' %}
                       </button>
-                      <span class="min-w-[1.5rem] text-center text-sm">{{ item.quantity }}</span>
-                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | plus: 1 }}" aria-label="{{ 'np.common.increase_qty' | t }}" class="px-2.5 py-1 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                      <span class="min-w-[1.5rem] text-center text-sm">{% if line_box > 1 %}{{ item.quantity | divided_by: line_box }} × {{ line_box }}{% else %}{{ item.quantity }}{% endif %}</span>
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ qty_plus }}" aria-label="{{ 'np.common.increase_qty' | t }}" class="px-2.5 py-1 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
                         {% render 'icon', name: 'plus', class: 'h-3.5 w-3.5' %}
                       </button>
                     </div>
