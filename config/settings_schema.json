@@ -251,7 +251,13 @@
         "id": "b2b_minimum_order",
         "label": "B2B minimum order value",
         "default": 1000,
-        "info": "Shown and enforced on the cart page for B2B customers only (checkout stays disabled below this), compared with the cart's wholesale value. Major units in the shop's currency, same as the price list, e.g. 1000; other currencies are converted. 0 = no minimum."
+        "info": "Shown and enforced on the cart page for B2B customers only (checkout stays disabled below this), compared with the cart's wholesale value. Major units in the shop's currency, same as the price list, e.g. 11000. Carts in a currency listed below use that fixed amount instead; any other currency gets this one converted. 0 = no minimum."
+      },
+      {
+        "type": "textarea",
+        "id": "b2b_minimum_by_currency",
+        "label": "B2B minimum order per currency",
+        "info": "Optional, one line per currency: CURRENCY:AMOUNT, e.g. EUR:1000. A cart in that currency must reach exactly this amount (no exchange-rate drift). The B2B checkout of the verification service uses the line for the shop's currency, if any."
       }
     ]
   },

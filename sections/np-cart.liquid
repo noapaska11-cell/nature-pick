@@ -22,8 +22,12 @@
     assign b2b_listed_cents = wholesale_parts[0] | plus: 0
     assign b2b_other_cents = wholesale_parts[1] | plus: 0
     assign b2b_wholesale_cents = b2b_listed_cents | plus: b2b_other_cents
-    if settings.b2b_minimum_order > 0
-      assign b2b_minimum_cents = settings.b2b_minimum_order | times: 100
+    capture minimum_parts
+      render 'np-b2b-minimum-cents', cart: cart
+    endcapture
+    assign minimum_parts = minimum_parts | strip | split: ':'
+    assign b2b_minimum_cents = minimum_parts[0] | plus: 0
+    if b2b_minimum_cents > 0
       if b2b_wholesale_cents < b2b_minimum_cents
         assign b2b_minimum_met = false
       endif
