@@ -3,6 +3,9 @@
   "B2B minimum order value" is greater than 0. Renders nothing for a retail visitor or when no
   minimum is configured. Sets data-minimum-met="true"/"false" so callers (the checkout button) can
   read the outcome without recomputing it.
+  The minimum is in the shop's currency (SEK) and Liquid has no exchange rate, so for a cart in another
+  currency naturepick.js re-checks it with Shopify's live rate (data-minimum-shop-cents / data-cart-total)
+  and fills the %MINIMUM% / %REMAINING% placeholders of both messages.
   Params: cart
 {%- endcomment -%}
 {%- liquid
@@ -23,14 +26,17 @@
     assign remaining_cents = minimum_cents | minus: cart.total_price
     assign minimum_text = minimum_cents | money_without_trailing_zeros
     assign remaining_text = remaining_cents | money_without_trailing_zeros
+    assign met_template = 'np.cart.b2b_minimum_met' | t: minimum: '%MINIMUM%'
+    assign not_met_template = 'np.cart.b2b_minimum_not_met' | t: remaining: '%REMAINING%', minimum: '%MINIMUM%'
   -%}
-  <div data-b2b-minimum-order data-minimum-met="{{ minimum_met }}" class="flex items-center gap-2 rounded-xl px-4 py-3 text-sm {% if minimum_met %}bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]{% else %}bg-[var(--color-paprika-light)] text-[var(--color-paprika-dark)]{% endif %}">
-    {%- if minimum_met -%}
+  <div data-b2b-minimum-order data-minimum-met="{{ minimum_met }}" data-minimum-shop-cents="{{ minimum_cents }}" data-cart-total="{{ cart.total_price }}">
+    <div data-minimum-state="met" {% unless minimum_met %}hidden{% endunless %} class="flex items-center gap-2 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
       {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %}
-      <span>{{ 'np.cart.b2b_minimum_met' | t: minimum: minimum_text }}</span>
-    {%- else -%}
+      <span data-minimum-text data-template="{{ met_template | escape }}">{{ 'np.cart.b2b_minimum_met' | t: minimum: minimum_text }}</span>
+    </div>
+    <div data-minimum-state="not-met" {% if minimum_met %}hidden{% endif %} class="flex items-center gap-2 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]">
       {% render 'icon', name: 'building', class: 'h-4 w-4 flex-shrink-0' %}
-      <span>{{ 'np.cart.b2b_minimum_not_met' | t: remaining: remaining_text, minimum: minimum_text }}</span>
-    {%- endif -%}
+      <span data-minimum-text data-template="{{ not_met_template | escape }}">{{ 'np.cart.b2b_minimum_not_met' | t: remaining: remaining_text, minimum: minimum_text }}</span>
+    </div>
   </div>
 {%- endif -%}
