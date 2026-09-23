@@ -4,9 +4,9 @@
   <section class="container-page py-14">
     {%- if blog.all_tags.size > 0 -%}
       <div class="mb-8 flex flex-wrap gap-2">
-        <a href="{{ blog.url }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags == blank %}border-[var(--color-charcoal)] bg-[var(--color-olive)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ 'np.collection.filter_all' | t }}</a>
+        <a href="{{ blog.url }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags == blank %}border-[var(--color-paprika)] bg-[var(--color-paprika)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ 'np.collection.filter_all' | t }}</a>
         {%- for tag in blog.all_tags -%}
-          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags contains tag %}border-[var(--color-charcoal)] bg-[var(--color-olive)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ tag }}</a>
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="rounded-full border px-4 py-1.5 text-sm {% if current_tags contains tag %}border-[var(--color-paprika)] bg-[var(--color-paprika)] text-[var(--color-charcoal)]{% else %}border-[var(--color-line)] text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)]{% endif %}">{{ tag }}</a>
         {%- endfor -%}
       </div>
     {%- endif -%}

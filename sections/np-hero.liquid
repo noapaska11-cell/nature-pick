@@ -33,8 +33,7 @@
       {%- comment -%} Default brand photo until a merchant picks their own in Theme settings > Hero. {%- endcomment -%}
       <img src="{{ 'np-hero-bg.webp' | asset_url }}" width="1671" height="941" loading="eager" fetchpriority="high" alt="" class="h-full w-full object-cover">
     {%- endif -%}
-    <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-charcoal)] via-[var(--color-charcoal)]/70 to-transparent" aria-hidden="true"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-charcoal)]/50 via-transparent to-transparent" aria-hidden="true"></div>
+    <div class="absolute inset-0 np-hero-fade" aria-hidden="true"></div>
   </div>
 
   <div class="container-page flex min-h-[32rem] flex-col justify-center py-14 sm:min-h-[46rem] sm:py-28">
