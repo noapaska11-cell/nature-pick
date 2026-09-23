@@ -12,7 +12,7 @@
       {%- if part.is_link -%}
         <a href="{{ part.url }}" aria-label="{{ 'general.pagination.page' | t: number: part.title }}" class="flex h-10 min-w-10 items-center justify-center rounded-full border border-[var(--color-line)] px-3 text-sm font-medium text-[var(--color-charcoal-soft)] hover:border-[var(--color-charcoal)] hover:text-[var(--color-charcoal)]">{{ part.title }}</a>
       {%- elsif part.title == paginate.current_page -%}
-        <span aria-current="page" class="flex h-10 min-w-10 items-center justify-center rounded-full border border-[var(--color-charcoal)] bg-[var(--color-olive)] px-3 text-sm font-semibold text-[var(--color-charcoal)]">{{ part.title }}</span>
+        <span aria-current="page" class="flex h-10 min-w-10 items-center justify-center rounded-full border border-[var(--color-paprika)] bg-[var(--color-paprika)] px-3 text-sm font-semibold text-[var(--color-charcoal)]">{{ part.title }}</span>
       {%- else -%}
         <span class="flex h-10 items-center justify-center px-1 text-sm text-[var(--color-charcoal-soft)]">{{ part.title }}</span>
       {%- endif -%}

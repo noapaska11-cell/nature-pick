@@ -68,49 +68,49 @@
         "type": "color",
         "id": "color_paprika",
         "label": "Accent (buttons, badges)",
-        "default": "#e9a824"
+        "default": "#f5b82e"
       },
       {
         "type": "color",
         "id": "color_paprika_dark",
         "label": "Accent, dark (hover, links)",
-        "default": "#bf8a1e"
+        "default": "#9c6508"
       },
       {
         "type": "color",
         "id": "color_paprika_light",
         "label": "Accent, light (highlights)",
-        "default": "#faeccf"
+        "default": "#fff1c9"
       },
       {
         "type": "color",
         "id": "color_olive",
         "label": "Green (top bar, brand story)",
-        "default": "#31b94d"
+        "default": "#2f4a33"
       },
       {
         "type": "color",
         "id": "color_olive_dark",
         "label": "Green, dark",
-        "default": "#248939"
+        "default": "#273e2b"
       },
       {
         "type": "color",
         "id": "color_olive_light",
         "label": "Green, light",
-        "default": "#dbf0df"
+        "default": "#b8cbb4"
       },
       {
         "type": "color",
         "id": "color_charcoal",
         "label": "Text and dark sections",
-        "default": "#1f5129"
+        "default": "#2f4a33"
       },
       {
         "type": "color",
         "id": "color_charcoal_soft",
         "label": "Secondary text",
-        "default": "#83907f"
+        "default": "#5c6b59"
       },
       {
         "type": "color",
@@ -122,13 +122,13 @@
         "type": "color",
         "id": "color_gold",
         "label": "Gold (stars, B2B)",
-        "default": "#e9a824"
+        "default": "#f5b82e"
       },
       {
         "type": "color",
         "id": "color_gold_on_dark",
         "label": "Gold on dark backgrounds",
-        "default": "#edb647"
+        "default": "#ffd166"
       }
     ]
   },
