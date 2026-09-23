@@ -1,0 +1,30 @@
+{%- comment -%}
+  Wholesale value of the cart, as "LISTED:OTHER" in cents:
+  - LISTED: lines priced from the price list, in the shop's currency (the list is kept in SEK)
+  - OTHER:  every other line in the cart's own currency - the wholesale discount % applied, else the regular price
+  Same rules as the B2B checkout of the verification service, which charges exactly these prices.
+  When the cart is in the shop's currency both parts simply add up; otherwise naturepick.js converts LISTED
+  with Shopify's live rate before adding (see fromShopCents).
+  Usage: {%- capture parts -%}{%- render 'np-b2b-cart-wholesale', cart: cart -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign listed_cents = 0
+  assign other_cents = 0
+  for item in cart.items
+    capture wholesale_major
+      render 'np-b2b-wholesale-price', sku: item.sku
+    endcapture
+    assign wholesale_major = wholesale_major | strip
+    if wholesale_major != ''
+      assign line_cents = wholesale_major | plus: 0 | times: 100 | round | times: item.quantity
+      assign listed_cents = listed_cents | plus: line_cents
+    elsif settings.b2b_discount_percent > 0
+      assign multiplier = 100 | minus: settings.b2b_discount_percent
+      assign line_cents = item.original_line_price | times: multiplier | divided_by: 100
+      assign other_cents = other_cents | plus: line_cents
+    else
+      assign other_cents = other_cents | plus: item.original_line_price
+    endif
+  endfor
+  echo listed_cents | append: ':' | append: other_cents
+-%}

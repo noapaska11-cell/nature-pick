@@ -787,7 +787,13 @@
       "calculated_at_checkout": "Izračunava se pri plaćanju",
       "note_label": "Napomena uz narudžbu (neobavezno)",
       "b2b_minimum_met": "Minimalna B2B narudžba ({{ minimum }}) dosegnuta - možeš na plaćanje.",
-      "b2b_minimum_not_met": "Dodaj još {{ remaining }} da dosegneš minimalnu B2B narudžbu od {{ minimum }}."
+      "b2b_minimum_not_met": "Dodaj još {{ remaining }} da dosegneš minimalnu B2B narudžbu od {{ minimum }}.",
+      "b2b_total": "Veleprodajna cijena (B2B blagajna)",
+      "b2b_checkout_busy": "Pripremam blagajnu…",
+      "b2b_checkout_login": "Prijavi se e-mailom i OIB-om na B2B stranici da platiš veleprodajne cijene.",
+      "b2b_checkout_minimum": "Košarica ne doseže minimalnu B2B narudžbu u veleprodajnim cijenama.",
+      "b2b_checkout_unavailable": "Proizvod u košarici više nije dostupan. Osvježi košaricu i pokušaj ponovno.",
+      "b2b_checkout_error": "Blagajnu trenutno nije moguće otvoriti. Pokušaj ponovno za trenutak ili nas kontaktiraj."
     },
     "quick_contact": {
       "title": "Imaš pitanje?",
