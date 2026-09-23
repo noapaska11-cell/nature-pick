@@ -1,0 +1,27 @@
+{%- comment -%}
+  Carton label for a B2B customer, e.g. "Carton of 36 pcs × 125 g = 4.5 kg": pieces per carton and the net weight
+  of one piece come from the price list (SKU:PRICE:BOX:GRAMS), not from the Shopify variant weight. Without grams
+  it falls back to "Carton of 36 pcs". Params: sku, box (pieces per carton, > 1)
+{%- endcomment -%}
+{%- liquid
+  capture piece_grams
+    render 'np-b2b-wholesale-price', sku: sku, field: 'grams'
+  endcapture
+  assign piece_grams = piece_grams | strip | plus: 0
+-%}
+{%- if piece_grams > 0 -%}
+  {%- liquid
+    assign carton_grams = piece_grams | times: box
+    capture piece_label
+      render 'np-weight', grams: piece_grams
+    endcapture
+    capture carton_label
+      render 'np-weight', grams: carton_grams
+    endcapture
+    assign piece_label = piece_label | strip
+    assign carton_label = carton_label | strip
+  -%}
+  {{- 'np.b2b_box.carton_of_weight' | t: pcs: box, piece: piece_label, carton: carton_label -}}
+{%- else -%}
+  {{- 'np.b2b_box.carton_of' | t: pcs: box -}}
+{%- endif -%}

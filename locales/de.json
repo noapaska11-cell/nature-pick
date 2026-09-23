@@ -853,6 +853,7 @@
     },
     "b2b_box": {
       "carton_of": "Verkauf pro Karton à {{ pcs }} Stk.",
+      "carton_of_weight": "Karton à {{ pcs }} Stk. × {{ piece }} = {{ carton }}",
       "cartons_label": "Anzahl Kartons (à {{ pcs }} Stk.)",
       "summary": "%BOXES% Karton × %PCS% Stk. × %UNIT% = %TOTAL%",
       "excl_vat": "zzgl. MwSt.",

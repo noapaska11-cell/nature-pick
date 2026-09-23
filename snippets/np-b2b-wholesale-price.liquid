@@ -1,8 +1,10 @@
 {%- comment -%}
   Looks up a variant SKU in Theme settings > B2B / wholesale > "Wholesale price list". Each line is
-  SKU:PRICE:BOX - PRICE per piece excluding VAT in major units (e.g. 19.00), BOX = pieces per carton (optional).
+  SKU:PRICE:BOX:GRAMS - PRICE per piece excluding VAT in major units (e.g. 19.00), BOX = pieces per carton and
+  GRAMS = net weight of one piece (both optional).
   Usage: {%- capture wholesale_price -%}{%- render 'np-b2b-wholesale-price', sku: variant.sku -%}{%- endcapture -%}
          {%- capture box_size -%}{%- render 'np-b2b-wholesale-price', sku: variant.sku, field: 'box' -%}{%- endcapture -%}
+         field: 'grams' -> grams per piece
   Outputs nothing when the SKU is blank or not in the list (or, with field: 'box', has no carton size) - the caller
   then falls back to the wholesale discount percentage (or to the regular price) and to single pieces.
 
@@ -18,6 +20,8 @@
   assign part_index = 1
   if field == 'box'
     assign part_index = 2
+  elsif field == 'grams'
+    assign part_index = 3
   endif
   if sku_clean != ''
     assign price_lines = settings.b2b_price_list | newline_to_br | split: '<br />'

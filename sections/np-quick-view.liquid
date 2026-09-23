@@ -74,7 +74,7 @@
         {%- endif -%}
         {%- if box_size > 1 -%}
           <p class="mb-2 flex items-center gap-1.5 text-sm font-medium text-[var(--color-olive-dark)]">
-            {% render 'icon', name: 'building', class: 'h-4 w-4' %} {{ 'np.b2b_box.carton_of' | t: pcs: box_size }}
+            {% render 'icon', name: 'building', class: 'h-4 w-4' %} {% render 'np-b2b-carton-label', sku: variant.sku, box: box_size %}
           </p>
         {%- endif -%}
         <div class="flex items-center gap-3">
