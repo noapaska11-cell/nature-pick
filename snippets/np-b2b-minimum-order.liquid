@@ -3,9 +3,11 @@
   "B2B minimum order value" is greater than 0. Renders nothing for a retail visitor or when no
   minimum is configured. Sets data-minimum-met="true"/"false" so callers (the checkout button) can
   read the outcome without recomputing it.
-  The minimum is in the shop's currency (SEK) and Liquid has no exchange rate, so for a cart in another
-  currency naturepick.js re-checks it with Shopify's live rate (data-minimum-shop-cents / data-cart-total)
-  and fills the %MINIMUM% / %REMAINING% placeholders of both messages.
+  The minimum applies to the cart's WHOLESALE value (np-b2b-cart-wholesale - what the B2B checkout charges),
+  not to its retail total. The minimum and the price list are in the shop's currency (SEK) and Liquid has no
+  exchange rate, so for a cart in another currency naturepick.js re-checks it with Shopify's live rate
+  (data-minimum-shop-cents / data-wholesale-listed / data-wholesale-other) and fills the %MINIMUM% /
+  %REMAINING% placeholders of both messages.
   Params: cart
 {%- endcomment -%}
 {%- liquid
@@ -19,17 +21,24 @@
 {%- if b2b_active and settings.b2b_minimum_order > 0 -%}
   {%- liquid
     assign minimum_cents = settings.b2b_minimum_order | times: 100
+    capture wholesale_parts
+      render 'np-b2b-cart-wholesale', cart: cart
+    endcapture
+    assign wholesale_parts = wholesale_parts | strip | split: ':'
+    assign listed_cents = wholesale_parts[0] | plus: 0
+    assign other_cents = wholesale_parts[1] | plus: 0
+    assign wholesale_cents = listed_cents | plus: other_cents
     assign minimum_met = false
-    if cart.total_price >= minimum_cents
+    if wholesale_cents >= minimum_cents
       assign minimum_met = true
     endif
-    assign remaining_cents = minimum_cents | minus: cart.total_price
+    assign remaining_cents = minimum_cents | minus: wholesale_cents
     assign minimum_text = minimum_cents | money_without_trailing_zeros
     assign remaining_text = remaining_cents | money_without_trailing_zeros
     assign met_template = 'np.cart.b2b_minimum_met' | t: minimum: '%MINIMUM%'
     assign not_met_template = 'np.cart.b2b_minimum_not_met' | t: remaining: '%REMAINING%', minimum: '%MINIMUM%'
   -%}
-  <div data-b2b-minimum-order data-minimum-met="{{ minimum_met }}" data-minimum-shop-cents="{{ minimum_cents }}" data-cart-total="{{ cart.total_price }}">
+  <div data-b2b-minimum-order data-minimum-met="{{ minimum_met }}" data-minimum-shop-cents="{{ minimum_cents }}" data-wholesale-listed="{{ listed_cents }}" data-wholesale-other="{{ other_cents }}">
     <div data-minimum-state="met" {% unless minimum_met %}hidden{% endunless %} class="flex items-center gap-2 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
       {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %}
       <span data-minimum-text data-template="{{ met_template | escape }}">{{ 'np.cart.b2b_minimum_met' | t: minimum: minimum_text }}</span>

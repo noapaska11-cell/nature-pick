@@ -1323,12 +1323,20 @@
      add/change); this only decides whether that verdict is currently enforced. Called from
      applyPriceView() (toggle, initial load) and from cart.applySections() (after every cart change),
      since cart line items are not [data-np-price] elements the price MutationObserver would catch. */
+  /* Wholesale value of the cart in its own currency, from np-b2b-cart-wholesale's two parts: price-list lines
+     (shop currency, converted) + all other lines (already in the cart's currency). null without a rate. */
+  function wholesaleCartCents(el) {
+    const listed = fromShopCents(el.dataset.wholesaleListed);
+    const other = Number(el.dataset.wholesaleOther);
+    return listed === null || !Number.isFinite(other) ? null : listed + other;
+  }
+
   /* Re-checks a minimum-order notice in the cart's own currency (see fromShopCents) and fills in its amounts */
   function syncB2bMinimum(el) {
     if (!NP.currency || NP.currency === NP.shopCurrency) return; // the server already compared like with like
     const minimum = fromShopCents(el.dataset.minimumShopCents);
-    const total = Number(el.dataset.cartTotal);
-    if (minimum === null || !Number.isFinite(total)) return; // no rate: keep the server's verdict
+    const total = wholesaleCartCents(el);
+    if (minimum === null || total === null) return; // no rate: keep the server's verdict
     const met = total >= minimum;
     el.dataset.minimumMet = String(met);
     $$('[data-minimum-state]', el).forEach((state) => {
@@ -1347,6 +1355,14 @@
       syncB2bMinimum(el);
       el.hidden = retailView;
     });
+    $$('[data-b2b-wholesale-total]').forEach((el) => {
+      const value = $('[data-b2b-wholesale-total-value]', el);
+      if (value && !value.textContent.trim()) {
+        const cents = wholesaleCartCents(el);
+        if (cents !== null) value.textContent = formatMoney(cents);
+      }
+      el.hidden = retailView || !(value && value.textContent.trim());
+    });
     $$('[data-checkout-button][data-b2b-minimum-met]').forEach((button) => {
       const page = button.closest('[data-cart-page]');
       const notice = page && $('[data-b2b-minimum-order]', page);
@@ -1363,6 +1379,74 @@
     storage.set(PRICE_VIEW_KEY, view);
     applyPriceView(view);
   }
+
+  /* B2B checkout at wholesale prices (cart page, only rendered for a B2B customer when the verification service is
+     configured): instead of Shopify's normal checkout, the cart goes to the service, which creates a draft order with
+     the price-list prices for the signed-in company and answers with that order's Shopify checkout URL. Needs the
+     company's e-mail + OIB sign-in from the B2B page (the token <np-b2b-session> keeps). Switched to "regular prices"
+     the button is an ordinary checkout again. */
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-checkout-button][data-b2b-checkout]');
+    if (!button || currentPriceView() === 'retail') return;
+    event.preventDefault();
+    if (button.dataset.busy) return;
+
+    const message = $('[data-b2b-checkout-message]', button.closest('[data-cart-page]') || document);
+    const show = (text, link) => {
+      if (!message) return;
+      message.textContent = text || '';
+      if (link) {
+        const a = document.createElement('a');
+        a.href = link;
+        a.className = 'ml-1 font-semibold underline';
+        a.textContent = '→';
+        message.append(a);
+      }
+      message.hidden = !text;
+    };
+
+    let session = null;
+    try {
+      session = JSON.parse(storage.get(B2B_SESSION_KEY) || 'null');
+    } catch (e) {
+      session = null;
+    }
+    if (!session || !session.token) {
+      show(button.dataset.msgLogin, `${button.dataset.b2bPageUrl}#login`);
+      return;
+    }
+
+    const label = button.textContent;
+    button.dataset.busy = '1';
+    button.disabled = true;
+    button.textContent = button.dataset.labelBusy || label;
+    show('');
+    try {
+      const cart = await fetch(NP.routes.cartJson, { headers: { Accept: 'application/json' } }).then((r) => r.json());
+      const lines = cart.items.map((item) => ({ variantId: String(item.variant_id), quantity: item.quantity }));
+      const response = await fetch(button.dataset.b2bCheckout, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ token: session.token, lines, locale: NP.locale }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (data.status === 'ok' && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      if (data.status === 'session') {
+        storage.set(B2B_SESSION_KEY, ''); // expired or revoked: sign in again on the B2B page
+        show(button.dataset.msgLogin, `${button.dataset.b2bPageUrl}#login`);
+      } else if (data.status === 'minimum') show(button.dataset.msgMinimum);
+      else if (data.status === 'unavailable') show(button.dataset.msgUnavailable);
+      else show(button.dataset.msgError);
+    } catch (e) {
+      show(button.dataset.msgError);
+    }
+    delete button.dataset.busy;
+    button.textContent = label;
+    applyB2bMinimumGate(); // restores the disabled state the minimum-order gate wants
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => applyPriceView(currentPriceView()));

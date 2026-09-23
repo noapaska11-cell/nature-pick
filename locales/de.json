@@ -876,7 +876,13 @@
       "calculated_at_checkout": "Wird an der Kasse berechnet",
       "note_label": "Bestellhinweis (optional)",
       "b2b_minimum_met": "B2B-Mindestbestellwert ({{ minimum }}) erreicht - du kannst zur Kasse gehen.",
-      "b2b_minimum_not_met": "Füge noch {{ remaining }} hinzu, um den B2B-Mindestbestellwert von {{ minimum }} zu erreichen."
+      "b2b_minimum_not_met": "Füge noch {{ remaining }} hinzu, um den B2B-Mindestbestellwert von {{ minimum }} zu erreichen.",
+      "b2b_total": "Großhandelspreis (B2B-Kasse)",
+      "b2b_checkout_busy": "Kasse wird vorbereitet…",
+      "b2b_checkout_login": "Melde dich auf der B2B-Seite mit E-Mail und Firmennummer an, um Großhandelspreise zu zahlen.",
+      "b2b_checkout_minimum": "Der Warenkorb erreicht den B2B-Mindestbestellwert zu Großhandelspreisen nicht.",
+      "b2b_checkout_unavailable": "Ein Produkt im Warenkorb ist nicht mehr verfügbar. Aktualisiere den Warenkorb und versuche es erneut.",
+      "b2b_checkout_error": "Die Kasse konnte gerade nicht geöffnet werden. Bitte versuche es gleich noch einmal oder kontaktiere uns."
     },
     "quick_contact": {
       "title": "Hast du eine Frage?",

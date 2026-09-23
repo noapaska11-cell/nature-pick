@@ -844,7 +844,13 @@
       "calculated_at_checkout": "Calculated at checkout",
       "note_label": "Order note (optional)",
       "b2b_minimum_met": "B2B minimum order ({{ minimum }}) reached - you can check out.",
-      "b2b_minimum_not_met": "Add {{ remaining }} more to reach the B2B minimum order of {{ minimum }}."
+      "b2b_minimum_not_met": "Add {{ remaining }} more to reach the B2B minimum order of {{ minimum }}.",
+      "b2b_total": "Wholesale price (B2B checkout)",
+      "b2b_checkout_busy": "Preparing checkout…",
+      "b2b_checkout_login": "Log in with your e-mail and company ID on the B2B page to pay wholesale prices.",
+      "b2b_checkout_minimum": "The cart does not reach the B2B minimum order at wholesale prices.",
+      "b2b_checkout_unavailable": "A product in your cart is no longer available. Update the cart and try again.",
+      "b2b_checkout_error": "Checkout could not be opened right now. Please try again shortly or contact us."
     },
     "quick_contact": {
       "title": "Got a question?",
