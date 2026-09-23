@@ -1,14 +1,38 @@
+{%- liquid
+  # templates/page.json fallback: hidden on the pages that page.json already shows a designed section for
+  assign np_route_show = true
+  assign np_route_list = section.settings.route_skip_handles | strip | split: ','
+  for np_route_handle in np_route_list
+    assign np_route_handle = np_route_handle | strip
+    if np_route_handle != blank and np_route_handle == page.handle
+      assign np_route_show = false
+      break
+    endif
+  endfor
+-%}
+{%- if np_route_show -%}
 {%- comment -%}Generic page (templates/page.json): title band + rich text content.{%- endcomment -%}
 {%- render 'np-page-hero', eyebrow: page.title, title: page.title, description: nil -%}
 <section class="container-page max-w-3xl py-14">
   <div class="np-prose">{{ page.content }}</div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
   "name": "Page",
   "enabled_on": {
-    "templates": ["page"]
-  }
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "route_skip_handles",
+      "label": "Hide on page handles",
+      "info": "Comma-separated page handles that already get a designed section in the default page template."
+    }
+  ]
 }
 {% endschema %}

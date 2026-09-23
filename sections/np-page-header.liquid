@@ -1,3 +1,22 @@
+{%- liquid
+  # Handle routing for templates/page.json: until this theme is live, Shopify only lets a page pick templates of the
+  # published theme, so the generic page template renders each designed section only on its own page handle.
+  # Blank setting (every page.*.json template) = always shown.
+  assign np_route_show = true
+  assign np_route_handles = section.settings.route_handles | strip
+  if np_route_handles != blank
+    assign np_route_show = false
+    assign np_route_list = np_route_handles | split: ','
+    for np_route_handle in np_route_list
+      assign np_route_handle = np_route_handle | strip
+      if np_route_handle == page.handle
+        assign np_route_show = true
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if np_route_show -%}
 {%- comment -%}
   Title band for content pages. The "content" setting selects which translated texts are used
   (eyebrow / title / description in all languages); any text typed in the settings wins.
@@ -58,6 +77,7 @@
   endif
 -%}
 {%- render 'np-page-hero', eyebrow: eyebrow, title: title, description: description -%}
+{%- endif -%}
 
 {% schema %}
 {
@@ -68,15 +88,42 @@
       "id": "content",
       "label": "Translated texts",
       "options": [
-        { "value": "custom", "label": "Page title (custom)" },
-        { "value": "faq", "label": "FAQ" },
-        { "value": "about", "label": "About / Our origin" },
-        { "value": "origin", "label": "Product origin (QR)" },
-        { "value": "contact", "label": "Contact" },
-        { "value": "b2b", "label": "B2B" },
-        { "value": "club", "label": "Spice Club" },
-        { "value": "shipping", "label": "Shipping & returns" },
-        { "value": "wishlist", "label": "Wishlist" }
+        {
+          "value": "custom",
+          "label": "Page title (custom)"
+        },
+        {
+          "value": "faq",
+          "label": "FAQ"
+        },
+        {
+          "value": "about",
+          "label": "About / Our origin"
+        },
+        {
+          "value": "origin",
+          "label": "Product origin (QR)"
+        },
+        {
+          "value": "contact",
+          "label": "Contact"
+        },
+        {
+          "value": "b2b",
+          "label": "B2B"
+        },
+        {
+          "value": "club",
+          "label": "Spice Club"
+        },
+        {
+          "value": "shipping",
+          "label": "Shipping & returns"
+        },
+        {
+          "value": "wishlist",
+          "label": "Wishlist"
+        }
       ],
       "default": "custom"
     },
@@ -94,6 +141,12 @@
       "type": "textarea",
       "id": "description",
       "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "route_handles",
+      "label": "Only on page handles",
+      "info": "Comma-separated page handles, e.g. b2b. Leave empty to always show. Used by the default page template to show this section on its own page before page templates can be assigned."
     }
   ],
   "presets": [

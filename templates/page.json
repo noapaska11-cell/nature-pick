@@ -1,11 +1,118 @@
 {
   "sections": {
+    "about_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "about",
+        "route_handles": "about"
+      }
+    },
+    "about_main": {
+      "type": "np-about",
+      "settings": {
+        "collection_1": "notter-snacks",
+        "collection_2": "soltorkade-gronsaker",
+        "route_handles": "about"
+      }
+    },
+    "origin_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "origin",
+        "route_handles": "origin"
+      }
+    },
+    "origin_main": {
+      "type": "np-origin",
+      "settings": {
+        "route_handles": "origin"
+      }
+    },
+    "faq_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "faq",
+        "route_handles": "faq"
+      }
+    },
+    "faq_main": {
+      "type": "np-faq",
+      "settings": {
+        "layout": "page",
+        "item_count": 8,
+        "first_open": true,
+        "reveal": false,
+        "route_handles": "faq"
+      }
+    },
+    "b2b_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "b2b",
+        "route_handles": "b2b"
+      }
+    },
+    "b2b_main": {
+      "type": "np-b2b",
+      "settings": {
+        "route_handles": "b2b"
+      }
+    },
+    "spice_club_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "club",
+        "route_handles": "spice-club"
+      }
+    },
+    "spice_club_main": {
+      "type": "np-club",
+      "settings": {
+        "collection_1": "naturliga-kryddor",
+        "collection_2": "torkad-frukt",
+        "route_handles": "spice-club"
+      }
+    },
+    "shipping_returns_header": {
+      "type": "np-page-header",
+      "settings": {
+        "content": "shipping",
+        "route_handles": "shipping-returns"
+      }
+    },
+    "shipping_returns_main": {
+      "type": "np-shipping-returns",
+      "settings": {
+        "route_handles": "shipping-returns"
+      }
+    },
+    "wishlist_main": {
+      "type": "np-wishlist",
+      "settings": {
+        "route_handles": "wishlist"
+      }
+    },
     "main": {
       "type": "np-page",
-      "settings": {}
+      "settings": {
+        "route_skip_handles": "about,origin,faq,b2b,spice-club,shipping-returns,wishlist"
+      }
     }
   },
   "order": [
+    "about_header",
+    "about_main",
+    "origin_header",
+    "origin_main",
+    "faq_header",
+    "faq_main",
+    "b2b_header",
+    "b2b_main",
+    "spice_club_header",
+    "spice_club_main",
+    "shipping_returns_header",
+    "shipping_returns_main",
+    "wishlist_main",
     "main"
   ]
 }
