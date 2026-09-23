@@ -793,6 +793,14 @@
         "other": "{{ count }} produkter"
       }
     },
+    "b2b_box": {
+      "carton_of": "Säljs per kartong à {{ pcs }} st",
+      "cartons_label": "Antal kartonger (à {{ pcs }} st)",
+      "summary": "%BOXES% kartong × %PCS% st × %UNIT% = %TOTAL%",
+      "excl_vat": "exkl. moms",
+      "cart_line_cartons": "%CARTONS% kartong × %PCS% st × %UNIT% = %TOTAL%",
+      "cart_line_pieces": "%CARTONS% st × %UNIT% = %TOTAL%"
+    },
     "cart": {
       "title": "Varukorg",
       "summary": "Sammanfattning",
@@ -819,11 +827,12 @@
       "note_label": "Ordermeddelande (valfritt)",
       "b2b_minimum_met": "B2B-minimiorder ({{ minimum }}) uppnådd - du kan gå till kassan.",
       "b2b_minimum_not_met": "Lägg till {{ remaining }} till för att nå B2B-minimiordern på {{ minimum }}.",
-      "b2b_total": "Grossistpris (B2B-kassan)",
+      "b2b_total": "Grossistpris exkl. moms (B2B-kassan)",
       "b2b_checkout_busy": "Förbereder kassan…",
       "b2b_checkout_login": "Logga in med e-post och organisationsnummer på B2B-sidan för att betala grossistpriser.",
       "b2b_checkout_minimum": "Varukorgen når inte B2B-minimiordern i grossistpriser.",
       "b2b_checkout_unavailable": "En produkt i varukorgen är inte längre tillgänglig. Uppdatera varukorgen och försök igen.",
+      "b2b_checkout_cartons": "Grossistköp sker i hela kartonger – justera antalet på den markerade raden.",
       "b2b_checkout_error": "Kassan kunde inte öppnas just nu. Försök igen om en stund eller kontakta oss."
     },
     "quick_contact": {

@@ -68,6 +68,23 @@
           <ul class="flex flex-col divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)]">
             {%- for item in cart.items -%}
               {%- capture weight_label -%}{%- render 'np-weight', grams: item.variant.weight -%}{%- endcapture -%}
+              {%- capture line_box -%}{%- render 'np-b2b-box-size', sku: item.sku -%}{%- endcapture -%}
+              {%- liquid
+                # B2B customer + carton size: the stepper moves whole cartons
+                assign line_box = line_box | strip | plus: 0
+                assign qty_minus = item.quantity | minus: 1
+                assign qty_plus = item.quantity | plus: 1
+                if line_box > 1
+                  assign line_cartons = item.quantity | divided_by: line_box
+                  assign qty_plus = line_cartons | plus: 1 | times: line_box
+                  assign whole = line_cartons | times: line_box
+                  if whole == item.quantity
+                    assign qty_minus = line_cartons | minus: 1 | times: line_box
+                  else
+                    assign qty_minus = whole
+                  endif
+                endif
+              -%}
               {%- assign weight_label = weight_label | strip -%}
               <li class="flex gap-4 p-4" data-cart-line data-line-key="{{ item.key }}">
                 <a href="{{ item.url }}" class="block h-24 w-24 flex-shrink-0" tabindex="-1" aria-hidden="true">
@@ -88,6 +105,7 @@
                           {% render 'icon', name: 'check', class: 'h-3 w-3' %} {{ allocation.discount_application.title | escape }}
                         </p>
                       {%- endfor -%}
+                      {%- render 'np-b2b-cart-line', item: item, box: line_box -%}
                     </div>
                     <span class="font-display font-semibold">
                       {%- if item.original_line_price > item.final_line_price -%}
@@ -98,11 +116,11 @@
                   </div>
                   <div class="flex items-center justify-between">
                     <div class="flex items-center rounded-full border border-[var(--color-line)]">
-                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | minus: 1 }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ qty_minus }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
                         {% render 'icon', name: 'minus', class: 'h-3.5 w-3.5' %}
                       </button>
-                      <span class="min-w-[2rem] text-center text-sm">{{ item.quantity }}</span>
-                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ item.quantity | plus: 1 }}" aria-label="{{ 'np.common.increase_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
+                      <span class="min-w-[2rem] text-center text-sm">{% if line_box > 1 %}{{ item.quantity | divided_by: line_box }} × {{ line_box }}{% else %}{{ item.quantity }}{% endif %}</span>
+                      <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ qty_plus }}" aria-label="{{ 'np.common.increase_qty' | t }}" class="px-3 py-1.5 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
                         {% render 'icon', name: 'plus', class: 'h-3.5 w-3.5' %}
                       </button>
                     </div>
@@ -166,6 +184,7 @@
               data-msg-login="{{ 'np.cart.b2b_checkout_login' | t }}"
               data-msg-minimum="{{ 'np.cart.b2b_checkout_minimum' | t }}"
               data-msg-unavailable="{{ 'np.cart.b2b_checkout_unavailable' | t }}"
+              data-msg-cartons="{{ 'np.cart.b2b_checkout_cartons' | t }}"
               data-msg-error="{{ 'np.cart.b2b_checkout_error' | t }}"
               data-label-busy="{{ 'np.cart.b2b_checkout_busy' | t }}"
             {% endif %}

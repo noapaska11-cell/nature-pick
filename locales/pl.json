@@ -884,6 +884,14 @@
         "other": "{{ count }} produktów"
       }
     },
+    "b2b_box": {
+      "carton_of": "Sprzedaż w kartonach po {{ pcs }} szt.",
+      "cartons_label": "Liczba kartonów (po {{ pcs }} szt.)",
+      "summary": "%BOXES% karton × %PCS% szt. × %UNIT% = %TOTAL%",
+      "excl_vat": "netto (bez VAT)",
+      "cart_line_cartons": "%CARTONS% karton × %PCS% szt. × %UNIT% = %TOTAL%",
+      "cart_line_pieces": "%CARTONS% szt. × %UNIT% = %TOTAL%"
+    },
     "cart": {
       "title": "Koszyk",
       "summary": "Podsumowanie",
@@ -910,11 +918,12 @@
       "note_label": "Uwagi do zamówienia (opcjonalnie)",
       "b2b_minimum_met": "Minimalne zamówienie B2B ({{ minimum }}) osiągnięte - możesz przejść do kasy.",
       "b2b_minimum_not_met": "Dodaj jeszcze {{ remaining }}, aby osiągnąć minimalne zamówienie B2B w wysokości {{ minimum }}.",
-      "b2b_total": "Cena hurtowa (kasa B2B)",
+      "b2b_total": "Cena hurtowa netto (kasa B2B)",
       "b2b_checkout_busy": "Przygotowywanie kasy…",
       "b2b_checkout_login": "Zaloguj się na stronie B2B adresem e-mail i numerem firmy, aby płacić ceny hurtowe.",
       "b2b_checkout_minimum": "Koszyk nie osiąga minimalnego zamówienia B2B w cenach hurtowych.",
       "b2b_checkout_unavailable": "Produkt w koszyku nie jest już dostępny. Zaktualizuj koszyk i spróbuj ponownie.",
+      "b2b_checkout_cartons": "Zamówienia hurtowe tylko w pełnych kartonach – popraw ilość w danej pozycji.",
       "b2b_checkout_error": "Nie udało się teraz otworzyć kasy. Spróbuj ponownie za chwilę lub skontaktuj się z nami."
     },
     "quick_contact": {

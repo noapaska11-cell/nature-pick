@@ -76,7 +76,18 @@
       assign b2b_active = true
     endif
   endif
+  # a B2B customer buys whole cartons (Theme settings > B2B / wholesale > price list SKU:PRICE:BOX)
+  assign box_size = 0
+  if b2b_customer
+    capture box_size
+      render 'np-b2b-wholesale-price', sku: current_variant.sku, field: 'box'
+    endcapture
+    assign box_size = box_size | strip | plus: 0
+  endif
   assign unit_price_text = unit_cents | money_without_trailing_zeros
+  if box_size > 1
+    assign unit_price_text = unit_cents | times: box_size | money_without_trailing_zeros
+  endif
 
   capture weight_label
     render 'np-weight', grams: current_variant.weight
@@ -263,7 +274,7 @@
           <div data-swap="buy" data-unit-price="{{ unit_cents }}" {% if b2b_active %}data-unit-price-retail="{{ current_variant.price }}"{% endif %} {% if unit_shop_cents %}data-unit-price-shop="{{ unit_shop_cents }}"{% endif %}>
             {%- if current_variant.available -%}
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                {% render 'np-quantity', size: 'md', id: qty_id %}
+                {% render 'np-quantity', size: 'md', id: qty_id, box: box_size %}
                 <button type="submit" name="add" data-add-button data-label-added="{{ 'np.common.added' | t }}" class="btn-primary flex-1">
                   <span data-add-icon>{% render 'icon', name: 'cart', class: 'h-4 w-4' %}</span>
                   <span data-add-label>{{ 'np.common.add_to_cart' | t }}</span>
@@ -271,6 +282,24 @@
                   <span data-add-total>{{ unit_price_text }}</span>
                 </button>
               </div>
+              {%- if box_size > 1 -%}
+                {%- liquid
+                  assign single_unit_text = unit_cents | money_without_trailing_zeros
+                  assign box_template = 'np.b2b_box.summary' | t: boxes: '%BOXES%', pcs: '%PCS%', unit: '%UNIT%', total: '%TOTAL%'
+                  assign excl_vat_text = 'np.b2b_box.excl_vat' | t
+                  assign box_template_b2b = box_template | append: ' ' | append: excl_vat_text
+                -%}
+                {%- comment -%} naturepick.js (updateTotals) rewrites this for every carton count and price view {%- endcomment -%}
+                <div class="mt-3 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
+                  <p class="flex items-center gap-2 font-semibold">
+                    {% render 'icon', name: 'building', class: 'h-4 w-4 flex-shrink-0' %}
+                    {{ 'np.b2b_box.carton_of' | t: pcs: box_size }}
+                  </p>
+                  <p class="mt-1" data-box-summary data-box-size="{{ box_size }}" data-template="{{ box_template_b2b | escape }}" data-template-retail="{{ box_template | escape }}">
+                    {{- box_template_b2b | replace: '%BOXES%', '1' | replace: '%PCS%', box_size | replace: '%UNIT%', single_unit_text | replace: '%TOTAL%', unit_price_text -}}
+                  </p>
+                </div>
+              {%- endif -%}
               {%- if section.settings.show_dynamic_checkout -%}
                 <div class="mt-3">{{ form | payment_button }}</div>
               {%- endif -%}

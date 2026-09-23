@@ -1,0 +1,17 @@
+{%- comment -%}
+  Pieces per carton for a B2B customer (price list SKU:PRICE:BOX), or nothing for a retail visitor / a SKU without a
+  carton size - they buy single pieces. Usage:
+  {%- capture box_size -%}{%- render 'np-b2b-box-size', sku: variant.sku -%}{%- endcapture -%}
+  {%- assign box_size = box_size | strip | plus: 0 -%}
+{%- endcomment -%}
+{%- liquid
+  assign box_out = ''
+  if customer
+    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+      capture box_out
+        render 'np-b2b-wholesale-price', sku: sku, field: 'box'
+      endcapture
+    endif
+  endif
+  echo box_out | strip
+-%}
