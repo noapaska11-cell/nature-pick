@@ -1,3 +1,22 @@
+{%- liquid
+  # Handle routing for templates/page.json: until this theme is live, Shopify only lets a page pick templates of the
+  # published theme, so the generic page template renders each designed section only on its own page handle.
+  # Blank setting (every page.*.json template) = always shown.
+  assign np_route_show = true
+  assign np_route_handles = section.settings.route_handles | strip
+  if np_route_handles != blank
+    assign np_route_show = false
+    assign np_route_list = np_route_handles | split: ','
+    for np_route_handle in np_route_list
+      assign np_route_handle = np_route_handle | strip
+      if np_route_handle == page.handle
+        assign np_route_show = true
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if np_route_show -%}
 {%- comment -%}
   Shipping & returns page (React /dostawa-i-zwroty). The texts are the store's own policies
   (Shopify admin > Settings > Policies), so shipping rates and the right of withdrawal are always
@@ -42,16 +61,27 @@
     </div>
   </section>
 {%- endif -%}
+{%- endif -%}
 
 {% schema %}
 {
   "name": "Shipping & returns",
   "enabled_on": {
-    "templates": ["page"]
+    "templates": [
+      "page"
+    ]
   },
   "presets": [
     {
       "name": "Shipping & returns"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "route_handles",
+      "label": "Only on page handles",
+      "info": "Comma-separated page handles, e.g. b2b. Leave empty to always show. Used by the default page template to show this section on its own page before page templates can be assigned."
     }
   ]
 }

@@ -1,3 +1,22 @@
+{%- liquid
+  # Handle routing for templates/page.json: until this theme is live, Shopify only lets a page pick templates of the
+  # published theme, so the generic page template renders each designed section only on its own page handle.
+  # Blank setting (every page.*.json template) = always shown.
+  assign np_route_show = true
+  assign np_route_handles = section.settings.route_handles | strip
+  if np_route_handles != blank
+    assign np_route_show = false
+    assign np_route_list = np_route_handles | split: ','
+    for np_route_handle in np_route_list
+      assign np_route_handle = np_route_handle | strip
+      if np_route_handle == page.handle
+        assign np_route_show = true
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if np_route_show -%}
 {%- comment -%}
   B2B page: audience list + a card with three tabs (register company / log in / request a quote).
   Registration has exactly four fields and all of them are required: company name, e-mail, OIB and VAT number.
@@ -34,7 +53,9 @@
       assign shopify_b2b_active = true
     endif
   endif
-  assign shopify_login_url = routes.account_login_url | append: '?return_url=' | append: page.url | url_encode
+  # only the return path is encoded - encoding the whole URL turned '/account/login?...' into a broken relative link
+  assign return_path = page.url | url_encode
+  assign shopify_login_url = routes.account_login_url | append: '?return_url=' | append: return_path
 -%}
 <section class="container-page grid gap-10 py-14 lg:grid-cols-[1fr_1.2fr]">
   <div>
@@ -115,16 +136,27 @@
     </div>
   </np-b2b-session>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
   "name": "B2B",
   "enabled_on": {
-    "templates": ["page"]
+    "templates": [
+      "page"
+    ]
   },
   "presets": [
     {
       "name": "B2B"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "route_handles",
+      "label": "Only on page handles",
+      "info": "Comma-separated page handles, e.g. b2b. Leave empty to always show. Used by the default page template to show this section on its own page before page templates can be assigned."
     }
   ]
 }
