@@ -36,6 +36,7 @@
   endif
 
   assign b2b_active = false
+  assign b2b_shop_cents = nil
   assign wholesale = price
   if b2b_customer
     capture wholesale_major
@@ -45,6 +46,12 @@
     if wholesale_major != ''
       assign wholesale = wholesale_major | plus: 0 | times: 100 | round
       assign b2b_active = true
+      # the price list is in the shop's currency (SEK); Liquid has no exchange rate, so in any other
+      # currency naturepick.js converts it with Shopify's live rate and the retail price stands in until then
+      if cart.currency.iso_code != shop.currency
+        assign b2b_shop_cents = wholesale
+        assign wholesale = price
+      endif
     elsif settings.b2b_discount_percent > 0
       assign multiplier = 100 | minus: settings.b2b_discount_percent
       assign wholesale = price | times: multiplier | divided_by: 100
@@ -61,11 +68,20 @@
     every price on the site between wholesale and retail without a page reload - a display preference
     only, it never changes what Shopify actually charges at checkout.
   {%- endcomment -%}
+  {%- if b2b_shop_cents -%}
+    {%- comment -%} data-b2b-text is filled in by naturepick.js from data-b2b-shop-cents (see above) {%- endcomment -%}
+    <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-shop-cents="{{ b2b_shop_cents }}">
+      <span hidden data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
+      <span data-price-main>{{ price_text }}</span>
+      <span hidden data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-paprika)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-[var(--color-charcoal)]">{{ 'np.common.b2b_badge' | t }}</span>
+    </span>
+  {%- else -%}
   <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-text="{{ wholesale_text }}" aria-label="{{ 'np.common.b2b_price_aria' | t: wholesale: wholesale_text, retail: price_text | strip_html }}">
     <span aria-hidden="true" data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
     <span aria-hidden="true" data-price-main>{{ wholesale_text }}</span>
     <span aria-hidden="true" data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-paprika)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-[var(--color-charcoal)]">{{ 'np.common.b2b_badge' | t }}</span>
   </span>
+  {%- endif -%}
 {%- elsif compare_at > price -%}
   <span class="{{ class }}" data-np-price>
     <s class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)]"><span class="sr-only">{{ 'products.product.price.regular_price' | t }}</span>{{ compare_at | money_without_trailing_zeros }}</s>

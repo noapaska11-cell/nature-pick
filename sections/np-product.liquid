@@ -55,6 +55,7 @@
     endif
   endif
   assign b2b_active = false
+  assign unit_shop_cents = nil
   assign unit_cents = current_variant.price
   if b2b_customer
     capture wholesale_major
@@ -64,6 +65,11 @@
     if wholesale_major != ''
       assign unit_cents = wholesale_major | plus: 0 | times: 100 | round
       assign b2b_active = true
+      # price list is in the shop's currency: naturepick.js converts it (data-unit-price-shop), retail until then
+      if cart.currency.iso_code != shop.currency
+        assign unit_shop_cents = unit_cents
+        assign unit_cents = current_variant.price
+      endif
     elsif settings.b2b_discount_percent > 0
       assign b2b_multiplier = 100 | minus: settings.b2b_discount_percent
       assign unit_cents = unit_cents | times: b2b_multiplier | divided_by: 100
@@ -254,7 +260,7 @@
             </div>
           {%- endunless -%}
 
-          <div data-swap="buy" data-unit-price="{{ unit_cents }}" {% if b2b_active %}data-unit-price-retail="{{ current_variant.price }}"{% endif %}>
+          <div data-swap="buy" data-unit-price="{{ unit_cents }}" {% if b2b_active %}data-unit-price-retail="{{ current_variant.price }}"{% endif %} {% if unit_shop_cents %}data-unit-price-shop="{{ unit_shop_cents }}"{% endif %}>
             {%- if current_variant.available -%}
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {% render 'np-quantity', size: 'md', id: qty_id %}

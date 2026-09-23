@@ -697,6 +697,11 @@
           if (!live || !next) return;
           live.innerHTML = next.innerHTML;
           if (next.dataset.unitPrice !== undefined) live.dataset.unitPrice = next.dataset.unitPrice;
+          // the new variant may or may not have a wholesale price: take its B2B data as-is, including absence
+          ['unitPriceRetail', 'unitPriceShop'].forEach((key) => {
+            if (next.dataset[key] !== undefined) live.dataset[key] = next.dataset[key];
+            else delete live.dataset[key];
+          });
         });
         const freshQuantity = $('input[name="quantity"]', this);
         if (freshQuantity) freshQuantity.value = quantity;
@@ -720,7 +725,11 @@
       const buy = $('[data-swap="buy"]', this);
       if (!buy) return;
       const useRetail = currentPriceView() === 'retail' && buy.dataset.unitPriceRetail !== undefined;
-      const unit = Number(useRetail ? buy.dataset.unitPriceRetail : buy.dataset.unitPrice);
+      let unit = Number(useRetail ? buy.dataset.unitPriceRetail : buy.dataset.unitPrice);
+      if (!useRetail && buy.dataset.unitPriceShop !== undefined) {
+        const converted = fromShopCents(buy.dataset.unitPriceShop);
+        if (converted !== null) unit = converted;
+      }
       if (!Number.isFinite(unit)) return;
       const input = $('input[name="quantity"]', this);
       const quantity = Math.max(1, parseInt(input && input.value, 10) || 1);
@@ -1269,12 +1278,29 @@
 
   const currentPriceView = () => (storage.get(PRICE_VIEW_KEY) === 'retail' ? 'retail' : 'b2b');
 
+  /* The B2B price list and minimum order are entered in the shop's currency (SEK). Liquid has no exchange
+     rate, so for any other storefront currency the theme renders them as data-*-shop-cents and they are
+     converted here with Shopify's own live rate. Returns null when the rate is unknown - callers then keep
+     the server-rendered fallback (the retail price) instead of showing an unconverted number. */
+  function fromShopCents(cents) {
+    const amount = Number(cents);
+    if (!Number.isFinite(amount)) return null;
+    if (!NP.currency || NP.currency === NP.shopCurrency) return amount;
+    const rate = Number(window.Shopify && window.Shopify.currency && window.Shopify.currency.rate);
+    return rate > 0 ? Math.round(amount * rate) : null;
+  }
+
   function applyPriceView(view, root = document) {
     $$('[data-np-price][data-b2b-price]', root).forEach((el) => {
       const strike = $('[data-price-strike]', el);
       const main = $('[data-price-main]', el);
       const badge = $('[data-price-badge]', el);
       if (!main) return;
+      if (el.dataset.b2bShopCents !== undefined && !el.dataset.b2bText) {
+        const cents = fromShopCents(el.dataset.b2bShopCents);
+        if (cents === null) return; // no rate: the retail price stays, without the B2B badge
+        el.dataset.b2bText = formatMoney(cents);
+      }
       const retail = view === 'retail';
       main.textContent = retail ? el.dataset.retailText : el.dataset.b2bText;
       if (strike) strike.hidden = retail;
@@ -1297,12 +1323,34 @@
      add/change); this only decides whether that verdict is currently enforced. Called from
      applyPriceView() (toggle, initial load) and from cart.applySections() (after every cart change),
      since cart line items are not [data-np-price] elements the price MutationObserver would catch. */
+  /* Re-checks a minimum-order notice in the cart's own currency (see fromShopCents) and fills in its amounts */
+  function syncB2bMinimum(el) {
+    if (!NP.currency || NP.currency === NP.shopCurrency) return; // the server already compared like with like
+    const minimum = fromShopCents(el.dataset.minimumShopCents);
+    const total = Number(el.dataset.cartTotal);
+    if (minimum === null || !Number.isFinite(total)) return; // no rate: keep the server's verdict
+    const met = total >= minimum;
+    el.dataset.minimumMet = String(met);
+    $$('[data-minimum-state]', el).forEach((state) => {
+      state.hidden = state.dataset.minimumState !== (met ? 'met' : 'not-met');
+    });
+    $$('[data-minimum-text]', el).forEach((text) => {
+      text.textContent = (text.dataset.template || '')
+        .replace('%MINIMUM%', formatMoney(minimum))
+        .replace('%REMAINING%', formatMoney(Math.max(0, minimum - total)));
+    });
+  }
+
   function applyB2bMinimumGate() {
     const retailView = currentPriceView() === 'retail';
     $$('[data-b2b-minimum-order]').forEach((el) => {
+      syncB2bMinimum(el);
       el.hidden = retailView;
     });
     $$('[data-checkout-button][data-b2b-minimum-met]').forEach((button) => {
+      const page = button.closest('[data-cart-page]');
+      const notice = page && $('[data-b2b-minimum-order]', page);
+      if (notice) button.dataset.b2bMinimumMet = notice.dataset.minimumMet;
       const blocked = !retailView && button.dataset.b2bMinimumMet === 'false';
       button.disabled = blocked;
       button.setAttribute('aria-disabled', String(blocked));
