@@ -1,5 +1,10 @@
 
     {%-liquid
+      assign isPreview = false
+      if request.path contains '/a/gempages'
+        assign isPreview = true
+      endif
+
       assign gpTemplateSuffix = template.suffix
       assign arrSplitSuffix = gpTemplateSuffix | split: "-"
       if gpTemplateSuffix contains "gp-template-" and arrSplitSuffix.size == 3
