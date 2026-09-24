@@ -5,11 +5,18 @@
   B2B customer whose cart is under Theme settings > B2B / wholesale > "B2B minimum order value".
   With the verification service configured, a B2B customer's checkout button instead asks the service
   for a draft order at wholesale prices (naturepick.js, data-b2b-checkout) and goes to its Shopify checkout.
+  That B2B checkout also carries the pallet shipping promotion (pallet_mode): the cart shows the promotion and
+  pallets × price per pallet (np-b2b-pallet-summary), and the draft order charges exactly that as its shipping.
+  Every checkout first asks "continue with the purchase?" ([data-checkout-confirm]): with the pallet numbers in
+  pallet mode, a plain yes/no for everybody else - retail shipping and checkout are unchanged.
 {%- endcomment -%}
 {%- liquid
   assign b2b_active = false
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       assign b2b_active = true
     endif
   endif
@@ -39,6 +46,11 @@
   if b2b_active and b2b_endpoint != blank
     assign b2b_checkout_endpoint = b2b_endpoint | replace: '/register', '/checkout'
   endif
+  # pallet shipping exists only where it is really charged: the B2B draft-order checkout
+  assign pallet_mode = false
+  if b2b_checkout_endpoint != blank
+    assign pallet_mode = true
+  endif
 -%}
 <div data-cart-page data-section-id="{{ section.id }}" data-cart-count="{{ cart.item_count }}">
   {%- if cart.item_count == 0 -%}
@@ -57,6 +69,10 @@
           {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
           {%- if progress_html contains 'data-free-shipping' -%}
             <div class="mb-6 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3">{{ progress_html }}</div>
+          {%- endif -%}
+
+          {%- if pallet_mode -%}
+            <div class="mb-6">{% render 'np-b2b-pallet-promo', cart: cart, style: 'card' %}</div>
           {%- endif -%}
 
           {%- if b2b_active -%}
@@ -152,10 +168,13 @@
                 <span>-{{ discount.total_allocated_amount | money_without_trailing_zeros }}</span>
               </div>
             {%- endfor -%}
-            <div class="flex justify-between">
+            <div class="flex justify-between"{% if pallet_mode %} data-b2b-retail-only hidden{% endif %}>
               <span>{{ 'np.cart.shipping' | t }}</span>
               <span>{{ 'np.cart.calculated_at_checkout' | t }}</span>
             </div>
+            {%- if pallet_mode -%}
+              <div class="mt-1 border-t border-[var(--color-line)] pt-3">{% render 'np-b2b-pallet-summary', cart: cart %}</div>
+            {%- endif -%}
           </div>
           <div class="mt-4 flex justify-between border-t border-[var(--color-line)] pt-4 font-display text-lg font-semibold text-[var(--color-charcoal)]">
             <span>{{ 'np.cart.total' | t }}</span>
@@ -177,6 +196,7 @@
             type="submit"
             name="checkout"
             data-checkout-button
+            data-checkout-confirm-trigger
             {% if b2b_active %}data-b2b-minimum-met="{{ b2b_minimum_met }}"{% endif %}
             {% if b2b_checkout_endpoint != blank %}
               data-b2b-checkout="{{ b2b_checkout_endpoint }}"
@@ -201,6 +221,36 @@
           </div>
         </aside>
       </form>
+    </div>
+
+    {%- comment -%}
+      "Continue with the purchase?" before every checkout (naturepick.js, checkoutConfirm). YES continues the existing
+      checkout / B2B order flow, NO closes it and leaves the customer on the cart. The pallet block is only there in
+      pallet mode and only shown while the B2B customer views B2B prices; numbers are filled in by the script.
+    {%- endcomment -%}
+    <div hidden class="fixed inset-0 z-50 flex items-center justify-center p-4" data-checkout-confirm>
+      <div class="absolute inset-0 bg-black/40" data-confirm-answer="no" aria-hidden="true"></div>
+      <div role="dialog" aria-modal="true" aria-labelledby="np-checkout-confirm-title" tabindex="-1" class="relative w-full max-w-md rounded-3xl bg-[var(--color-paper)] p-6 shadow-2xl" data-confirm-dialog>
+        <h2 id="np-checkout-confirm-title" class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.checkout_confirm.title' | t }}</h2>
+        {%- if pallet_mode -%}
+          <div class="mt-4 flex flex-col gap-3 text-sm text-[var(--color-charcoal-soft)]" data-confirm-pallets>
+            <p hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-[var(--color-paprika-dark)]" data-confirm-changed>{{ 'np.b2b_pallets.confirm_changed' | t }}</p>
+            <div>
+              <p>{{ 'np.b2b_pallets.confirm_requires' | t }}</p>
+              <p class="font-display text-lg font-semibold text-[var(--color-charcoal)]" data-confirm-pallet-count></p>
+            </div>
+            <div>
+              <p>{{ 'np.b2b_pallets.confirm_shipping' | t }}</p>
+              <p class="font-display text-lg font-semibold text-[var(--color-charcoal)]" data-confirm-shipping></p>
+            </div>
+            <p class="rounded-xl bg-[var(--color-olive-light)] px-4 py-3 font-medium text-[var(--color-olive-dark)]">{{ 'np.b2b_pallets.confirm_promo' | t }}</p>
+          </div>
+        {%- endif -%}
+        <div class="mt-6 flex gap-3">
+          <button type="button" class="btn-secondary flex-1" data-confirm-answer="no">{{ 'np.checkout_confirm.no' | t }}</button>
+          <button type="button" class="btn-primary flex-1" data-confirm-answer="yes" data-label-simple="{{ 'np.checkout_confirm.yes' | t }}" data-label-pallets="{{ 'np.b2b_pallets.confirm_yes' | t }}">{{ 'np.checkout_confirm.yes' | t }}</button>
+        </div>
+      </div>
     </div>
   {%- endif -%}
 </div>

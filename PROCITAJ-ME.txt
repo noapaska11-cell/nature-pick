@@ -69,20 +69,29 @@ B2B PRIJAVA I ODOBRAVANJE (najbitniji dio)
 Gumb "B2B" u headeru (gore, i u mobilnom izborniku) vodi na B2B stranicu.
 Ondje su tri kartice: Registracija, Prijava, Zatraži ponudu.
 
-REGISTRACIJA — 4 OBAVEZNA polja, ništa nije neobavezno: naziv firme, e-mail,
-OIB (matični broj) i VAT broj. Tema provjerava format (kontrolna znamenka
-OIB-a, prefiks države kod VAT-a) prije slanja. SVAKA registracija ide na
-ručni pregled u admin panel — automatsko odobravanje je isključeno dok ga
-sami ne uključite (AUTO_APPROVE_VERIFIED u servisu, vidi README servisa).
+REGISTRACIJA — sva polja obavezna: ime, prezime, e-mail, kontakt broj, država
+(padajući izbornik), adresa firme (ulica, poštanski broj, grad), VAT broj, lozinka
+i potvrda lozinke. OIB se više NE traži. Tema provjerava polja (VAT format prema
+odabranoj državi, lozinke se moraju podudarati), a servis sve provjerava ponovno.
+Jedan račun po e-adresi. Lozinka se sprema samo kao siguran hash (scrypt).
+SVAKA registracija čeka odobrenje u admin panelu (status "na čekanju"), a firma
+dobiva e-poruku za potvrdu e-adrese.
 
-PRIJAVA — samo 2 polja: e-mail i OIB tvrtke, ISTI kao pri registraciji.
-Nema lozinke, nema Shopify računa kupca u tom prvom koraku. Prijava ne
-uspijeva dok firma nije registrirana I odobrena u admin panelu. Nakon
-uspješne prijave na istoj stranici pojavljuje se gumb "B2B shop" te ponuda
-da se firma prijavi i u pravi Shopify račun (istom e-adresom, Shopify sam
-šalje jednokratni kod — jedan klik) — TEK TADA firma po cijeloj stranici
-(ne samo B2B stranici) vidi veleprodajne cijene iz cjenika, jer to jedino
-Shopify-ov tag na kupcu može upravljati (isti mehanizam kao proizvodi).
+PRIJAVA — samo e-mail i lozinka, gumb "Prijava". "Zaboravljena lozinka?" šalje
+poveznicu za novu lozinku. Firme registrirane PRIJE (s OIB-om) nemaju lozinku:
+pošaljite im "Poveznica za lozinku" iz admin panela (ili neka same kliknu
+"Zaboravljena lozinka?"). Prijava ne uspijeva dok firma nije odobrena; odbijena i
+suspendirana firma dobiju jasnu poruku. Nakon prijave na istoj stranici pojavljuje
+se gumb "B2B shop" te ponuda da se firma prijavi i u pravi Shopify račun (istom
+e-adresom, Shopify sam šalje jednokratni kod) — TEK TADA firma po cijeloj stranici
+vidi veleprodajne cijene iz cjenika.
+
+TKO VIDI VELEPRODAJNE CIJENE — odlučuje Shopify na serveru (snippet
+np-b2b-customer): kupac mora imati tag "b2b" I status koji je upisao servis
+(odobreno). Sam tag nije dovoljan jer ga posjetitelj može sebi dodati preko
+Shopifyjeve newsletter forme. PRIJE uploada ove verzije teme pokrenite u servisu
+"npm run migrate" (vidi README servisa) — tako firme koje ste ranije odobrili
+ručno u Shopify adminu ne izgube cijene.
 
 VELEPRODAJNE CIJENE — već postavljeno iz vašeg PDF cjenika (B2B WHOLESALE
 PRICE LIST 2026-2027, 100 proizvoda, šifra:cijena) u Theme settings -> B2B
@@ -100,18 +109,18 @@ VAŽNO — da bi PRIJAVA i ADMIN PANEL uopće radili, morate postaviti servis:
   ~15 min) su u tom folderu, README.md. Bez njega registracija i dalje radi
   (šalje se e-mailom kao Shopify kontakt obrazac), ALI prijava ne radi —
   kartica "Prijava" tada samo ispisuje da čekate odobrenje, jer nema servisa
-  koji bi provjerio e-mail+OIB. Servis besplatno radi na Netlifyju.
+  koji bi provjerio e-mail i lozinku. Servis besplatno radi na Netlifyju.
 Nakon postavljanja servisa, u Theme settings -> B2B / wholesale upišite
 njegovu adresu (.../api/b2b/register) u polje "B2B verification service
 URL" — prijava i provjera sesije se automatski izvedu iz iste adrese.
 
 ADMIN PANEL (nakon što postavite servis): https://<vaš-servis>.netlify.app
-/admin/ — lozinka koju sami izaberete (ADMIN_PASSWORD). Tri kartice: Na
-čekanju, Odobreno, Odbijeno. Na čekanju odobravate ili odbijate; odobrenu
-firmu možete kasnije "Opozvati" (gubi pristup); odbijenu možete naknadno
-odobriti ako se predomislite.
+/admin/ — lozinka koju sami izaberete (ADMIN_PASSWORD). Četiri kartice: Na
+čekanju, Odobreno, Odbijeno, Suspendirano. Na čekanju odobravate ili odbijate;
+odobrenu firmu možete "Suspendirati" (odmah gubi pristup i cijene) i kasnije
+"Ponovno aktivirati"; odbijenu možete naknadno odobriti.
 Testirajte jednom cijeli tok: registrirajte testnu firmu, odobrite je u
-/admin/, prijavite se na B2B stranici tom e-adresom i OIB-om, pa klikom
+/admin/, prijavite se na B2B stranici tom e-adresom i lozinkom, pa klikom
 dovršite i Shopify prijavu (isti e-mail, kod koji stigne e-poštom) — tek
 tada provjerite prikazuju li se veleprodajne cijene iz cjenika na
 proizvodima i radi li minimalna narudžba u košarici.

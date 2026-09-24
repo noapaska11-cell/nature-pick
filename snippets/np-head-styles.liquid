@@ -97,4 +97,16 @@
     }
   };
 </script>
+{%- comment -%} B2B pallet calculation (window.NPPallets) - only ever loaded for a B2B customer, before naturepick.js {%- endcomment -%}
+{%- if customer -%}
+  {%- capture np_b2b_check -%}{%- render 'np-b2b-customer' -%}{%- endcapture -%}
+  {%- if np_b2b_check contains 'true' -%}
+    {%- assign np_b2b_endpoint = settings.b2b_endpoint | strip -%}
+    {%- if np_b2b_endpoint != blank -%}
+      {%- comment -%} pallet price in the visitor's currency (100 EUR at the service's daily rate - the checkout charges the same) {%- endcomment -%}
+      <script>window.NP.palletPriceUrl = {{ np_b2b_endpoint | replace: '/register', '/pallet-price' | json }};</script>
+    {%- endif -%}
+    <script src="{{ 'np-pallets.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+{%- endif -%}
 <script src="{{ 'naturepick.js' | asset_url }}" defer="defer"></script>

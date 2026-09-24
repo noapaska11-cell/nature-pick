@@ -1,18 +1,14 @@
 {%- comment -%}
-  B2B company registration with automatic verification (all four fields are required).
-  The <np-b2b-register> element in naturepick.js validates the fields, sends them to the verification
-  service (Theme settings > B2B / wholesale) and shows the result: approved / pending review / already registered.
-  Params: endpoint (service URL), login_url
+  B2B company registration with the verification service: first name, last name, e-mail, contact phone, country,
+  company address, VAT number, password + confirmation - all required. <np-b2b-register> in naturepick.js checks the
+  fields (same rules as the service, which checks everything again), sends them and shows the outcome: pending
+  (waits for the owner's approval; a confirmation e-mail was sent), approved, or "this e-mail is already registered".
+  Params: endpoint (service URL)
 {%- endcomment -%}
 <np-b2b-register
   class="block"
   data-endpoint="{{ endpoint }}"
-  data-msg-required="{{ 'np.b2b_auth.error_required' | t }}"
-  data-msg-email="{{ 'np.b2b_auth.error_email' | t }}"
-  data-msg-oib="{{ 'np.b2b_auth.error_oib' | t }}"
-  data-msg-id="{{ 'np.b2b_auth.error_id' | t }}"
-  data-msg-vat="{{ 'np.b2b_auth.error_vat' | t }}"
-  data-msg-generic="{{ 'np.b2b_auth.error_generic' | t }}"
+  {% render 'np-b2b-messages' %}
   data-label-submit="{{ 'np.b2b_auth.register_submit' | t }}"
   data-label-verifying="{{ 'np.b2b_auth.verifying' | t }}"
 >
@@ -22,31 +18,7 @@
       <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
     </div>
 
-    <div>
-      <label for="b2b-company" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.company_name' | t }}</label>
-      <input id="b2b-company" name="company" type="text" required maxlength="120" autocomplete="organization" aria-describedby="b2b-company-error" class="input-field">
-      <p id="b2b-company-error" data-error-for="company" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-    </div>
-
-    <div>
-      <label for="b2b-email" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.email' | t }}</label>
-      <input id="b2b-email" name="email" type="email" required maxlength="160" autocomplete="email" aria-describedby="b2b-email-error" class="input-field">
-      <p id="b2b-email-error" data-error-for="email" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-    </div>
-
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div>
-        <label for="b2b-oib" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.oib' | t }}</label>
-        <input id="b2b-oib" name="oib" type="text" required maxlength="20" autocomplete="off" placeholder="12345678901" aria-describedby="b2b-oib-error" class="input-field">
-        <p id="b2b-oib-error" data-error-for="oib" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-      </div>
-      <div>
-        <label for="b2b-vat" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.vat_number' | t }}</label>
-        <input id="b2b-vat" name="vat" type="text" required maxlength="20" autocomplete="off" autocapitalize="characters" placeholder="HR12345678901" aria-describedby="b2b-vat-error" class="input-field uppercase placeholder:normal-case">
-        <p id="b2b-vat-error" data-error-for="vat" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-      </div>
-    </div>
-    <p class="-mt-2 text-xs text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.vat_hint' | t }}</p>
+    {% render 'np-b2b-registration-fields', prefix: 'b2b-reg', native: false, with_password: true %}
 
     <p data-b2b-error hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
 
@@ -61,7 +33,7 @@
     <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">{% render 'icon', name: 'check', class: 'h-6 w-6' %}</span>
     <h3 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.result_approved_title' | t }}</h3>
     <p class="max-w-sm text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.result_approved_text' | t }}</p>
-    <a href="{{ login_url }}" class="btn-primary mt-2">{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.login_submit' | t }}</a>
+    <a href="#login" data-b2b-go-login class="btn-primary mt-2">{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.login_submit' | t }}</a>
   </div>
 
   <div data-b2b-result="pending" hidden class="flex flex-col items-center gap-3 py-6 text-center" role="status">
@@ -74,6 +46,6 @@
     <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">{% render 'icon', name: 'building', class: 'h-6 w-6' %}</span>
     <h3 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.result_exists_title' | t }}</h3>
     <p class="max-w-sm text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.result_exists_text' | t }}</p>
-    <a href="{{ login_url }}" class="btn-primary mt-2">{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.login_submit' | t }}</a>
+    <a href="#login" data-b2b-go-login class="btn-primary mt-2">{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.login_submit' | t }}</a>
   </div>
 </np-b2b-register>

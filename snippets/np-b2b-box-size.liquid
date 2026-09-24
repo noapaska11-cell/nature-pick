@@ -7,7 +7,10 @@
 {%- liquid
   assign box_out = ''
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       capture box_out
         render 'np-b2b-wholesale-price', sku: sku, field: 'box'
       endcapture

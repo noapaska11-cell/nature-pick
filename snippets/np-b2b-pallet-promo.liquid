@@ -1,0 +1,30 @@
+{%- comment -%}
+  B2B shipping promotion "every pallet only 100 €". Rendered only where pallet shipping is really charged (B2B customer
+  + verification service configured - see np-cart / np-header); hidden by naturepick.js while the B2B customer views
+  regular prices (data-b2b-pallet-only), because that checkout is Shopify's ordinary one.
+  The price is shown in the visitor's currency: Liquid renders the configured price, naturepick.js swaps in the price
+  converted by the verification service (data-pallet-price-template, %PRICE%) - the amount the checkout charges.
+  Params: cart, style ('bar' = one line in the header announcement bar, 'card' = box on the cart page)
+{%- endcomment -%}
+{%- liquid
+  capture price_parts
+    render 'np-b2b-pallet-price', cart: cart
+  endcapture
+  assign price_parts = price_parts | strip | split: ':'
+  assign price_text = price_parts[2]
+  assign headline_template = 'np.b2b_pallets.promo_headline' | t: price: '%PRICE%'
+  assign text_template = 'np.b2b_pallets.promo_text' | t: price: '%PRICE%'
+-%}
+{%- if style == 'bar' -%}
+  <span class="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1" data-b2b-pallet-only data-b2b-pallet-promo>
+    <strong class="font-semibold text-[var(--color-gold-on-dark)]">{{ 'np.b2b_pallets.promo_title' | t }}</strong>
+    <span class="font-semibold" data-pallet-price-template="{{ headline_template | escape }}">{{ 'np.b2b_pallets.promo_headline' | t: price: price_text }}</span>
+    <span data-pallet-price-template="{{ text_template | escape }}">{{ 'np.b2b_pallets.promo_text' | t: price: price_text }}</span>
+  </span>
+{%- else -%}
+  <div class="rounded-2xl bg-[var(--color-olive-light)] px-4 py-3 text-[var(--color-olive-dark)]" data-b2b-pallet-only data-b2b-pallet-promo>
+    <p class="text-xs font-semibold uppercase tracking-wide">{{ 'np.b2b_pallets.promo_title' | t }}</p>
+    <p class="mt-1 font-display text-lg font-semibold" data-pallet-price-template="{{ headline_template | escape }}">{{ 'np.b2b_pallets.promo_headline' | t: price: price_text }}</p>
+    <p class="mt-1 text-sm leading-relaxed" data-pallet-price-template="{{ text_template | escape }}">{{ 'np.b2b_pallets.promo_text' | t: price: price_text }}</p>
+  </div>
+{%- endif -%}
