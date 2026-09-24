@@ -1124,7 +1124,7 @@
       "password_confirm": "Potwierdź hasło",
       "password_hint": "Co najmniej 8 znaków, w tym co najmniej jedna litera i jedna cyfra.",
       "error_name": "Podaj prawidłowe imię lub nazwisko (tylko litery).",
-      "error_phone": "Podaj prawidłowy telefon kontaktowy, np. +48 22 123 45 67.",
+      "error_phone": "Podaj prawidłowy telefon kontaktowy (bez numeru kierunkowego kraju, np. 22 123 45 67).",
       "error_country": "Wybierz kraj z listy.",
       "error_address": "Podaj prawidłowy adres.",
       "error_zip": "Podaj prawidłowy kod pocztowy.",
@@ -1148,7 +1148,8 @@
       "password_set_done": "Hasło zostało zapisane. Możesz się teraz zalogować.",
       "link_invalid": "Ten link wygasł lub został już użyty. Poproś o nowy przez „Nie pamiętasz hasła?”.",
       "verify_done": "Dziękujemy, adres e-mail został potwierdzony.",
-      "verify_failed": "Ten link potwierdzający jest nieprawidłowy lub wygasł."
+      "verify_failed": "Ten link potwierdzający jest nieprawidłowy lub wygasł.",
+      "dial_code": "Numer kierunkowy kraju"
     },
     "spice_club_page": {
       "meta_title": "Klub Smaków",

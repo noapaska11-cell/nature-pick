@@ -973,7 +973,8 @@
     const rule = B2B_VAT_RULES[country];
     const clean = String(raw || '').toUpperCase().replace(/[\s.\-/]/g, '');
     if (!clean) return { error: 'required' };
-    if (!rule) return { error: 'vat' };
+    // a country without a known VAT format: its tax / VAT number as written (the owner checks it)
+    if (!rule) return /^[A-Z0-9]{4,20}$/.test(clean) ? { vat: clean } : { error: 'vat' };
     const [prefix, re] = rule;
     let number = clean;
     if (clean.startsWith(prefix)) number = clean.slice(prefix.length);
@@ -1021,11 +1022,13 @@
     });
     if (!values.email) errors.email = 'required';
     else if (!B2B_EMAIL_RE.test(values.email)) errors.email = 'email';
+    values.phone = b2bFullPhone(root, values.phone);
     const phoneDigits = values.phone.replace(/\D/g, '');
-    if (!values.phone) errors.phone = 'required';
+    if (!get('phone').trim()) errors.phone = 'required';
     else if (!/^\+?[\d\s()./-]+$/.test(values.phone) || phoneDigits.length < 6 || phoneDigits.length > 15) errors.phone = 'phone';
-    if (!values.country) errors.country = 'required';
-    else if (!B2B_VAT_RULES[values.country]) errors.country = 'country';
+    const countrySelect = $('[data-country-select]', root);
+    if (!values.country) errors.country = 'country';
+    else if (countrySelect && !Array.from(countrySelect.options).some((option) => option.value && option.value === values.country)) errors.country = 'country';
     if (!values.street) errors.street = 'required';
     else if (!/\p{L}/u.test(values.street)) errors.street = 'address';
     if (!values.zip) errors.zip = 'required';
@@ -1075,28 +1078,64 @@
 
   const B2B_REGISTRATION_FIELDS = ['firstName', 'lastName', 'email', 'phone', 'country', 'street', 'zip', 'city', 'vat', 'password', 'passwordConfirm'];
 
-  /* Country dropdown in the visitor's language (Liquid renders English names), alphabetical; the VAT placeholder
-     follows the selected country (e.g. DE123456789) */
+  /* The phone as the service receives it: "+<dialling code> <number>" - the number without its national trunk 0
+     (091 234 5678 in Croatia -> +385 91 234 5678; Italy, San Marino and the Vatican keep it). A number the visitor
+     already wrote internationally (+.. or 00..) is taken as it is. */
+  function b2bFullPhone(root, raw) {
+    const number = String(raw || '').trim();
+    if (!number) return '';
+    if (number.startsWith('+')) return number;
+    if (number.startsWith('00')) return '+' + number.slice(2);
+    const dialSelect = $('[data-dial-select]', root);
+    const option = dialSelect && dialSelect.selectedOptions[0];
+    if (!option || !option.dataset.dial) return number;
+    const national = ['IT', 'SM', 'VA'].includes(option.value) ? number : number.replace(/^0+/, '');
+    return `+${option.dataset.dial} ${national}`;
+  }
+
+  /* "HR" -> 🇭🇷 (regional indicator symbols) */
+  const flagOf = (code) => String(code).toUpperCase().replace(/[A-Z]/g, (c) => String.fromCodePoint(0x1f1a5 + c.charCodeAt(0)));
+
+  /* Country and dialling-code dropdowns in the visitor's language (Liquid renders English names), alphabetical.
+     The dialling code shows "🇭🇷 +385 Hrvatska" and follows the selected country until the visitor picks a code
+     themselves; the VAT placeholder follows the country (e.g. DE123456789). */
   function setupB2bCountry(root) {
     const select = $('[data-country-select]', root);
     if (!select || select.dataset.ready) return;
     select.dataset.ready = '1';
+    const dialSelect = $('[data-dial-select]', root);
+    const locale = NP.locale || 'en';
+    let names = null;
     try {
-      const names = new Intl.DisplayNames([NP.locale || 'en'], { type: 'region' });
-      const options = Array.from(select.options).filter((option) => option.value);
-      options.forEach((option) => {
-        option.textContent = names.of(option.value) || option.textContent;
-      });
-      options.sort((a, b) => a.textContent.localeCompare(b.textContent, NP.locale || 'en')).forEach((option) => select.append(option));
+      names = new Intl.DisplayNames([locale], { type: 'region' });
     } catch (e) {
-      /* no Intl.DisplayNames: the English names stay */
+      names = null; // no Intl.DisplayNames: the English names stay
     }
+    const nameOf = (option) => (names && names.of(option.value)) || option.textContent;
+    const sortOptions = (target, label) => {
+      const options = Array.from(target.options).filter((option) => option.value);
+      options.forEach((option) => {
+        option.dataset.name = nameOf(option);
+        option.textContent = label(option);
+      });
+      options.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name, locale)).forEach((option) => target.append(option));
+    };
+    sortOptions(select, (option) => option.dataset.name);
+    if (dialSelect) sortOptions(dialSelect, (option) => `${flagOf(option.value)} +${option.dataset.dial} ${option.dataset.name}`);
+
     const vat = $('[data-vat-input]', root);
     const sync = () => {
       const rule = B2B_VAT_RULES[select.value];
-      if (vat && rule) vat.placeholder = rule[2];
+      if (vat) vat.placeholder = rule ? rule[2] : '';
+      if (dialSelect && !dialSelect.dataset.touched && select.value) dialSelect.value = select.value;
     };
     select.addEventListener('change', sync);
+    if (dialSelect) {
+      dialSelect.addEventListener('change', () => {
+        dialSelect.dataset.touched = '1';
+        showB2bErrors(root.closest('np-b2b-register, np-b2b-native') || root, root, {}, ['phone']);
+      });
+    }
     sync();
   }
 
@@ -1223,8 +1262,10 @@
           first.focus();
           return;
         }
-        // send the normalised values (VAT with prefix, no spaces) and one name for Shopify's contact form
+        // send the normalised values (VAT with prefix, no spaces; phone with its dialling code) and one name for
+        // Shopify's contact form
         $('[data-field="vat"]', this.form).value = values.vat;
+        $('[data-field="phone"]', this.form).value = values.phone;
         const name = $('[data-b2b-native-name]', this.form);
         if (name) name.value = `${values.firstName} ${values.lastName}`;
       });

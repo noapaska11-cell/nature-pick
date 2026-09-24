@@ -1091,7 +1091,7 @@
       "password_confirm": "Passwort bestätigen",
       "password_hint": "Mindestens 8 Zeichen, mindestens ein Buchstabe und eine Ziffer.",
       "error_name": "Bitte gib einen gültigen Namen ein (nur Buchstaben).",
-      "error_phone": "Bitte gib eine gültige Telefonnummer ein, z. B. +49 30 1234567.",
+      "error_phone": "Bitte gib eine gültige Telefonnummer ein (ohne Landesvorwahl, z. B. 30 1234567).",
       "error_country": "Bitte wähle ein Land aus der Liste.",
       "error_address": "Bitte gib eine gültige Adresse ein.",
       "error_zip": "Bitte gib eine gültige Postleitzahl ein.",
@@ -1115,7 +1115,8 @@
       "password_set_done": "Das Passwort wurde gespeichert. Du kannst dich jetzt anmelden.",
       "link_invalid": "Dieser Link ist abgelaufen oder wurde bereits verwendet. Fordere über „Passwort vergessen?“ einen neuen an.",
       "verify_done": "Danke, deine E-Mail-Adresse ist bestätigt.",
-      "verify_failed": "Dieser Bestätigungslink ist ungültig oder abgelaufen."
+      "verify_failed": "Dieser Bestätigungslink ist ungültig oder abgelaufen.",
+      "dial_code": "Landesvorwahl"
     },
     "spice_club_page": {
       "meta_title": "Gewürzclub",
