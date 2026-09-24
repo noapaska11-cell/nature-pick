@@ -11,7 +11,10 @@
   assign b2b_active = false
   assign b2b_company = ''
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       assign b2b_active = true
       assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
     endif

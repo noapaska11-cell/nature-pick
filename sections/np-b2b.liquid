@@ -19,37 +19,47 @@
 {%- if np_route_show -%}
 {%- comment -%}
   B2B page: audience list + a card with three tabs (register company / log in / request a quote).
-  Registration has exactly four fields and all of them are required: company name, e-mail, OIB and VAT number.
-  Login has exactly two fields, both required: e-mail and OIB - the same two values used at registration. There is
-  no Shopify customer account and no password anywhere in this flow.
-  Default (no server): registration goes to the store inbox through Shopify's contact form and the owner approves
-  the company by hand in the Shopify admin (customer tag); login only shows a hint, since nothing can check it yet.
-  With a verification service configured (Theme settings > B2B / wholesale) both registration and login are live:
-  every registration waits in the service's admin panel for the owner to approve or reject (filtered lists, and an
-  approved company's access can be revoked later); an approved company logs in with its e-mail + OIB and the page
-  below switches, client-side, from the tabs to a "B2B shop" panel - <np-b2b-session> in naturepick.js drives that
-  switch from a token stored in the browser after login, and re-checks it against the service in the background.
+  Registration (all required): first name, last name, e-mail, contact phone, country (dropdown), company address,
+  VAT number, password + confirmation. Login: e-mail + password only. No OIB anywhere any more.
+  Default (no server): registration goes to the store inbox through Shopify's contact form (without a password -
+  a password must never travel by e-mail) and the owner approves the company by hand in the Shopify admin (customer
+  tag); the login tab only shows a hint, since nothing can check it.
+  With the verification service configured (Theme settings > B2B / wholesale) everything is live: the service
+  validates every field again, keeps one account per e-mail address, stores only a salted password hash, and every
+  registration waits as "pending" in its admin panel until the owner approves it (approved / rejected / suspended).
+  An approved company logs in with e-mail + password; <np-b2b-session> in naturepick.js then switches this page from
+  the tabs to the "B2B shop" panel and re-checks the session with the service on every visit. Links the service
+  e-mails (set password, confirm e-mail) are finished here by <np-b2b-account-links>.
 
-  Wholesale PRICING (np-price, np-product, cart) reads the real Shopify customer tag (settings.b2b_customer_tag),
-  not this page's own token - that is the only thing that can also drive a real Shopify discount at checkout later.
-  The e-mail+OIB login above proves the company is approved but does not by itself create a Shopify customer
-  session, so the "active" panel below also offers Shopify's own sign-in (same e-mail, Shopify e-mails a one-time
-  code) once, unless the visitor already has a tagged Shopify session - after that, pricing lights up everywhere.
+  Wholesale PRICING (np-price, np-product, cart) is decided on the server by Shopify's Liquid: snippets/np-b2b-customer
+  (customer tag AND the b2b.status only the service can write), never by this page's token or by hiding elements.
+  The login above proves the company is approved but does not by itself create a Shopify customer session, so the
+  "active" panel also offers Shopify's own sign-in (same e-mail, Shopify e-mails a one-time code) once, unless the
+  visitor already has an approved Shopify session - after that, pricing lights up everywhere.
 {%- endcomment -%}
 {%- liquid
   assign endpoint = settings.b2b_endpoint | strip
   assign login_endpoint = ''
   assign session_endpoint = ''
+  assign password_request_endpoint = ''
+  assign password_reset_endpoint = ''
+  assign verify_endpoint = ''
   if endpoint != blank
     assign login_endpoint = endpoint | replace: '/register', '/login'
     assign session_endpoint = endpoint | replace: '/register', '/session'
+    assign password_request_endpoint = endpoint | replace: '/register', '/password/request'
+    assign password_reset_endpoint = endpoint | replace: '/register', '/password/reset'
+    assign verify_endpoint = endpoint | replace: '/register', '/verify-email'
   endif
   # %COMPANY% is filled in by <np-b2b-session> once the logged-in company's name is known client-side
   assign active_text_template = 'np.b2b_auth.active_text' | t: company: '%COMPANY%'
 
   assign shopify_b2b_active = false
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       assign shopify_b2b_active = true
     endif
   endif
@@ -72,6 +82,9 @@
   </div>
 
   <np-b2b-session class="block" data-endpoint="{{ session_endpoint }}" data-active-text-template="{{ active_text_template | strip | escape }}">
+    {%- if endpoint != blank -%}
+      {% render 'np-b2b-account-links', reset_endpoint: password_reset_endpoint, verify_endpoint: verify_endpoint %}
+    {%- endif -%}
     <div data-b2b-guest>
       <np-tabs class="card-surface block scroll-mt-32 overflow-hidden" data-default="register" id="b2b-card">
         <div class="flex border-b border-[var(--color-line)]" role="tablist">
@@ -89,7 +102,7 @@
         <div class="p-6">
           <div role="tabpanel" data-panel="register">
             {%- if endpoint != blank -%}
-              {% render 'np-b2b-register-form', endpoint: endpoint, login_url: '#login' %}
+              {% render 'np-b2b-register-form', endpoint: endpoint %}
             {%- else -%}
               {% render 'np-contact-form', kind: 'b2b_register', form_id: 'B2BRegisterForm' %}
             {%- endif -%}
@@ -98,7 +111,7 @@
 
           <div role="tabpanel" data-panel="login" hidden>
             {%- if login_endpoint != blank -%}
-              {% render 'np-b2b-login-form', endpoint: login_endpoint %}
+              {% render 'np-b2b-login-form', endpoint: login_endpoint, password_endpoint: password_request_endpoint %}
             {%- else -%}
               <div class="flex flex-col items-center gap-4 py-6 text-center">
                 <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-cream-soft)] text-[var(--color-charcoal)]">

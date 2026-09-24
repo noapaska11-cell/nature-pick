@@ -1,0 +1,52 @@
+{%- comment -%}
+  B2B pallet shipping of the cart: "Pallets needed: 2 / Price per pallet: 100 € / Shipping: 200 €".
+  Liquid only lists the cart lines with their pieces per carton (np-b2b-box-size - the price list, unchanged) and the
+  settings; naturepick.js packs the cartons with NPPallets (assets/np-pallets.js), takes the pallet price in the
+  visitor's currency from the verification service (100 EUR at its daily rate) and fills the numbers in - on load
+  and again after every cart change (the cart re-renders through the Section Rendering API). The B2B checkout of the
+  verification service runs the very same code and puts pallets × price on the draft order as its shipping line.
+  Only rendered where that checkout is used (B2B customer + service configured). Params: cart
+{%- endcomment -%}
+{%- liquid
+  capture price_parts
+    render 'np-b2b-pallet-price', cart: cart
+  endcapture
+  assign price_parts = price_parts | strip | split: ':'
+-%}
+<div
+  class="flex flex-col gap-1"
+  data-b2b-pallets
+  data-b2b-pallet-only
+  data-box-dimensions="{{ settings.b2b_box_dimensions | escape }}"
+  data-pallet-size="{{ settings.b2b_pallet_size | escape }}"
+  data-pallet-prices="{{ settings.b2b_pallet_price_by_currency | escape }}"
+  data-price-text="{{ price_parts[2] | escape }}"
+  data-count-one="{{ 'np.b2b_pallets.pallet_count' | t: count: 1 }}"
+  data-count-few="{{ 'np.b2b_pallets.pallet_count' | t: count: 3 }}"
+  data-count-other="{{ 'np.b2b_pallets.pallet_count' | t: count: 5 }}"
+  data-formula="{{ 'np.b2b_pallets.shipping_formula' | t: pallets: '%COUNT%', price: '%PRICE%', total: '%TOTAL%' | escape }}"
+>
+  <script type="application/json" data-b2b-pallet-lines>
+    [
+      {%- for item in cart.items -%}
+        {%- capture line_box -%}{%- render 'np-b2b-box-size', sku: item.sku -%}{%- endcapture -%}
+        {"variant":{{ item.variant_id | json }},"quantity":{{ item.quantity }},"box":{{ line_box | strip | plus: 0 }}}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  </script>
+  <div class="flex justify-between">
+    <span>{{ 'np.b2b_pallets.pallets_needed' | t }}</span>
+    <span class="font-semibold text-[var(--color-charcoal)]" data-pallet-count>–</span>
+  </div>
+  <div class="flex justify-between">
+    <span>{{ 'np.b2b_pallets.price_per_pallet' | t }}</span>
+    <span data-pallet-price>{{ price_parts[2] }}</span>
+  </div>
+  <div class="flex justify-between font-semibold text-[var(--color-charcoal)]">
+    <span>{{ 'np.cart.shipping' | t }}</span>
+    <span data-pallet-shipping>–</span>
+  </div>
+  <p hidden class="text-xs text-[var(--color-charcoal-soft)]" data-pallet-base data-template="{{ 'np.b2b_pallets.converted_note' | t: base: '%BASE%', date: '%DATE%' | escape }}"></p>
+  <p class="text-xs text-[var(--color-charcoal-soft)]" data-pallet-cartons data-template="{{ 'np.b2b_pallets.cartons_note' | t: cartons: '%CARTONS%' | escape }}"></p>
+  <p hidden class="text-xs text-[var(--color-charcoal-soft)]" data-pallet-estimated>{{ 'np.b2b_pallets.estimated_note' | t }}</p>
+</div>

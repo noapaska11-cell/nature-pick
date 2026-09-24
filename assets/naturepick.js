@@ -939,7 +939,24 @@
     }
   }
 
-  /* OIB = Croatian tax number: 11 digits, last one is an ISO 7064 (MOD 11,10) check digit */
+  /* ------------------------------------------------------------ B2B accounts */
+  /* Client-side checks of the B2B forms - for the visitor's convenience only: the verification service validates every
+     field again (lib/verify.mjs) and never trusts what the browser sends. The VAT rules mirror its lib/countries.mjs
+     (a FORMAT check - whether the number is real is only known from EU VIES or the owner's manual check). */
+  const B2B_VAT_RULES = {
+    AT: ['AT', /^U\d{8}$/, 'ATU12345678'], BE: ['BE', /^[01]\d{9}$/, 'BE0123456789'], BG: ['BG', /^\d{9,10}$/, 'BG123456789'],
+    CY: ['CY', /^\d{8}[A-Z]$/, 'CY12345678X'], CZ: ['CZ', /^\d{8,10}$/, 'CZ12345678'], DE: ['DE', /^\d{9}$/, 'DE123456789'],
+    DK: ['DK', /^\d{8}$/, 'DK12345678'], EE: ['EE', /^\d{9}$/, 'EE123456789'], GR: ['EL', /^\d{9}$/, 'EL123456789'],
+    ES: ['ES', /^[A-Z0-9]\d{7}[A-Z0-9]$/, 'ESB12345678'], FI: ['FI', /^\d{8}$/, 'FI12345678'], FR: ['FR', /^[A-HJ-NP-Z0-9]{2}\d{9}$/, 'FR12345678901'],
+    HR: ['HR', /^\d{11}$/, 'HR12345678901'], HU: ['HU', /^\d{8}$/, 'HU12345678'], IE: ['IE', /^(\d{7}[A-W][A-IW]?|\d[A-Z+*]\d{5}[A-W])$/, 'IE1234567T'],
+    IT: ['IT', /^\d{11}$/, 'IT12345678901'], LT: ['LT', /^(\d{9}|\d{12})$/, 'LT123456789'], LU: ['LU', /^\d{8}$/, 'LU12345678'],
+    LV: ['LV', /^\d{11}$/, 'LV12345678901'], MT: ['MT', /^\d{8}$/, 'MT12345678'], NL: ['NL', /^\d{9}B\d{2}$/, 'NL123456789B01'],
+    PL: ['PL', /^\d{10}$/, 'PL1234567890'], PT: ['PT', /^\d{9}$/, 'PT123456789'], RO: ['RO', /^\d{2,10}$/, 'RO12345678'],
+    SE: ['SE', /^\d{10}01$/, 'SE123456789001'], SI: ['SI', /^\d{8}$/, 'SI12345678'], SK: ['SK', /^\d{10}$/, 'SK1234567890'],
+    NO: ['NO', /^\d{9}(MVA)?$/, 'NO123456789MVA'], CH: ['CHE', /^\d{9}(MWST|TVA|IVA)?$/, 'CHE123456789'], GB: ['GB', /^(\d{9}|\d{12}|GD\d{3}|HA\d{3})$/, 'GB123456789'],
+  };
+
+  /* OIB = Croatian tax number and the Croatian VAT number: 11 digits, last one an ISO 7064 (MOD 11,10) check digit */
   function isValidOib(oib) {
     if (!/^\d{11}$/.test(oib)) return false;
     let a = 10;
@@ -951,52 +968,193 @@
     return (11 - a) % 10 === Number(oib[10]);
   }
 
-  /* The four required B2B fields. Croatian companies (VAT prefix HR): strict OIB (11 digits + check digit);
-     other countries: national company number. Returns { field: 'required' | 'email' | 'vat' | 'oib' | 'id' }. */
-  function validateB2bValues(v) {
-    const errors = {};
-    const vatValid = /^[A-Z]{2}[A-Z0-9]{2,13}$/.test(v.vat);
-    const country = vatValid ? v.vat.slice(0, 2) : '';
-    if (!v.company) errors.company = 'required';
-    if (!v.email) errors.email = 'required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = 'email';
-    if (!v.vat) errors.vat = 'required';
-    else if (!vatValid) errors.vat = 'vat';
-    if (!v.oib) errors.oib = 'required';
-    else if (country === 'HR') {
-      v.oib = v.oib.replace(/\D/g, '');
-      if (!isValidOib(v.oib)) errors.oib = 'oib';
-    } else if (country && !/^[A-Z0-9][A-Z0-9\-/]{3,18}[A-Z0-9]$/.test(v.oib)) errors.oib = 'id';
-    return errors;
+  /* VAT number for the selected country, prefix optional -> { vat } or { error: 'required' | 'vat' | 'vat_country' } */
+  function b2bVatFor(country, raw) {
+    const rule = B2B_VAT_RULES[country];
+    const clean = String(raw || '').toUpperCase().replace(/[\s.\-/]/g, '');
+    if (!clean) return { error: 'required' };
+    if (!rule) return { error: 'vat' };
+    const [prefix, re] = rule;
+    let number = clean;
+    if (clean.startsWith(prefix)) number = clean.slice(prefix.length);
+    else if (country === 'GR' && clean.startsWith('GR')) number = clean.slice(2);
+    else if (/^[A-Z]{2}/.test(clean) && !re.test(clean)) return { error: 'vat_country' };
+    if (!re.test(number) || (country === 'HR' && !isValidOib(number))) return { error: 'vat' };
+    return { vat: prefix + number };
   }
 
-  /* B2B registration: validates the four required fields, sends them to the verification service and shows the outcome */
+  const B2B_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const B2B_NAME_RE = /^[\p{L}\p{M}][\p{L}\p{M}' .-]*$/u;
+
+  function b2bPasswordProblem(password, email) {
+    if (!password) return 'required';
+    if (password.length < 8 || password.length > 128) return 'password_length';
+    if (!/\p{L}/u.test(password) || !/\d/.test(password)) return 'password_weak';
+    const local = String(email || '').split('@')[0].toLowerCase();
+    if (local.length >= 4 && password.toLowerCase().includes(local)) return 'password_weak';
+    return '';
+  }
+
+  /* Registration fields (snippets/np-b2b-registration-fields.liquid, data-field="...") -> { values, errors }.
+     Same message keys as the service's answers, so both show the same texts. */
+  function checkB2bRegistration(root, withPassword) {
+    const get = (field) => {
+      const input = $(`[data-field="${field}"]`, root);
+      return input ? String(input.value || '') : '';
+    };
+    const squash = (value) => value.replace(/\s+/g, ' ').trim();
+    const values = {
+      firstName: squash(get('firstName')),
+      lastName: squash(get('lastName')),
+      email: get('email').trim(),
+      phone: get('phone').trim(),
+      country: get('country'),
+      street: squash(get('street')),
+      zip: squash(get('zip')).toUpperCase(),
+      city: squash(get('city')),
+      vat: get('vat'),
+    };
+    const errors = {};
+    ['firstName', 'lastName'].forEach((field) => {
+      if (!values[field]) errors[field] = 'required';
+      else if (!B2B_NAME_RE.test(values[field])) errors[field] = 'name';
+    });
+    if (!values.email) errors.email = 'required';
+    else if (!B2B_EMAIL_RE.test(values.email)) errors.email = 'email';
+    const phoneDigits = values.phone.replace(/\D/g, '');
+    if (!values.phone) errors.phone = 'required';
+    else if (!/^\+?[\d\s()./-]+$/.test(values.phone) || phoneDigits.length < 6 || phoneDigits.length > 15) errors.phone = 'phone';
+    if (!values.country) errors.country = 'required';
+    else if (!B2B_VAT_RULES[values.country]) errors.country = 'country';
+    if (!values.street) errors.street = 'required';
+    else if (!/\p{L}/u.test(values.street)) errors.street = 'address';
+    if (!values.zip) errors.zip = 'required';
+    else if (!/^[A-Z0-9][A-Z0-9 -]{1,9}$/.test(values.zip)) errors.zip = 'zip';
+    if (!values.city) errors.city = 'required';
+    else if (!/\p{L}/u.test(values.city)) errors.city = 'address';
+    if (values.country) {
+      const vat = b2bVatFor(values.country, values.vat);
+      if (vat.error) errors.vat = vat.error;
+      else values.vat = vat.vat;
+    } else if (!values.vat.trim()) errors.vat = 'required';
+    if (withPassword) {
+      values.password = get('password');
+      values.passwordConfirm = get('passwordConfirm');
+      const weak = b2bPasswordProblem(values.password, values.email);
+      if (weak) errors.password = weak;
+      if (!values.passwordConfirm) errors.passwordConfirm = 'required';
+      else if (values.passwordConfirm !== values.password) errors.passwordConfirm = 'password_mismatch';
+    }
+    return { values, errors };
+  }
+
+  /* data-msg-* of snippets/np-b2b-messages.liquid by message key: 'password_mismatch' -> data-msg-password-mismatch */
+  function b2bMessage(host, key) {
+    const name = 'msg' + String(key || 'generic').split(/[_-]/).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+    return host.dataset[name] || host.dataset.msgGeneric || '';
+  }
+
+  /* Shows one message per field (data-error-for) and marks the input; returns the first invalid input */
+  function showB2bErrors(host, root, errors, fields) {
+    let first = null;
+    fields.forEach((field) => {
+      const target = $(`[data-error-for="${field}"]`, root);
+      const input = $(`[data-field="${field}"]`, root);
+      const text = errors[field] ? b2bMessage(host, errors[field]) : '';
+      if (target) {
+        target.textContent = text;
+        target.hidden = !text;
+      }
+      if (input) {
+        input.setAttribute('aria-invalid', text ? 'true' : 'false');
+        if (text && !first) first = input;
+      }
+    });
+    return first;
+  }
+
+  const B2B_REGISTRATION_FIELDS = ['firstName', 'lastName', 'email', 'phone', 'country', 'street', 'zip', 'city', 'vat', 'password', 'passwordConfirm'];
+
+  /* Country dropdown in the visitor's language (Liquid renders English names), alphabetical; the VAT placeholder
+     follows the selected country (e.g. DE123456789) */
+  function setupB2bCountry(root) {
+    const select = $('[data-country-select]', root);
+    if (!select || select.dataset.ready) return;
+    select.dataset.ready = '1';
+    try {
+      const names = new Intl.DisplayNames([NP.locale || 'en'], { type: 'region' });
+      const options = Array.from(select.options).filter((option) => option.value);
+      options.forEach((option) => {
+        option.textContent = names.of(option.value) || option.textContent;
+      });
+      options.sort((a, b) => a.textContent.localeCompare(b.textContent, NP.locale || 'en')).forEach((option) => select.append(option));
+    } catch (e) {
+      /* no Intl.DisplayNames: the English names stay */
+    }
+    const vat = $('[data-vat-input]', root);
+    const sync = () => {
+      const rule = B2B_VAT_RULES[select.value];
+      if (vat && rule) vat.placeholder = rule[2];
+    };
+    select.addEventListener('change', sync);
+    sync();
+  }
+
+  async function postJson(url, body) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(body),
+    });
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (e) {
+      /* not JSON */
+    }
+    return { response, data };
+  }
+
+  function setB2bBusy(button, label, icon, busy, labels) {
+    button.disabled = busy;
+    if (label) label.textContent = busy ? labels.busy : labels.idle;
+    if (icon) {
+      if (busy) {
+        icon.dataset.icon = icon.innerHTML;
+        icon.innerHTML = '<span class="np-spinner block"></span>';
+      } else if (icon.dataset.icon) {
+        icon.innerHTML = icon.dataset.icon;
+      }
+    }
+  }
+
+  /* B2B registration with the verification service: first/last name, e-mail, phone, country, company address, VAT
+     number, password + confirmation. Shows: pending (waits for approval, confirmation e-mail sent), approved, or
+     "already registered". The password is only ever sent to the service over HTTPS, never stored in the browser. */
   class NPB2BRegister extends HTMLElement {
     connectedCallback() {
       this.form = $('[data-b2b-form]', this);
       if (!this.form) return;
+      setupB2bCountry(this.form);
       this.form.addEventListener('submit', (event) => {
         event.preventDefault();
         this.submit();
       });
       this.form.addEventListener('input', (event) => {
-        if (event.target.name) this.setError(event.target.name, '');
+        const field = event.target.dataset && event.target.dataset.field;
+        if (field) showB2bErrors(this, this.form, {}, [field]);
         this.showFormError('');
       });
-    }
-
-    message(key) {
-      return this.dataset['msg' + key.charAt(0).toUpperCase() + key.slice(1)] || this.dataset.msgGeneric || '';
-    }
-
-    setError(field, text) {
-      const target = $(`[data-error-for="${field}"]`, this);
-      const input = $(`[name="${field}"]`, this.form);
-      if (target) {
-        target.textContent = text;
-        target.hidden = !text;
-      }
-      if (input) input.setAttribute('aria-invalid', text ? 'true' : 'false');
+      this.addEventListener('click', (event) => {
+        if (!event.target.closest('[data-b2b-go-login]')) return;
+        const tabs = this.closest('np-tabs');
+        if (tabs && tabs.select) {
+          event.preventDefault();
+          tabs.select('login');
+          const email = $('#b2b-login-email');
+          if (email) email.focus();
+        }
+      });
     }
 
     showFormError(text) {
@@ -1006,171 +1164,119 @@
       box.hidden = !text;
     }
 
-    values() {
-      const data = new FormData(this.form);
-      return {
-        company: String(data.get('company') || '').trim(),
-        email: String(data.get('email') || '').trim(),
-        oib: String(data.get('oib') || '').trim().toUpperCase().replace(/\s+/g, ''),
-        vat: String(data.get('vat') || '').replace(/[\s.\-]/g, '').toUpperCase(),
-        website: String(data.get('website') || ''),
-      };
-    }
-
-    validate(v) {
-      return validateB2bValues(v);
-    }
-
-    setBusy(busy) {
-      this.busy = busy;
-      const button = $('[data-b2b-submit]', this);
-      const label = $('[data-b2b-submit-label]', this);
-      const icon = $('[data-b2b-submit-icon]', this);
-      button.disabled = busy;
-      label.textContent = busy ? this.dataset.labelVerifying : this.dataset.labelSubmit;
-      if (icon) {
-        if (busy) {
-          icon.dataset.icon = icon.innerHTML;
-          icon.innerHTML = '<span class="np-spinner block"></span>';
-        } else if (icon.dataset.icon) {
-          icon.innerHTML = icon.dataset.icon;
-        }
-      }
-    }
-
     async submit() {
       if (this.busy) return;
-      const values = this.values();
-      const errors = this.validate(values);
-      ['company', 'email', 'oib', 'vat'].forEach((field) => this.setError(field, errors[field] ? this.message(errors[field]) : ''));
-      const firstInvalid = Object.keys(errors)[0];
-      if (firstInvalid) {
-        $(`[name="${firstInvalid}"]`, this.form).focus();
+      const { values, errors } = checkB2bRegistration(this.form, true);
+      const first = showB2bErrors(this, this.form, errors, B2B_REGISTRATION_FIELDS);
+      if (first) {
+        first.focus();
         return;
       }
       this.showFormError('');
-      this.setBusy(true);
+      this.busy = true;
+      const button = $('[data-b2b-submit]', this);
+      const labels = { busy: this.dataset.labelVerifying, idle: this.dataset.labelSubmit };
+      setB2bBusy(button, $('[data-b2b-submit-label]', this), $('[data-b2b-submit-icon]', this), true, labels);
       try {
-        const response = await fetch(this.dataset.endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(Object.assign({ locale: NP.locale }, values)),
-        });
-        let data = {};
-        try {
-          data = await response.json();
-        } catch (e) {
-          /* not JSON */
-        }
+        const website = String((this.form.elements.website && this.form.elements.website.value) || '');
+        const { response, data } = await postJson(this.dataset.endpoint, Object.assign({ locale: NP.locale, website }, values));
         if (response.status === 400 && data.errors) {
-          Object.keys(data.errors).forEach((field) => this.setError(field, this.message(data.errors[field])));
+          const firstServer = showB2bErrors(this, this.form, data.errors, B2B_REGISTRATION_FIELDS);
+          if (firstServer) firstServer.focus();
           return;
         }
-        if (!response.ok) throw new Error('service error');
-        const status = ['approved', 'pending', 'exists'].includes(data.status) ? data.status : 'pending';
-        this.form.hidden = true;
-        $$('[data-b2b-result]', this).forEach((panel) => {
-          panel.hidden = panel.dataset.b2bResult !== status;
-        });
+        if (data.status === 'exists' || ['approved', 'pending'].includes(data.status)) {
+          this.form.hidden = true;
+          $$('[data-b2b-result]', this).forEach((panel) => {
+            panel.hidden = panel.dataset.b2bResult !== data.status;
+          });
+          return;
+        }
+        this.showFormError(b2bMessage(this, data.error === 'rate-limit' ? 'rate_limit' : 'generic'));
       } catch (e) {
-        this.showFormError(this.message('generic'));
+        this.showFormError(b2bMessage(this, 'generic'));
       } finally {
-        this.setBusy(false);
+        // the passwords never stay in the page longer than needed
+        $$('input[type="password"]', this.form).forEach((input) => {
+          if (this.form.hidden) input.value = '';
+        });
+        this.busy = false;
+        setB2bBusy(button, $('[data-b2b-submit-label]', this), $('[data-b2b-submit-icon]', this), false, labels);
       }
     }
   }
 
-  /* B2B registration WITHOUT a verification service (the default): the browser checks the four required fields with the
-     rules above, then the form is posted to Shopify's own contact endpoint. The request arrives in the store inbox and
-     the owner approves the company by hand in the Shopify admin (add the customer tag). */
+  /* B2B registration WITHOUT a verification service (the default): the same field checks, then the form is posted to
+     Shopify's own contact endpoint (no password - it would travel by e-mail). The request arrives in the store inbox
+     and the owner approves the company by hand in the Shopify admin (add the customer tag). */
   class NPB2BNative extends HTMLElement {
     connectedCallback() {
       this.form = $('form', this);
       if (!this.form) return;
       this.form.noValidate = true; // translated messages of the theme instead of the browser's own
+      setupB2bCountry(this.form);
       this.form.addEventListener('submit', (event) => {
-        const values = this.values();
-        const errors = validateB2bValues(values);
-        Object.keys(B2B_NATIVE_FIELDS).forEach((field) => this.setError(field, errors[field] ? this.message(errors[field]) : ''));
-        const firstInvalid = Object.keys(errors)[0];
-        if (firstInvalid) {
+        const { values, errors } = checkB2bRegistration(this.form, false);
+        const first = showB2bErrors(this, this.form, errors, B2B_REGISTRATION_FIELDS);
+        if (first) {
           event.preventDefault();
-          this.input(firstInvalid).focus();
+          first.focus();
           return;
         }
-        // send the normalised values (VAT without spaces, OIB digits only for Croatian companies)
-        this.input('company').value = values.company;
-        this.input('oib').value = values.oib;
-        this.input('vat').value = values.vat;
+        // send the normalised values (VAT with prefix, no spaces) and one name for Shopify's contact form
+        $('[data-field="vat"]', this.form).value = values.vat;
+        const name = $('[data-b2b-native-name]', this.form);
+        if (name) name.value = `${values.firstName} ${values.lastName}`;
       });
       this.form.addEventListener('input', (event) => {
-        const field = Object.keys(B2B_NATIVE_FIELDS).find((key) => B2B_NATIVE_FIELDS[key] === event.target.name);
-        if (field) this.setError(field, '');
+        const field = event.target.dataset && event.target.dataset.field;
+        if (field) showB2bErrors(this, this.form, {}, [field]);
       });
-    }
-
-    input(field) {
-      return this.form.elements[B2B_NATIVE_FIELDS[field]];
-    }
-
-    message(key) {
-      return this.dataset['msg' + key.charAt(0).toUpperCase() + key.slice(1)] || this.dataset.msgRequired || '';
-    }
-
-    setError(field, text) {
-      const target = $(`[data-error-for="${B2B_NATIVE_FIELDS[field]}"]`, this);
-      if (target) {
-        target.textContent = text;
-        target.hidden = !text;
-      }
-      this.input(field).setAttribute('aria-invalid', text ? 'true' : 'false');
-    }
-
-    values() {
-      const get = (field) => String(this.input(field).value || '');
-      return {
-        company: get('company').trim(),
-        email: get('email').trim(),
-        oib: get('oib').trim().toUpperCase().replace(/\s+/g, ''),
-        vat: get('vat').replace(/[\s.\-]/g, '').toUpperCase(),
-      };
     }
   }
 
-  // form field names of Shopify's contact form for each B2B field (see snippets/np-contact-form.liquid)
-  const B2B_NATIVE_FIELDS = { company: 'contact[name]', email: 'contact[email]', oib: 'contact[OIB]', vat: 'contact[VAT number]' };
-
-  /* B2B company login: e-mail + OIB, no password, no Shopify customer account. The verification service checks the
-     pair against the Shopify customer the admin panel approved and returns a signed token, stored in the browser
-     (see storage helper above) so <np-b2b-session> can show the "logged in" view without a full page reload cycle. */
+  /* B2B company login: e-mail + password. The service answers with a signed session token (7 days, re-checked on every
+     visit and ended by a password change, suspension or revocation), stored in this browser so <np-b2b-session> can
+     show the logged-in view. "Forgot password" asks for a link to set a new one (always answers "sent"). */
   const B2B_SESSION_KEY = 'np-b2b-session';
 
   class NPB2BLogin extends HTMLElement {
     connectedCallback() {
       this.form = $('[data-b2b-login-form]', this);
       if (!this.form) return;
+      this.forgotForm = $('[data-b2b-forgot-form]', this);
       this.form.addEventListener('submit', (event) => {
         event.preventDefault();
         this.submit();
       });
       this.form.addEventListener('input', (event) => {
-        if (event.target.name) this.setError(event.target.name, '');
+        const field = event.target.dataset && event.target.dataset.field;
+        if (field) showB2bErrors(this, this.form, {}, [field]);
         this.showFormError('');
       });
-    }
-
-    message(key) {
-      return this.dataset['msg' + key.charAt(0).toUpperCase() + key.slice(1)] || this.dataset.msgGeneric || '';
-    }
-
-    setError(field, text) {
-      const target = $(`[data-error-for="${field}"]`, this);
-      const input = $(`[name="${field}"]`, this.form);
-      if (target) {
-        target.textContent = text;
-        target.hidden = !text;
+      const forgot = $('[data-b2b-forgot]', this);
+      if (forgot) forgot.addEventListener('click', () => this.showForgot(true));
+      const back = $('[data-b2b-back]', this);
+      if (back) back.addEventListener('click', () => this.showForgot(false));
+      if (this.forgotForm) {
+        this.forgotForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          this.requestLink();
+        });
       }
-      if (input) input.setAttribute('aria-invalid', text ? 'true' : 'false');
+    }
+
+    showForgot(open) {
+      $('[data-login-panel]', this).hidden = open;
+      $('[data-forgot-panel]', this).hidden = !open;
+      if (open) {
+        const email = $('[data-field="email"]', this.forgotForm);
+        email.value = email.value || $('[data-field="email"]', this.form).value;
+        $('[data-b2b-forgot-message]', this).hidden = true;
+        email.focus();
+      } else {
+        $('[data-field="password"]', this.form).focus();
+      }
     }
 
     showFormError(text) {
@@ -1180,72 +1286,179 @@
       box.hidden = !text;
     }
 
-    values() {
-      const data = new FormData(this.form);
-      return { email: String(data.get('email') || '').trim(), oib: String(data.get('oib') || '').trim() };
-    }
-
-    validate(v) {
-      const errors = {};
-      if (!v.email) errors.email = 'required';
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = 'email';
-      if (!v.oib) errors.oib = 'required';
-      return errors;
-    }
-
-    setBusy(busy) {
-      this.busy = busy;
-      const button = $('[data-b2b-login-submit]', this);
-      const label = $('[data-b2b-login-submit-label]', this);
-      const icon = $('[data-b2b-login-submit-icon]', this);
-      button.disabled = busy;
-      label.textContent = busy ? this.dataset.labelVerifying : this.dataset.labelSubmit;
-      if (icon) {
-        if (busy) {
-          icon.dataset.icon = icon.innerHTML;
-          icon.innerHTML = '<span class="np-spinner block"></span>';
-        } else if (icon.dataset.icon) {
-          icon.innerHTML = icon.dataset.icon;
-        }
-      }
-    }
-
     async submit() {
       if (this.busy) return;
-      const values = this.values();
-      const errors = this.validate(values);
-      ['email', 'oib'].forEach((field) => this.setError(field, errors[field] ? this.message(errors[field]) : ''));
-      const firstInvalid = Object.keys(errors)[0];
-      if (firstInvalid) {
-        $(`[name="${firstInvalid}"]`, this.form).focus();
+      const email = $('[data-field="email"]', this.form).value.trim();
+      const password = $('[data-field="password"]', this.form).value;
+      const errors = {};
+      if (!email) errors.email = 'required';
+      else if (!B2B_EMAIL_RE.test(email)) errors.email = 'email';
+      if (!password) errors.password = 'required';
+      const first = showB2bErrors(this, this.form, errors, ['email', 'password']);
+      if (first) {
+        first.focus();
         return;
       }
       this.showFormError('');
-      this.setBusy(true);
+      this.busy = true;
+      const button = $('[data-b2b-login-submit]', this);
+      const labels = { busy: this.dataset.labelVerifying, idle: this.dataset.labelSubmit };
+      setB2bBusy(button, $('[data-b2b-login-submit-label]', this), $('[data-b2b-login-submit-icon]', this), true, labels);
       try {
-        const response = await fetch(this.dataset.endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(Object.assign({ locale: NP.locale }, values)),
-        });
-        let data = {};
-        try {
-          data = await response.json();
-        } catch (e) {
-          /* not JSON */
-        }
+        const { data } = await postJson(this.dataset.endpoint, { email, password, locale: NP.locale });
         if (data.status === 'ok' && data.token) {
           storage.set(B2B_SESSION_KEY, JSON.stringify({ token: data.token, company: data.company || '' }));
-          window.location.reload(); // <np-b2b-session> picks the stored token up on the next load
+          window.location.hash = '';
+          window.location.reload(); // <np-b2b-session> picks the stored token up and shows the B2B shop panel
           return;
         }
-        const key = { 'not-found': 'notFound', pending: 'pending', rejected: 'rejected' }[data.status];
-        this.showFormError(this.message(key || 'generic'));
+        // invalid (wrong e-mail or password - never which of the two), pending, rejected, suspended, unverified
+        const key = data.error === 'rate-limit' ? 'rate_limit' : ['invalid', 'pending', 'rejected', 'suspended', 'unverified'].includes(data.status) ? data.status : 'generic';
+        this.showFormError(b2bMessage(this, key));
+        $('[data-field="password"]', this.form).value = '';
       } catch (e) {
-        this.showFormError(this.message('generic'));
+        this.showFormError(b2bMessage(this, 'generic'));
       } finally {
-        this.setBusy(false);
+        this.busy = false;
+        setB2bBusy(button, $('[data-b2b-login-submit-label]', this), $('[data-b2b-login-submit-icon]', this), false, labels);
       }
+    }
+
+    async requestLink() {
+      if (this.busy) return;
+      const input = $('[data-field="email"]', this.forgotForm);
+      const email = input.value.trim();
+      const error = !email ? 'required' : B2B_EMAIL_RE.test(email) ? '' : 'email';
+      const errorBox = $('[data-b2b-forgot-error]', this);
+      errorBox.hidden = true;
+      if (showB2bErrors(this, this.forgotForm, error ? { email: error } : {}, ['email'])) {
+        input.focus();
+        return;
+      }
+      this.busy = true;
+      const button = $('[data-b2b-forgot-submit]', this);
+      button.disabled = true;
+      try {
+        const { data } = await postJson(this.dataset.passwordEndpoint, { email, locale: NP.locale });
+        if (data.status === 'sent') $('[data-b2b-forgot-message]', this).hidden = false;
+        else {
+          errorBox.textContent = b2bMessage(this, data.error === 'rate-limit' ? 'rate_limit' : 'generic');
+          errorBox.hidden = false;
+        }
+      } catch (e) {
+        errorBox.textContent = b2bMessage(this, 'generic');
+        errorBox.hidden = false;
+      } finally {
+        this.busy = false;
+        button.disabled = false;
+      }
+    }
+  }
+
+  /* Links the service e-mails, finished on the B2B page: #password=<token> (set a new password) and #verify=<token>
+     (confirm the e-mail address). The token is read and removed from the address bar at once, so it does not stay in
+     the history or get shared along with the page URL. */
+  class NPB2BAccountLinks extends HTMLElement {
+    connectedCallback() {
+      this.handle();
+      // a link pasted into a tab that already shows the B2B page only changes the fragment - no page load
+      window.addEventListener('hashchange', () => this.handle());
+    }
+
+    handle() {
+      const match = window.location.hash.match(/^#(password|verify)=(.+)$/);
+      if (!match) return;
+      const [, kind, raw] = match;
+      let token = '';
+      try {
+        token = decodeURIComponent(raw);
+      } catch (e) {
+        token = '';
+      }
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {
+        /* old browser: the fragment stays, nothing else happens */
+      }
+      if (kind === 'verify') this.verify(token);
+      else this.showPassword(token);
+    }
+
+    async verify(token) {
+      let ok = false;
+      try {
+        const { data } = await postJson(this.dataset.verifyEndpoint, { token });
+        ok = data.status === 'ok';
+      } catch (e) {
+        ok = false;
+      }
+      const panel = $(`[data-verify-result="${ok ? 'ok' : 'failed'}"]`, this);
+      if (panel) panel.hidden = false;
+    }
+
+    showPassword(token) {
+      const panel = $('[data-password-panel]', this);
+      const form = $('[data-b2b-password-form]', this);
+      if (!panel || !form) return;
+      this.token = token; // the newest link wins
+      panel.hidden = false;
+      form.hidden = false;
+      $('[data-b2b-password-done]', this).hidden = true;
+      requestAnimationFrame(() => panel.scrollIntoView({ block: 'start' }));
+      $('[data-field="password"]', form).focus();
+      if (this.formReady) return;
+      this.formReady = true;
+      form.addEventListener('input', (event) => {
+        const field = event.target.dataset && event.target.dataset.field;
+        if (field) showB2bErrors(this, form, {}, [field]);
+      });
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (this.busy) return;
+        const password = $('[data-field="password"]', form).value;
+        const passwordConfirm = $('[data-field="passwordConfirm"]', form).value;
+        const errors = {};
+        const weak = b2bPasswordProblem(password, '');
+        if (weak) errors.password = weak;
+        if (!passwordConfirm) errors.passwordConfirm = 'required';
+        else if (passwordConfirm !== password) errors.passwordConfirm = 'password_mismatch';
+        const first = showB2bErrors(this, form, errors, ['password', 'passwordConfirm']);
+        if (first) {
+          first.focus();
+          return;
+        }
+        const errorBox = $('[data-b2b-password-error]', this);
+        errorBox.hidden = true;
+        this.busy = true;
+        const button = $('[data-b2b-password-submit]', this);
+        button.disabled = true;
+        try {
+          const { data } = await postJson(this.dataset.resetEndpoint, { token: this.token, password, passwordConfirm });
+          if (data.status === 'ok') {
+            form.hidden = true;
+            $('[data-b2b-password-done]', this).hidden = false;
+            // straight to the login tab with the new password
+            const tabs = $('np-tabs');
+            if (tabs && tabs.select) tabs.select('login');
+            storage.set(B2B_SESSION_KEY, ''); // any older session ended with the password change
+          } else if (data.status === 'invalid' && data.errors) {
+            const firstServer = showB2bErrors(this, form, data.errors, ['password', 'passwordConfirm']);
+            if (firstServer) firstServer.focus();
+          } else {
+            errorBox.textContent = b2bMessage(this, data.status === 'link-invalid' ? 'link_invalid' : data.error === 'rate-limit' ? 'rate_limit' : 'generic');
+            errorBox.hidden = false;
+          }
+        } catch (e) {
+          errorBox.textContent = b2bMessage(this, 'generic');
+          errorBox.hidden = false;
+        } finally {
+          this.busy = false;
+          button.disabled = false;
+          $$('input[type="password"]', form).forEach((input) => {
+            input.value = '';
+          });
+        }
+      });
     }
   }
 
@@ -1421,9 +1634,227 @@
     });
   }
 
+  /* Money in any currency: the storefront's own format for the cart currency, Intl otherwise (e.g. "100 €" pallet
+     price in a SEK cart - the B2B checkout is then presented in EUR) */
+  function formatMoneyIn(cents, currency) {
+    if (!currency || currency === NP.currency) return formatMoney(cents);
+    const amount = Number(cents) / 100;
+    try {
+      return new Intl.NumberFormat(NP.locale || 'sv', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    } catch (e) {
+      return `${amount.toFixed(2)} ${currency}`;
+    }
+  }
+
+  /* Pallet price in the visitor's currency (B2B promotion: 100 EUR per pallet, converted at the verification service's
+     daily ECB rate - the same cached rate its checkout charges with). Kept 30 minutes in this browser; if the service
+     moved to a new rate meanwhile, the checkout answers with the new amount and it is stored here (rememberPalletPrice).
+     { currency, cents, baseCurrency?, baseCents?, rateDate? } or null (not loaded / no service). */
+  const PALLET_PRICE_KEY = 'np-pallet-price';
+  const PALLET_PRICE_TTL_MS = 30 * 60 * 1000;
+  const palletPriceState = { value: null, pending: null };
+
+  function rememberPalletPrice(value) {
+    palletPriceState.value = value;
+    storage.set(PALLET_PRICE_KEY, JSON.stringify({ ...value, cartCurrency: NP.currency, at: Date.now() }));
+    applyPalletPriceTexts();
+  }
+
+  function loadPalletPrice() {
+    if (!NP.palletPriceUrl || !NP.currency) return Promise.resolve(null);
+    if (palletPriceState.value) return Promise.resolve(palletPriceState.value);
+    try {
+      const saved = JSON.parse(storage.get(PALLET_PRICE_KEY) || 'null');
+      if (saved && saved.cartCurrency === NP.currency && Date.now() - saved.at < PALLET_PRICE_TTL_MS) {
+        palletPriceState.value = saved;
+        applyPalletPriceTexts();
+        return Promise.resolve(saved);
+      }
+    } catch (e) {
+      /* unreadable: fetch again */
+    }
+    if (!palletPriceState.pending) {
+      const url = `${NP.palletPriceUrl}?currency=${encodeURIComponent(NP.currency)}&shop=${encodeURIComponent(NP.shopCurrency || '')}`;
+      palletPriceState.pending = fetch(url, { headers: { Accept: 'application/json' } })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status !== 'ok') return null;
+          rememberPalletPrice({ currency: data.currency, cents: data.cents, baseCurrency: data.baseCurrency, baseCents: data.baseCents, rateDate: data.rateDate });
+          applyB2bMinimumGate(); // re-renders the cart's pallet summary with the price
+          return palletPriceState.value;
+        })
+        .catch(() => null)
+        .finally(() => {
+          palletPriceState.pending = null;
+        });
+    }
+    return palletPriceState.pending;
+  }
+
+  /* Promotion texts (np-b2b-pallet-promo.liquid): "Svaka paleta samo %PRICE%!" in the visitor's currency */
+  function applyPalletPriceTexts() {
+    const price = palletPriceState.value;
+    if (!price) return;
+    const text = formatMoneyIn(price.cents, price.currency);
+    $$('[data-pallet-price-template]').forEach((el) => {
+      el.textContent = (el.dataset.palletPriceTemplate || '').replace(/%PRICE%/g, text);
+    });
+  }
+
+  /* B2B pallet shipping (snippets/np-b2b-pallet-summary.liquid): cart lines + pieces per carton -> cartons -> pallets
+     -> pallets x price per pallet, with window.NPPallets (assets/np-pallets.js, B2B customers only). The B2B checkout
+     of the verification service runs the same file and charges exactly this as the draft order's shipping line.
+     Lines of the same variant are merged first, like the service does. null when the script is missing. */
+  function palletQuote(el) {
+    if (!el || !window.NPPallets) return null;
+    try {
+      const raw = JSON.parse(($('[data-b2b-pallet-lines]', el) || {}).textContent || '[]');
+      const merged = new Map();
+      raw.forEach((line) => {
+        const key = String(line.variant);
+        const current = merged.get(key) || { quantity: 0, box: line.box };
+        current.quantity += Number(line.quantity) || 0;
+        merged.set(key, current);
+      });
+      const P = window.NPPallets;
+      // the service's price for this currency (already converted) - until it has loaded, the configured price with a
+      // "pending" mark (the numbers that depend on it are then not shown yet)
+      const price = palletPriceState.value;
+      const settings = {
+        boxDimensions: P.parseBoxDimensions(el.dataset.boxDimensions),
+        pallet: P.parsePallet(el.dataset.palletSize),
+        palletPrices: price ? new Map([[price.currency, price.cents]]) : P.parsePalletPrices(el.dataset.palletPrices),
+      };
+      const quote = P.quote(Array.from(merged.values()), settings, NP.currency, NP.shopCurrency);
+      quote.pricePending = !price && Boolean(NP.palletPriceUrl);
+      if (price && price.baseCurrency) quote.basePrice = { currency: price.baseCurrency, cents: price.baseCents, date: price.rateDate };
+      return quote;
+    } catch (e) {
+      if (window.console) console.error('[Nature Pick] pallet calculation failed:', e);
+      return null;
+    }
+  }
+
+  const palletCountText = (el, n) => pluralText(el, n);
+  const palletFormula = (el, quote) =>
+    (el.dataset.formula || '%COUNT% × %PRICE% = %TOTAL%')
+      .replace('%COUNT%', String(quote.pallets))
+      .replace('%PRICE%', formatMoneyIn(quote.pricePerPalletCents, quote.currency))
+      .replace('%TOTAL%', formatMoneyIn(quote.shippingCents, quote.currency));
+
+  /* Recalculated on load and after every cart change (cart.applySections -> applyB2bMinimumGate). While a B2B
+     customer views regular prices the checkout is Shopify's ordinary one, so the pallet parts are hidden then. */
+  function syncB2bPallets(retailView) {
+    applyPalletPriceTexts(); // a re-rendered cart brings the promotion back with Liquid's price
+    $$('[data-b2b-pallets]').forEach((el) => {
+      const quote = palletQuote(el);
+      el.npPalletQuote = quote;
+      if (!quote) return;
+      $('[data-pallet-count]', el).textContent = String(quote.pallets);
+      $('[data-pallet-price]', el).textContent = quote.pricePending ? '…' : formatMoneyIn(quote.pricePerPalletCents, quote.currency);
+      $('[data-pallet-shipping]', el).textContent = quote.pricePending ? '…' : formatMoneyIn(quote.shippingCents, quote.currency);
+      const base = $('[data-pallet-base]', el);
+      if (base) {
+        base.hidden = !quote.basePrice;
+        if (quote.basePrice) {
+          const date = quote.basePrice.date ? new Date(`${quote.basePrice.date}T12:00:00Z`).toLocaleDateString(NP.locale || undefined) : '';
+          base.textContent = (base.dataset.template || '').replace('%BASE%', formatMoneyIn(quote.basePrice.cents, quote.basePrice.currency)).replace('%DATE%', date);
+        }
+      }
+      const cartons = $('[data-pallet-cartons]', el);
+      if (cartons) cartons.textContent = `${palletCountText(el, quote.pallets)} · ${(cartons.dataset.template || '').replace('%CARTONS%', String(quote.cartons))}`;
+      const estimated = $('[data-pallet-estimated]', el);
+      if (estimated) estimated.hidden = !quote.estimated;
+    });
+    $$('[data-b2b-pallet-only]').forEach((el) => {
+      el.hidden = retailView;
+    });
+    $$('[data-b2b-retail-only]').forEach((el) => {
+      el.hidden = !retailView;
+    });
+  }
+
+  /* "Continue with the purchase?" before every checkout (np-cart.liquid, [data-checkout-confirm]). Resolves true for
+     YES, false for NO / Escape / backdrop. With `pallets` (B2B pallet checkout) it also shows pallets and shipping. */
+  const checkoutConfirm = {
+    resolve: null,
+    lastFocus: null,
+    el: () => $('[data-checkout-confirm]'),
+    ask({ quote, source, changed } = {}) {
+      const modal = this.el();
+      if (!modal) return Promise.resolve(true); // no modal on this page: behave as before
+      const block = $('[data-confirm-pallets]', modal);
+      const yes = $('[data-confirm-answer="yes"]', modal);
+      const withPallets = Boolean(block && quote);
+      if (block) {
+        block.hidden = !withPallets;
+        if (withPallets) {
+          $('[data-confirm-pallet-count]', block).textContent = palletCountText(source, quote.pallets);
+          $('[data-confirm-shipping]', block).textContent = palletFormula(source, quote);
+          $('[data-confirm-changed]', block).hidden = !changed;
+        }
+      }
+      yes.textContent = withPallets ? yes.dataset.labelPallets : yes.dataset.labelSimple;
+      if (this.resolve) this.resolve(false);
+      this.lastFocus = document.activeElement;
+      modal.hidden = false;
+      lockScroll(true);
+      requestAnimationFrame(() => yes.focus({ preventScroll: true }));
+      return new Promise((resolve) => {
+        this.resolve = resolve;
+      });
+    },
+    answer(yes) {
+      const modal = this.el();
+      if (!modal || modal.hidden) return;
+      modal.hidden = true;
+      lockScroll(false);
+      const resolve = this.resolve;
+      this.resolve = null;
+      if (!yes && this.lastFocus && this.lastFocus.focus) this.lastFocus.focus({ preventScroll: true });
+      if (resolve) resolve(yes);
+    },
+  };
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest && event.target.closest('[data-confirm-answer]');
+    if (button && button.closest('[data-checkout-confirm]')) checkoutConfirm.answer(button.dataset.confirmAnswer === 'yes');
+  });
+
+  /* Retail (B2C) checkout, and a B2B customer's ordinary checkout: the cart form's normal submit to Shopify's checkout,
+     only asked for confirmation first. YES submits exactly as before (same button, so name="checkout" is sent). */
+  document.addEventListener('submit', async (event) => {
+    const form = event.target;
+    const button = event.submitter;
+    if (!button || !button.matches || !button.matches('[data-checkout-confirm-trigger]')) return;
+    if (form.dataset.checkoutConfirmed) {
+      delete form.dataset.checkoutConfirmed;
+      return;
+    }
+    event.preventDefault();
+    if (await checkoutConfirm.ask()) {
+      form.dataset.checkoutConfirmed = '1';
+      if (typeof form.requestSubmit === 'function') form.requestSubmit(button);
+      else {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = button.name;
+        hidden.value = button.value || '';
+        form.append(hidden);
+        form.submit();
+      }
+    }
+  });
+
   function applyB2bMinimumGate() {
     const retailView = currentPriceView() === 'retail';
     syncB2bCartLines(retailView);
+    syncB2bPallets(retailView);
     $$('[data-b2b-minimum-order]').forEach((el) => {
       syncB2bMinimum(el);
       el.hidden = retailView;
@@ -1456,8 +1887,12 @@
   /* B2B checkout at wholesale prices (cart page, only rendered for a B2B customer when the verification service is
      configured): instead of Shopify's normal checkout, the cart goes to the service, which creates a draft order with
      the price-list prices for the signed-in company and answers with that order's Shopify checkout URL. Needs the
-     company's e-mail + OIB sign-in from the B2B page (the token <np-b2b-session> keeps). Switched to "regular prices"
-     the button is an ordinary checkout again. */
+     company's e-mail + password sign-in from the B2B page (the token <np-b2b-session> keeps). Switched to "regular prices"
+     the button is an ordinary checkout again.
+     Before the order is created the company confirms "continue with the purchase?" with its pallets and pallet shipping.
+     The service counts the pallets again with the same code and only creates the order when the count matches the
+     confirmed one; otherwise (cart changed meanwhile, script missing) it answers with its numbers and the company
+     confirms those - so the shipping shown here is always the shipping Shopify's checkout charges. */
   document.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-checkout-button][data-b2b-checkout]');
     if (!button || currentPriceView() === 'retail') return;
@@ -1489,20 +1924,47 @@
       return;
     }
 
+    const page = button.closest('[data-cart-page]') || document;
+    const palletEl = $('[data-b2b-pallets]', page);
+    await loadPalletPrice();
+    let quote = palletQuote(palletEl);
+    if (quote && quote.pricePending) quote = null; // no price from the service: it answers with its numbers below
+    show('');
+    if (!(await checkoutConfirm.ask({ quote, source: palletEl }))) return; // NO: stay on the cart
+
     const label = button.textContent;
     button.dataset.busy = '1';
     button.disabled = true;
     button.textContent = button.dataset.labelBusy || label;
-    show('');
     try {
       const cart = await fetch(NP.routes.cartJson, { headers: { Accept: 'application/json' } }).then((r) => r.json());
       const lines = cart.items.map((item) => ({ variantId: String(item.variant_id), quantity: item.quantity }));
-      const response = await fetch(button.dataset.b2bCheckout, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ token: session.token, lines, currency: NP.currency, locale: NP.locale }),
-      });
-      const data = await response.json().catch(() => ({}));
+      let data = {};
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const response = await fetch(button.dataset.b2bCheckout, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            token: session.token,
+            lines,
+            currency: NP.currency,
+            locale: NP.locale,
+            expectedPallets: quote ? quote.pallets : -1,
+            expectedPalletPriceCents: quote ? quote.pricePerPalletCents : -1,
+            expectedShippingCurrency: quote ? quote.currency : '',
+          }),
+        });
+        data = await response.json().catch(() => ({}));
+        if (data.status !== 'pallets') break;
+        // the service counted differently than the page showed: confirm its numbers (they are what will be charged)
+        quote = { pallets: data.pallets, cartons: data.cartons, pricePerPalletCents: data.pricePerPalletCents, shippingCents: data.shippingCents, currency: data.shippingCurrency };
+        rememberPalletPrice({ currency: data.shippingCurrency, cents: data.pricePerPalletCents, baseCurrency: data.baseCurrency, baseCents: data.baseCents, rateDate: data.rateDate });
+        applyB2bMinimumGate();
+        if (!(await checkoutConfirm.ask({ quote, source: palletEl, changed: true }))) {
+          data = { status: 'cancelled' };
+          break;
+        }
+      }
       if (data.status === 'ok' && data.url) {
         window.location.href = data.url;
         return;
@@ -1513,7 +1975,7 @@
       } else if (data.status === 'minimum') show(button.dataset.msgMinimum);
       else if (data.status === 'unavailable') show(button.dataset.msgUnavailable);
       else if (data.status === 'cartons') show(button.dataset.msgCartons);
-      else show(button.dataset.msgError);
+      else if (data.status !== 'cancelled') show(button.dataset.msgError);
     } catch (e) {
       show(button.dataset.msgError);
     }
@@ -1550,6 +2012,7 @@
   if (!customElements.get('np-b2b-register')) customElements.define('np-b2b-register', NPB2BRegister);
   if (!customElements.get('np-b2b-login')) customElements.define('np-b2b-login', NPB2BLogin);
   if (!customElements.get('np-b2b-session')) customElements.define('np-b2b-session', NPB2BSession);
+  if (!customElements.get('np-b2b-account-links')) customElements.define('np-b2b-account-links', NPB2BAccountLinks);
   if (!customElements.get('np-wishlist')) customElements.define('np-wishlist', NPWishlist);
   if (!customElements.get('np-product')) customElements.define('np-product', NPProduct);
   if (!customElements.get('np-recommendations')) customElements.define('np-recommendations', NPRecommendations);
@@ -1846,6 +2309,7 @@
       if (searchModal && !searchModal.hidden) search.close();
       const menu = $('#np-mobile-menu');
       if (menu && !menu.hidden) setMobileMenu(false);
+      checkoutConfirm.answer(false);
       toast.hide();
     }
     if (event.key === 'Tab') {
@@ -1855,6 +2319,8 @@
       if (quick) trapFocus(quick, event);
       const searchDialog = $('[data-search-modal]:not([hidden]) [role="dialog"]');
       if (searchDialog) trapFocus(searchDialog, event);
+      const confirmDialog = $('[data-checkout-confirm]:not([hidden]) [data-confirm-dialog]');
+      if (confirmDialog) trapFocus(confirmDialog, event);
     }
   });
 
@@ -1896,6 +2362,7 @@
     // tells the safety net in the page head that the script is running
     document.documentElement.setAttribute('data-np-ready', '1');
     attempt('wishlist', () => wishlist.sync());
+    attempt('pallet price', () => loadPalletPrice());
     attempt('cookie banner', () => initCookieBanner());
     attempt('addresses', () => initAddresses());
     attempt('qr code', () => {

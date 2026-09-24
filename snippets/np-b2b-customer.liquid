@@ -1,0 +1,35 @@
+{%- comment -%}
+  THE check for "is the signed-in Shopify customer an approved B2B customer?" - every wholesale price, carton size,
+  B2B cart line, minimum order and pallet promotion is rendered (server-side, by Shopify) only when this says true.
+  Outputs "true" or "false". Usage:
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
+
+  - Shopify B2B (customer.b2b?, a company location on Shopify Plus): always trusted.
+  - Customer tag (Theme settings > B2B / wholesale > customer tag) - but a tag alone is NOT enough while the B2B
+    verification service is configured: Shopify's storefront forms (newsletter / contact) let a visitor add tags to
+    their own customer record, so the service also writes b2b.status (approved_auto / approved_manual /
+    approved_legacy, set only through the Admin API) and a suspended / rejected / pending company has none of those.
+  - Without the service (settings.b2b_endpoint empty) the owner approves by adding the tag by hand, so the tag counts.
+{%- endcomment -%}
+{%- liquid
+  assign np_b2b = false
+  if customer
+    if customer.b2b?
+      assign np_b2b = true
+    elsif customer.tags contains settings.b2b_customer_tag
+      assign np_b2b_endpoint = settings.b2b_endpoint | strip
+      if np_b2b_endpoint == blank
+        assign np_b2b = true
+      else
+        assign np_b2b_status = customer.metafields.b2b.status.value | append: ''
+        if np_b2b_status contains 'approved'
+          assign np_b2b = true
+        endif
+      endif
+    endif
+  endif
+  echo np_b2b
+-%}

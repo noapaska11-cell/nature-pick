@@ -6,9 +6,18 @@
 {%- liquid
   assign b2b_active = false
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       assign b2b_active = true
     endif
+  endif
+  # B2B pallet shipping (see np-cart.liquid): only where the B2B draft-order checkout charges it
+  assign pallet_mode = false
+  assign b2b_endpoint = settings.b2b_endpoint | strip
+  if b2b_active and b2b_endpoint != blank
+    assign pallet_mode = true
   endif
 -%}
 <div id="np-cart-drawer" data-cart-drawer data-cart-count="{{ cart.item_count }}">
@@ -117,10 +126,13 @@
               <span>-{{ discount.total_allocated_amount | money_without_trailing_zeros }}</span>
             </div>
           {%- endfor -%}
-          <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-charcoal-soft)]">
+          <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-charcoal-soft)]"{% if pallet_mode %} data-b2b-retail-only hidden{% endif %}>
             <span>{{ 'np.cart.shipping' | t }}</span>
             <span>{{ 'np.cart.calculated_at_checkout' | t }}</span>
           </div>
+          {%- if pallet_mode -%}
+            <div class="mb-3 text-sm text-[var(--color-charcoal-soft)]">{% render 'np-b2b-pallet-summary', cart: cart %}</div>
+          {%- endif -%}
           <div class="mb-4 flex items-center justify-between font-display text-lg font-semibold">
             <span>{{ 'np.cart.subtotal' | t }}</span>
             <span>{{ cart.total_price | money_without_trailing_zeros }}</span>

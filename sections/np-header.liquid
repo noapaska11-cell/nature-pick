@@ -32,10 +32,19 @@
   assign b2b_active = false
   assign b2b_company = ''
   if customer
-    if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
       assign b2b_active = true
       assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
     endif
+  endif
+  # B2B pallet shipping promotion - only where the B2B checkout (verification service) really charges it
+  assign b2b_pallet_promo = false
+  assign b2b_endpoint = settings.b2b_endpoint | strip
+  if b2b_active and b2b_endpoint != blank
+    assign b2b_pallet_promo = true
   endif
 
   capture np_threshold
@@ -75,6 +84,9 @@
             class="rounded-full border border-white/40 px-2.5 py-0.5 text-xs font-semibold text-white hover:bg-white/10"
           >{{ 'np.common.show_retail_prices' | t }}</button>
           <a href="{{ routes.account_logout_url }}" class="underline decoration-white/50 underline-offset-2 hover:decoration-white">{{ 'np.b2b_auth.header_logout' | t }}</a>
+          {%- if b2b_pallet_promo -%}
+            {% render 'np-b2b-pallet-promo', cart: cart, style: 'bar' %}
+          {%- endif -%}
         {%- else -%}
           <span>{{ announcement_text }}</span>
         {%- endif -%}

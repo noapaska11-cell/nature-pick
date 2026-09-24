@@ -258,6 +258,34 @@
         "id": "b2b_minimum_by_currency",
         "label": "B2B minimum order per currency",
         "info": "Optional, one line per currency: CURRENCY:AMOUNT, e.g. EUR:1000. A cart in that currency must reach exactly this amount (no exchange-rate drift). The B2B checkout of the verification service uses the line for the shop's currency, if any."
+      },
+      {
+        "type": "header",
+        "content": "B2B pallet shipping"
+      },
+      {
+        "type": "paragraph",
+        "content": "B2B only, and only with the verification service configured (it puts the pallet shipping on the B2B draft order, so Shopify's checkout charges exactly what the cart shows). Cartons per product = the price list's pieces per carton; the cartons are packed onto pallets (rotation, layers, mixed carton types) and the company pays pallets × the price below. Retail customers are not affected."
+      },
+      {
+        "type": "textarea",
+        "id": "b2b_box_dimensions",
+        "label": "Carton dimensions (pieces per carton:L×W×H cm)",
+        "default": "36:40x30x18\n30:40x25x19.5\n20:42x32x19.5\n60:42x32x14\n*:42x32x19.5",
+        "info": "One line per carton size of the price list, e.g. 36:40x30x18. The line * is used for every other carton size and for products sold per piece (counted as cartons of 20 pieces). Add a line for any other carton size in the price list (e.g. 12, 24, 40) to count it exactly."
+      },
+      {
+        "type": "text",
+        "id": "b2b_pallet_size",
+        "label": "Pallet (L×W×max. load height, cm)",
+        "default": "120x80x160"
+      },
+      {
+        "type": "textarea",
+        "id": "b2b_pallet_price_by_currency",
+        "label": "Shipping price per pallet",
+        "default": "EUR:100",
+        "info": "The first line is the price per pallet, e.g. EUR:100. Every B2B customer sees and pays it in the currency they shop in, converted at the day's ECB reference rate by the verification service (100 EUR -> SEK, PLN, DKK, ...); the checkout charges exactly the converted amount. Add a line CURRENCY:AMOUNT only to fix the price for one currency instead of converting it, e.g. SEK:1150."
       }
     ]
   },

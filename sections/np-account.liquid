@@ -1,6 +1,9 @@
 {%- liquid
   assign is_b2b = false
-  if customer.b2b? or customer.tags contains settings.b2b_customer_tag
+  capture np_b2b_check
+    render 'np-b2b-customer'
+  endcapture
+  if np_b2b_check contains 'true'
     assign is_b2b = true
   endif
 -%}

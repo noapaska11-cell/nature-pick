@@ -6,10 +6,11 @@
     kind    - 'contact' (default) | 'b2b_register' | 'b2b_quote'
     form_id - unique id for this form on the page
 
-  b2b_register is the B2B registration WITHOUT a server (the default): four required fields (company, e-mail,
-  OIB, VAT number) checked by <np-b2b-native> in naturepick.js, then posted to Shopify. The owner approves the
-  company by hand in the Shopify admin. The form sends no tags on purpose: a visitor must never be able to give
-  himself the B2B tag.
+  b2b_register is the B2B registration WITHOUT a server (the default): the same fields as the service form (first and
+  last name, e-mail, phone, country, company address, VAT number - np-b2b-registration-fields) checked by
+  <np-b2b-native> in naturepick.js, then posted to Shopify. No password here: it would travel by e-mail. The owner
+  approves the company by hand in the Shopify admin. The form sends no tags on purpose: a visitor must never be able
+  to give himself the B2B tag.
 {%- endcomment -%}
 {%- liquid
   assign cf_kind = kind | default: 'contact'
@@ -24,14 +25,7 @@
   endif
 -%}
 {%- if cf_kind == 'b2b_register' -%}
-  <np-b2b-native
-    class="block"
-    data-msg-required="{{ 'np.b2b_auth.error_required' | t }}"
-    data-msg-email="{{ 'np.b2b_auth.error_email' | t }}"
-    data-msg-oib="{{ 'np.b2b_auth.error_oib' | t }}"
-    data-msg-id="{{ 'np.b2b_auth.error_id' | t }}"
-    data-msg-vat="{{ 'np.b2b_auth.error_vat' | t }}"
-  >
+  <np-b2b-native class="block" {% render 'np-b2b-messages' %}>
 {%- endif -%}
 {%- form 'contact', id: cf_id, class: form_class -%}
   {%- if form.posted_successfully? -%}
@@ -54,31 +48,9 @@
       <input type="hidden" name="contact[body]" value="B2B registration request">
       <input type="hidden" name="contact[Language]" value="{{ request.locale.iso_code }}">
 
-      <div>
-        <label for="{{ cf_id }}-company" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.company_name' | t }}</label>
-        <input id="{{ cf_id }}-company" name="contact[name]" required maxlength="120" autocomplete="organization" aria-describedby="{{ cf_id }}-company-error" class="input-field">
-        <p id="{{ cf_id }}-company-error" data-error-for="contact[name]" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-      </div>
-
-      <div>
-        <label for="{{ cf_id }}-email" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.email' | t }}</label>
-        <input id="{{ cf_id }}-email" name="contact[email]" type="email" required maxlength="160" autocomplete="email" aria-describedby="{{ cf_id }}-email-error" class="input-field">
-        <p id="{{ cf_id }}-email-error" data-error-for="contact[email]" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-      </div>
-
-      <div class="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label for="{{ cf_id }}-oib" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.oib' | t }}</label>
-          <input id="{{ cf_id }}-oib" name="contact[OIB]" required maxlength="20" autocomplete="off" placeholder="12345678901" aria-describedby="{{ cf_id }}-oib-error" class="input-field">
-          <p id="{{ cf_id }}-oib-error" data-error-for="contact[OIB]" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-        </div>
-        <div>
-          <label for="{{ cf_id }}-vat" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.vat_number' | t }}</label>
-          <input id="{{ cf_id }}-vat" name="contact[VAT number]" required maxlength="20" autocomplete="off" autocapitalize="characters" placeholder="HR12345678901" aria-describedby="{{ cf_id }}-vat-error" class="input-field uppercase placeholder:normal-case">
-          <p id="{{ cf_id }}-vat-error" data-error-for="contact[VAT number]" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-        </div>
-      </div>
-      <p class="-mt-2 text-xs text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.vat_hint' | t }}</p>
+      {%- comment -%} "First Last", filled in by naturepick.js - Shopify's contact form knows one name field {%- endcomment -%}
+      <input type="hidden" name="contact[name]" data-b2b-native-name>
+      {% render 'np-b2b-registration-fields', prefix: cf_id, native: true, with_password: false %}
 
       <button type="submit" class="btn-primary mt-1 self-start">
         {% render 'icon', name: 'building', class: 'h-4 w-4' %} {{ 'np.b2b_auth.register_submit' | t }}

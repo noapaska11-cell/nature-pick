@@ -1,0 +1,57 @@
+{%- comment -%}
+  B2B pallet shipping price as rendered by Liquid, "CENTS:CURRENCY:TEXT" - e.g. "10000:EUR:100 €".
+  Theme settings > B2B / wholesale > "Shipping price per pallet": the cart's own fixed line, else the base price (first
+  line, EUR:100). Liquid has no exchange rate, so for any other currency naturepick.js replaces this text with the base
+  price converted into the visitor's currency by the verification service (/pallet-price) - the amount the B2B
+  checkout charges (NPPallets.palletPriceFor, assets/np-pallets.js).
+  Usage: {%- capture parts -%}{%- render 'np-b2b-pallet-price', cart: cart -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign price_setting = settings.b2b_pallet_price_by_currency | strip
+  if price_setting == blank
+    assign price_setting = 'EUR:100'
+  endif
+  assign first_cents = ''
+  assign first_currency = ''
+  assign cart_cents = ''
+  assign price_lines = price_setting | newline_to_br | split: '<br />'
+  for price_line in price_lines
+    assign parts = price_line | strip | split: ':'
+    assign line_currency = parts[0] | strip | upcase
+    assign line_amount = parts[1] | strip | replace: ',', '.'
+    if line_currency.size == 3 and line_amount != blank
+      assign line_cents = line_amount | plus: 0 | times: 100 | round
+      if first_currency == ''
+        assign first_cents = line_cents
+        assign first_currency = line_currency
+      endif
+      if line_currency == cart.currency.iso_code
+        assign cart_cents = line_cents
+      endif
+    endif
+  endfor
+  if cart_cents != ''
+    assign price_cents = cart_cents
+    assign price_currency = cart.currency.iso_code
+  else
+    assign price_cents = first_cents
+    assign price_currency = first_currency
+  endif
+
+  if price_currency == cart.currency.iso_code
+    assign price_text = price_cents | money_without_trailing_zeros
+  else
+    assign price_major = price_cents | divided_by: 100.0
+    assign price_whole = price_cents | modulo: 100
+    if price_whole == 0
+      assign price_major = price_cents | divided_by: 100
+    endif
+    case price_currency
+      when 'EUR'
+        assign price_text = price_major | append: ' €'
+      else
+        assign price_text = price_major | append: ' ' | append: price_currency
+    endcase
+  endif
+  echo price_cents | append: ':' | append: price_currency | append: ':' | append: price_text
+-%}

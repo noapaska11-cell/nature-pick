@@ -1,40 +1,61 @@
 {%- comment -%}
-  B2B company login: e-mail + OIB (company tax ID), the same two values entered at registration. No password, no
-  Shopify customer account - the <np-b2b-login> element in naturepick.js posts them to the verification service,
-  stores the returned token in the browser and reloads the page so <np-b2b-session> shows the logged-in view.
-  Params: endpoint (service URL, already pointed at /login)
+  B2B company login: e-mail + password, nothing else. <np-b2b-login> in naturepick.js posts them to the verification
+  service, stores the returned session token in the browser and reloads the page so <np-b2b-session> shows the
+  logged-in view. "Forgot password" asks the service for a link to set a new password - also the way a company that
+  registered with an OIB (before passwords existed) sets its first one. The answer is the same whether or not the
+  address has an account.
+  Params: endpoint (service login URL), password_endpoint (service URL for the password link)
 {%- endcomment -%}
 <np-b2b-login
   class="block"
   data-endpoint="{{ endpoint }}"
-  data-msg-required="{{ 'np.b2b_auth.error_required' | t }}"
-  data-msg-email="{{ 'np.b2b_auth.error_email' | t }}"
-  data-msg-not-found="{{ 'np.b2b_auth.login_error_not_found' | t }}"
-  data-msg-pending="{{ 'np.b2b_auth.login_error_pending' | t }}"
-  data-msg-rejected="{{ 'np.b2b_auth.login_error_rejected' | t }}"
-  data-msg-generic="{{ 'np.b2b_auth.error_generic' | t }}"
+  data-password-endpoint="{{ password_endpoint }}"
+  {% render 'np-b2b-messages' %}
   data-label-submit="{{ 'np.b2b_auth.login_submit' | t }}"
   data-label-verifying="{{ 'np.b2b_auth.login_verifying' | t }}"
 >
-  <p class="mb-4 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.login_hint' | t }}</p>
-  <form novalidate data-b2b-login-form class="flex flex-col gap-4">
-    <div>
-      <label for="b2b-login-email" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.email' | t }}</label>
-      <input id="b2b-login-email" name="email" type="email" required maxlength="160" autocomplete="email" aria-describedby="b2b-login-email-error" class="input-field">
-      <p id="b2b-login-email-error" data-error-for="email" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-    </div>
+  <div data-login-panel>
+    <p class="mb-4 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.login_hint' | t }}</p>
+    <form novalidate data-b2b-login-form class="flex flex-col gap-4">
+      <div>
+        <label for="b2b-login-email" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.email' | t }}</label>
+        <input id="b2b-login-email" name="email" data-field="email" type="email" required maxlength="160" autocomplete="username" inputmode="email" aria-describedby="b2b-login-email-error" class="input-field">
+        <p id="b2b-login-email-error" data-error-for="email" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
+      </div>
 
-    <div>
-      <label for="b2b-login-oib" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.oib' | t }}</label>
-      <input id="b2b-login-oib" name="oib" type="text" required maxlength="20" autocomplete="off" placeholder="12345678901" aria-describedby="b2b-login-oib-error" class="input-field">
-      <p id="b2b-login-oib-error" data-error-for="oib" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
-    </div>
+      <div>
+        <div class="mb-1.5 flex items-center justify-between gap-3">
+          <label for="b2b-login-password" class="block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.password' | t }}</label>
+          <button type="button" data-b2b-forgot class="text-xs font-medium text-[var(--color-paprika-dark)] underline underline-offset-2">{{ 'np.b2b_auth.forgot_link' | t }}</button>
+        </div>
+        <input id="b2b-login-password" name="password" data-field="password" type="password" required maxlength="128" autocomplete="current-password" aria-describedby="b2b-login-password-error" class="input-field">
+        <p id="b2b-login-password-error" data-error-for="password" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
+      </div>
 
-    <p data-b2b-login-error hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
+      <p data-b2b-login-error hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
 
-    <button type="submit" class="btn-primary mt-1" data-b2b-login-submit>
-      <span data-b2b-login-submit-icon>{% render 'icon', name: 'lock', class: 'h-4 w-4' %}</span>
-      <span data-b2b-login-submit-label>{{ 'np.b2b_auth.login_submit' | t }}</span>
-    </button>
-  </form>
+      <button type="submit" class="btn-primary mt-1" data-b2b-login-submit>
+        <span data-b2b-login-submit-icon>{% render 'icon', name: 'lock', class: 'h-4 w-4' %}</span>
+        <span data-b2b-login-submit-label>{{ 'np.b2b_auth.login_submit' | t }}</span>
+      </button>
+    </form>
+  </div>
+
+  <div data-forgot-panel hidden>
+    <h3 class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.forgot_title' | t }}</h3>
+    <p class="mb-4 mt-1 text-sm leading-relaxed text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.forgot_text' | t }}</p>
+    <form novalidate data-b2b-forgot-form class="flex flex-col gap-4">
+      <div>
+        <label for="b2b-forgot-email" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.email' | t }}</label>
+        <input id="b2b-forgot-email" name="email" data-field="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" aria-describedby="b2b-forgot-email-error" class="input-field">
+        <p id="b2b-forgot-email-error" data-error-for="email" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
+      </div>
+      <p data-b2b-forgot-message hidden role="status" class="rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">{{ 'np.b2b_auth.forgot_sent' | t }}</p>
+      <p data-b2b-forgot-error hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button type="submit" class="btn-primary" data-b2b-forgot-submit>{{ 'np.b2b_auth.forgot_submit' | t }}</button>
+        <button type="button" data-b2b-back class="btn-secondary">{{ 'np.b2b_auth.back_to_login' | t }}</button>
+      </div>
+    </form>
+  </div>
 </np-b2b-login>

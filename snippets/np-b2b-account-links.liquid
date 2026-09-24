@@ -1,0 +1,46 @@
+{%- comment -%}
+  Finishes the links the verification service e-mails to a company, on the B2B page:
+    #password=<token>  set a (new) password - "forgot password", or the first password of a company registered with
+                       an OIB before passwords existed
+    #verify=<token>    confirm the e-mail address given at registration
+  The token is in the URL fragment, which browsers never send to any server; naturepick.js (<np-b2b-account-links>)
+  reads it, removes it from the address bar at once and completes the step with the service.
+  Params: reset_endpoint, verify_endpoint
+{%- endcomment -%}
+<np-b2b-account-links
+  class="block"
+  data-reset-endpoint="{{ reset_endpoint }}"
+  data-verify-endpoint="{{ verify_endpoint }}"
+  {% render 'np-b2b-messages' %}
+>
+  <div data-verify-result="ok" hidden role="status" class="mb-4 flex items-center gap-2 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
+    {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %} {{ 'np.b2b_auth.verify_done' | t }}
+  </div>
+  <div data-verify-result="failed" hidden role="alert" class="mb-4 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]">{{ 'np.b2b_auth.verify_failed' | t }}</div>
+
+  <div data-password-panel hidden class="card-surface mb-6 p-6">
+    <h3 class="font-display text-lg font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.password_set_title' | t }}</h3>
+    <form novalidate data-b2b-password-form class="mt-4 flex flex-col gap-4">
+      {%- comment -%} lets password managers store the new password under the right account {%- endcomment -%}
+      <input type="text" name="username" autocomplete="username" hidden>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="b2b-new-password" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.password' | t }}</label>
+          <input id="b2b-new-password" name="password" data-field="password" type="password" required minlength="8" maxlength="128" autocomplete="new-password" aria-describedby="b2b-new-password-error b2b-new-password-hint" class="input-field">
+          <p id="b2b-new-password-error" data-error-for="password" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
+        </div>
+        <div>
+          <label for="b2b-new-password2" class="mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]">{{ 'np.b2b_auth.password_confirm' | t }}</label>
+          <input id="b2b-new-password2" name="passwordConfirm" data-field="passwordConfirm" type="password" required minlength="8" maxlength="128" autocomplete="new-password" aria-describedby="b2b-new-password2-error" class="input-field">
+          <p id="b2b-new-password2-error" data-error-for="passwordConfirm" hidden class="mt-1 text-xs text-[var(--color-paprika-dark)]"></p>
+        </div>
+      </div>
+      <p id="b2b-new-password-hint" class="-mt-2 text-xs text-[var(--color-charcoal-soft)]">{{ 'np.b2b_auth.password_hint' | t }}</p>
+      <p data-b2b-password-error hidden role="alert" class="rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
+      <button type="submit" class="btn-primary self-start" data-b2b-password-submit>{% render 'icon', name: 'lock', class: 'h-4 w-4' %} {{ 'np.b2b_auth.password_set_submit' | t }}</button>
+    </form>
+    <p data-b2b-password-done hidden role="status" class="mt-4 flex items-center gap-2 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
+      {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %} {{ 'np.b2b_auth.password_set_done' | t }}
+    </p>
+  </div>
+</np-b2b-account-links>

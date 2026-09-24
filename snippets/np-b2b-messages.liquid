@@ -1,0 +1,27 @@
+{%- comment -%}
+  The translated messages of the B2B forms as data-msg-* attributes (naturepick.js reads them by the service's message
+  keys, e.g. "password_mismatch" -> data-msg-password-mismatch). Usage: <np-b2b-register {% render 'np-b2b-messages' %}>
+  None of them tells whether an account exists, except "exists" at registration (asked for explicitly) - and a login
+  status (pending / rejected / suspended) is only shown after the right password.
+{%- endcomment -%}
+data-msg-required="{{ 'np.b2b_auth.error_required' | t | escape }}"
+data-msg-email="{{ 'np.b2b_auth.error_email' | t | escape }}"
+data-msg-name="{{ 'np.b2b_auth.error_name' | t | escape }}"
+data-msg-phone="{{ 'np.b2b_auth.error_phone' | t | escape }}"
+data-msg-country="{{ 'np.b2b_auth.error_country' | t | escape }}"
+data-msg-address="{{ 'np.b2b_auth.error_address' | t | escape }}"
+data-msg-zip="{{ 'np.b2b_auth.error_zip' | t | escape }}"
+data-msg-vat="{{ 'np.b2b_auth.error_vat' | t | escape }}"
+data-msg-vat-country="{{ 'np.b2b_auth.error_vat_country' | t | escape }}"
+data-msg-password-length="{{ 'np.b2b_auth.error_password_length' | t | escape }}"
+data-msg-password-weak="{{ 'np.b2b_auth.error_password_weak' | t | escape }}"
+data-msg-password-mismatch="{{ 'np.b2b_auth.error_password_mismatch' | t | escape }}"
+data-msg-exists="{{ 'np.b2b_auth.error_exists' | t | escape }}"
+data-msg-invalid="{{ 'np.b2b_auth.login_error_invalid' | t | escape }}"
+data-msg-pending="{{ 'np.b2b_auth.login_error_pending' | t | escape }}"
+data-msg-rejected="{{ 'np.b2b_auth.login_error_rejected' | t | escape }}"
+data-msg-suspended="{{ 'np.b2b_auth.login_error_suspended' | t | escape }}"
+data-msg-unverified="{{ 'np.b2b_auth.login_error_unverified' | t | escape }}"
+data-msg-rate-limit="{{ 'np.b2b_auth.error_rate_limit' | t | escape }}"
+data-msg-link-invalid="{{ 'np.b2b_auth.link_invalid' | t | escape }}"
+data-msg-generic="{{ 'np.b2b_auth.error_generic' | t | escape }}"
