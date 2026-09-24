@@ -5,14 +5,19 @@
   must never travel through Shopify's contact form / the owner's inbox).
   Every input carries data-field="<key>" and has a <p data-error-for="<key>">, so one script (naturepick.js,
   checkB2bRegistration) validates both forms the same way; the service validates everything again on its side.
-  Country options are ISO codes with English names; naturepick.js shows them in the visitor's language.
+  Countries: every country of np-b2b-country-list (ISO code, English name, dialling code); naturepick.js shows the
+  names in the visitor's language. The phone has its own dialling-code picker (flag + code, e.g. +385), which follows
+  the selected country until the visitor picks another code; the number is sent as "+385 91 234 5678".
   Params: prefix (unique id prefix), native (true = Shopify contact form names), with_password (true/false)
 {%- endcomment -%}
 {%- liquid
   assign label_class = 'mb-1.5 block text-sm font-medium text-[var(--color-charcoal)]'
   assign error_class = 'mt-1 text-xs text-[var(--color-paprika-dark)]'
-  assign countries = 'AT:Austria,BE:Belgium,BG:Bulgaria,HR:Croatia,CY:Cyprus,CZ:Czechia,DK:Denmark,EE:Estonia,FI:Finland,FR:France,DE:Germany,GR:Greece,HU:Hungary,IE:Ireland,IT:Italy,LV:Latvia,LT:Lithuania,LU:Luxembourg,MT:Malta,NL:Netherlands,NO:Norway,PL:Poland,PT:Portugal,RO:Romania,SK:Slovakia,SI:Slovenia,ES:Spain,SE:Sweden,CH:Switzerland,GB:United Kingdom' | split: ','
-  # visitor's own country first selected when it is one of them (Shopify localization)
+  capture country_data
+    render 'np-b2b-country-list'
+  endcapture
+  assign countries = country_data | strip | split: '|'
+  # the visitor's own country (Shopify localization) is preselected, for the country and the dialling code
   assign preselect = localization.country.iso_code
 -%}
 {%- capture f_first -%}{% if native %}contact[First name]{% else %}firstName{% endif %}{%- endcapture -%}
@@ -38,17 +43,10 @@
   </div>
 </div>
 
-<div class="grid gap-4 sm:grid-cols-2">
-  <div>
-    <label for="{{ prefix }}-email" class="{{ label_class }}">{{ 'np.b2b_auth.email' | t }}</label>
-    <input id="{{ prefix }}-email" name="{{ f_email }}" data-field="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" aria-describedby="{{ prefix }}-email-error" class="input-field">
-    <p id="{{ prefix }}-email-error" data-error-for="email" hidden class="{{ error_class }}"></p>
-  </div>
-  <div>
-    <label for="{{ prefix }}-phone" class="{{ label_class }}">{{ 'np.b2b_auth.phone' | t }}</label>
-    <input id="{{ prefix }}-phone" name="{{ f_phone }}" data-field="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="+385 1 234 5678" aria-describedby="{{ prefix }}-phone-error" class="input-field">
-    <p id="{{ prefix }}-phone-error" data-error-for="phone" hidden class="{{ error_class }}"></p>
-  </div>
+<div>
+  <label for="{{ prefix }}-email" class="{{ label_class }}">{{ 'np.b2b_auth.email' | t }}</label>
+  <input id="{{ prefix }}-email" name="{{ f_email }}" data-field="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" aria-describedby="{{ prefix }}-email-error" class="input-field">
+  <p id="{{ prefix }}-email-error" data-error-for="email" hidden class="{{ error_class }}"></p>
 </div>
 
 <div>
@@ -56,11 +54,25 @@
   <select id="{{ prefix }}-country" name="{{ f_country }}" data-field="country" data-country-select required autocomplete="country" aria-describedby="{{ prefix }}-country-error" class="input-field">
     <option value="">{{ 'np.b2b_auth.country_placeholder' | t }}</option>
     {%- for entry in countries -%}
-      {%- assign pair = entry | split: ':' -%}
-      <option value="{{ pair[0] }}"{% if pair[0] == preselect %} selected{% endif %}>{{ pair[1] }}</option>
+      {%- assign c = entry | split: ':' -%}
+      <option value="{{ c[0] }}" data-dial="{{ c[2] }}"{% if c[0] == preselect %} selected{% endif %}>{{ c[1] }}</option>
     {%- endfor -%}
   </select>
   <p id="{{ prefix }}-country-error" data-error-for="country" hidden class="{{ error_class }}"></p>
+</div>
+
+<div>
+  <label for="{{ prefix }}-phone" class="{{ label_class }}">{{ 'np.b2b_auth.phone' | t }}</label>
+  <div class="flex gap-2">
+    <select data-dial-select aria-label="{{ 'np.b2b_auth.dial_code' | t }}" autocomplete="tel-country-code" class="input-field flex-shrink-0 px-3" style="width: 8.5rem">
+      {%- for entry in countries -%}
+        {%- assign c = entry | split: ':' -%}
+        <option value="{{ c[0] }}" data-dial="{{ c[2] }}"{% if c[0] == preselect %} selected{% endif %}>{{ c[0] }} +{{ c[2] }}</option>
+      {%- endfor -%}
+    </select>
+    <input id="{{ prefix }}-phone" name="{{ f_phone }}" data-field="phone" type="tel" required maxlength="30" autocomplete="tel-national" inputmode="tel" placeholder="91 234 5678" aria-describedby="{{ prefix }}-phone-error" class="input-field min-w-0 flex-1">
+  </div>
+  <p id="{{ prefix }}-phone-error" data-error-for="phone" hidden class="{{ error_class }}"></p>
 </div>
 
 <fieldset class="flex flex-col gap-4">

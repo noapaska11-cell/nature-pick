@@ -741,7 +741,7 @@
       "password_confirm": "Bekräfta lösenord",
       "password_hint": "Minst 8 tecken, minst en bokstav och en siffra.",
       "error_name": "Ange ett giltigt namn (endast bokstäver).",
-      "error_phone": "Ange ett giltigt telefonnummer, t.ex. +46 70 123 45 67.",
+      "error_phone": "Ange ett giltigt telefonnummer (utan landsnummer, t.ex. 70 123 45 67).",
       "error_country": "Välj ett land i listan.",
       "error_address": "Ange en giltig adress.",
       "error_zip": "Ange ett giltigt postnummer.",
@@ -765,7 +765,8 @@
       "password_set_done": "Lösenordet har sparats. Nu kan du logga in.",
       "link_invalid": "Länken har gått ut eller redan använts. Begär en ny via ”Glömt lösenordet?”.",
       "verify_done": "Tack, din e-postadress är bekräftad.",
-      "verify_failed": "Bekräftelselänken är ogiltig eller har gått ut."
+      "verify_failed": "Bekräftelselänken är ogiltig eller har gått ut.",
+      "dial_code": "Landsnummer"
     },
     "spice_club_page": {
       "meta_title": "Kryddklubben",

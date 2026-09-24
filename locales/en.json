@@ -1059,7 +1059,7 @@
       "password_confirm": "Confirm password",
       "password_hint": "At least 8 characters, with at least one letter and one digit.",
       "error_name": "Please enter a valid name (letters only).",
-      "error_phone": "Please enter a valid contact phone, e.g. +385 1 234 5678.",
+      "error_phone": "Please enter a valid contact phone (without the country code, e.g. 20 7946 0958).",
       "error_country": "Please select a country from the list.",
       "error_address": "Please enter a valid address.",
       "error_zip": "Please enter a valid postal code.",
@@ -1083,7 +1083,8 @@
       "password_set_done": "Your password was saved. You can log in now.",
       "link_invalid": "This link has expired or was already used. Request a new one via “Forgot your password?”.",
       "verify_done": "Thank you, your e-mail address is confirmed.",
-      "verify_failed": "This confirmation link is not valid or has expired."
+      "verify_failed": "This confirmation link is not valid or has expired.",
+      "dial_code": "Country calling code"
     },
     "spice_club_page": {
       "meta_title": "Spice Club",

@@ -1002,7 +1002,7 @@
       "password_confirm": "Potvrdi lozinku",
       "password_hint": "Najmanje 8 znakova, barem jedno slovo i jedan broj.",
       "error_name": "Unesi ispravno ime (samo slova).",
-      "error_phone": "Unesi ispravan kontakt broj, npr. +385 1 234 5678.",
+      "error_phone": "Unesi ispravan kontakt broj (bez pozivnog broja države, npr. 91 234 5678).",
       "error_country": "Odaberi državu s popisa.",
       "error_address": "Unesi ispravnu adresu.",
       "error_zip": "Unesi ispravan poštanski broj.",
@@ -1026,7 +1026,8 @@
       "password_set_done": "Lozinka je spremljena. Sada se možeš prijaviti.",
       "link_invalid": "Poveznica je istekla ili je već iskorištena. Zatraži novu putem „Zaboravljena lozinka?”.",
       "verify_done": "Hvala, e-adresa je potvrđena.",
-      "verify_failed": "Poveznica za potvrdu nije valjana ili je istekla."
+      "verify_failed": "Poveznica za potvrdu nije valjana ili je istekla.",
+      "dial_code": "Pozivni broj države"
     },
     "spice_club_page": {
       "meta_title": "Klub okusa",
