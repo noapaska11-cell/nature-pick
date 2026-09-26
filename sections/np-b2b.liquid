@@ -130,14 +130,19 @@
       </np-tabs>
     </div>
 
-    <div data-b2b-active hidden class="card-surface flex flex-col items-center gap-3 p-10 text-center">
+    <div data-b2b-active hidden class="card-surface flex flex-col items-center gap-4 p-8 text-center sm:p-10">
       <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-olive-light)] text-[var(--color-olive-dark)]">
         {% render 'icon', name: 'check', class: 'h-6 w-6' %}
       </span>
       <h3 class="font-display text-xl font-semibold text-[var(--color-charcoal)]">{{ 'np.b2b_auth.active_title' | t }}</h3>
       <p class="text-sm text-[var(--color-charcoal-soft)]" data-b2b-active-text></p>
+
+      <div class="my-2 w-full max-w-lg text-left">
+        {% render 'np-b2b-pallet-promo', cart: cart, style: 'card' %}
+      </div>
+
       {%- unless shopify_b2b_active -%}
-        <div class="mt-1 max-w-sm rounded-xl bg-[var(--color-cream-soft)] p-4 text-sm text-[var(--color-charcoal-soft)]">
+        <div class="max-w-sm rounded-xl bg-[var(--color-cream-soft)] p-4 text-sm text-[var(--color-charcoal-soft)]">
           <p>{{ 'np.b2b_auth.shopify_login_hint' | t }}</p>
           <a href="{{ shopify_login_url }}" class="btn-secondary mt-3">{{ 'np.b2b_auth.shopify_login_cta' | t }}</a>
         </div>

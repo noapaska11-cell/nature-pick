@@ -40,10 +40,9 @@
       assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
     endif
   endif
-  # B2B pallet shipping promotion - only where the B2B checkout (verification service) really charges it
+  # B2B pallet shipping promotion - active whenever a B2B customer is logged in
   assign b2b_pallet_promo = false
-  assign b2b_endpoint = settings.b2b_endpoint | strip
-  if b2b_active and b2b_endpoint != blank
+  if b2b_active
     assign b2b_pallet_promo = true
   endif
 

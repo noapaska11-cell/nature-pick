@@ -1742,8 +1742,18 @@
   }
 
   /* Promotion texts (np-b2b-pallet-promo.liquid): "Svaka paleta samo %PRICE%!" in the visitor's currency */
+  function getEffectivePalletPrice() {
+    if (palletPriceState.value) return palletPriceState.value;
+    const baseCents = 10000; // 100 EUR base
+    const convertedCents = fromShopCents(baseCents);
+    if (convertedCents !== null && NP.currency) {
+      return { currency: NP.currency, cents: convertedCents };
+    }
+    return null;
+  }
+
   function applyPalletPriceTexts() {
-    const price = palletPriceState.value;
+    const price = getEffectivePalletPrice();
     if (!price) return;
     const text = formatMoneyIn(price.cents, price.currency);
     $$('[data-pallet-price-template]').forEach((el) => {

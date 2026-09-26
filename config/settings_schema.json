@@ -226,7 +226,7 @@
         "type": "text",
         "id": "b2b_endpoint",
         "label": "B2B verification service URL (optional)",
-        "info": "Leave empty (default): registrations are sent to the store inbox and the B2B page's log-in tab only shows a hint, since nothing can check it yet. Fill this in to run the optional b2b-verify-service (see its README): every registration then waits in its admin panel for you to approve or reject, and an approved company logs in on the B2B page with its e-mail + OIB (no Shopify account, no password). Use the /register URL, e.g. https://<your-service>/api/b2b/register - the theme derives the log-in and session-check URLs from it automatically."
+        "info": "Leave empty (default): registrations are sent to the store inbox and the B2B page's log-in tab only shows a hint, since nothing can check it yet. Fill this in to run the optional b2b-verify-service (see its README): every registration then waits in its admin panel for you to approve or reject, and an approved company logs in on the B2B page with its e-mail + password. Use the /register URL, e.g. https://<your-service>/api/b2b/register - the theme derives the log-in, session-check, and password URLs from it automatically."
       },
       {
         "type": "textarea",

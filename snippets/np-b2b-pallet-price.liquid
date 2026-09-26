@@ -33,25 +33,29 @@
   if cart_cents != ''
     assign price_cents = cart_cents
     assign price_currency = cart.currency.iso_code
+    assign price_text = price_cents | money_without_trailing_zeros
+  elsif cart.currency.rate and cart.currency.rate > 0 and first_cents != ''
+    assign price_cents = first_cents | times: cart.currency.rate | round
+    assign price_currency = cart.currency.iso_code
+    assign price_text = price_cents | money_without_trailing_zeros
   else
     assign price_cents = first_cents
     assign price_currency = first_currency
-  endif
-
-  if price_currency == cart.currency.iso_code
-    assign price_text = price_cents | money_without_trailing_zeros
-  else
-    assign price_major = price_cents | divided_by: 100.0
-    assign price_whole = price_cents | modulo: 100
-    if price_whole == 0
-      assign price_major = price_cents | divided_by: 100
+    if price_currency == cart.currency.iso_code
+      assign price_text = price_cents | money_without_trailing_zeros
+    else
+      assign price_major = price_cents | divided_by: 100.0
+      assign price_whole = price_cents | modulo: 100
+      if price_whole == 0
+        assign price_major = price_cents | divided_by: 100
+      endif
+      case price_currency
+        when 'EUR'
+          assign price_text = price_major | append: ' €'
+        else
+          assign price_text = price_major | append: ' ' | append: price_currency
+      endcase
     endif
-    case price_currency
-      when 'EUR'
-        assign price_text = price_major | append: ' €'
-      else
-        assign price_text = price_major | append: ' ' | append: price_currency
-    endcase
   endif
   echo price_cents | append: ':' | append: price_currency | append: ':' | append: price_text
 -%}
