@@ -766,7 +766,11 @@
       "link_invalid": "Länken har gått ut eller redan använts. Begär en ny via ”Glömt lösenordet?”.",
       "verify_done": "Tack, din e-postadress är bekräftad.",
       "verify_failed": "Bekräftelselänken är ogiltig eller har gått ut.",
-      "dial_code": "Landsnummer"
+      "dial_code": "Landsnummer",
+      "section_company": "Företagsuppgifter",
+      "section_contact": "Kontaktperson",
+      "section_password": "Lösenord för inloggning",
+      "error_company": "Ange företagets fullständiga namn."
     },
     "spice_club_page": {
       "meta_title": "Kryddklubben",

@@ -1084,7 +1084,11 @@
       "link_invalid": "This link has expired or was already used. Request a new one via “Forgot your password?”.",
       "verify_done": "Thank you, your e-mail address is confirmed.",
       "verify_failed": "This confirmation link is not valid or has expired.",
-      "dial_code": "Country calling code"
+      "dial_code": "Country calling code",
+      "section_company": "Company details",
+      "section_contact": "Contact person",
+      "section_password": "Password for logging in",
+      "error_company": "Please enter the full company name."
     },
     "spice_club_page": {
       "meta_title": "Spice Club",

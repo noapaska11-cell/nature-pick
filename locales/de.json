@@ -1116,7 +1116,11 @@
       "link_invalid": "Dieser Link ist abgelaufen oder wurde bereits verwendet. Fordere über „Passwort vergessen?“ einen neuen an.",
       "verify_done": "Danke, deine E-Mail-Adresse ist bestätigt.",
       "verify_failed": "Dieser Bestätigungslink ist ungültig oder abgelaufen.",
-      "dial_code": "Landesvorwahl"
+      "dial_code": "Landesvorwahl",
+      "section_company": "Firmendaten",
+      "section_contact": "Ansprechpartner",
+      "section_password": "Passwort für die Anmeldung",
+      "error_company": "Bitte gib den vollständigen Firmennamen ein."
     },
     "spice_club_page": {
       "meta_title": "Gewürzclub",
