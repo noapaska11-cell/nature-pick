@@ -1149,7 +1149,11 @@
       "link_invalid": "Ten link wygasł lub został już użyty. Poproś o nowy przez „Nie pamiętasz hasła?”.",
       "verify_done": "Dziękujemy, adres e-mail został potwierdzony.",
       "verify_failed": "Ten link potwierdzający jest nieprawidłowy lub wygasł.",
-      "dial_code": "Numer kierunkowy kraju"
+      "dial_code": "Numer kierunkowy kraju",
+      "section_company": "Dane firmy",
+      "section_contact": "Osoba kontaktowa",
+      "section_password": "Hasło do logowania",
+      "error_company": "Podaj pełną nazwę firmy."
     },
     "spice_club_page": {
       "meta_title": "Klub Smaków",

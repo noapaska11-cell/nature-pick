@@ -1005,6 +1005,7 @@
     };
     const squash = (value) => value.replace(/\s+/g, ' ').trim();
     const values = {
+      company: squash(get('company')),
       firstName: squash(get('firstName')),
       lastName: squash(get('lastName')),
       email: get('email').trim(),
@@ -1016,6 +1017,8 @@
       vat: get('vat'),
     };
     const errors = {};
+    if (!values.company) errors.company = 'required';
+    else if (values.company.length < 2 || !/\p{L}/u.test(values.company) || /[<>]/.test(values.company)) errors.company = 'company';
     ['firstName', 'lastName'].forEach((field) => {
       if (!values[field]) errors[field] = 'required';
       else if (!B2B_NAME_RE.test(values[field])) errors[field] = 'name';
@@ -1076,7 +1079,8 @@
     return first;
   }
 
-  const B2B_REGISTRATION_FIELDS = ['firstName', 'lastName', 'email', 'phone', 'country', 'street', 'zip', 'city', 'vat', 'password', 'passwordConfirm'];
+  // in the order of the form: the company, the contact person, the password
+  const B2B_REGISTRATION_FIELDS = ['company', 'country', 'street', 'zip', 'city', 'vat', 'firstName', 'lastName', 'email', 'phone', 'password', 'passwordConfirm'];
 
   /* The phone as the service receives it: "+<dialling code> <number>" - the number without its national trunk 0
      (091 234 5678 in Croatia -> +385 91 234 5678; Italy, San Marino and the Vatican keep it). A number the visitor

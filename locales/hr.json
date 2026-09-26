@@ -956,7 +956,7 @@
       "tab_register": "Registriraj tvrtku",
       "tab_login": "Prijava",
       "tab_quote": "Zatraži ponudu",
-      "company_name": "Naziv tvrtke",
+      "company_name": "Naziv firme",
       "email": "Adresa e-pošte",
       "password": "Lozinka",
       "register_submit": "Registriraj tvrtku",
@@ -1027,7 +1027,11 @@
       "link_invalid": "Poveznica je istekla ili je već iskorištena. Zatraži novu putem „Zaboravljena lozinka?”.",
       "verify_done": "Hvala, e-adresa je potvrđena.",
       "verify_failed": "Poveznica za potvrdu nije valjana ili je istekla.",
-      "dial_code": "Pozivni broj države"
+      "dial_code": "Pozivni broj države",
+      "section_company": "Podaci o firmi",
+      "section_contact": "Kontakt osoba",
+      "section_password": "Lozinka za prijavu",
+      "error_company": "Unesi puni naziv firme."
     },
     "spice_club_page": {
       "meta_title": "Klub okusa",
