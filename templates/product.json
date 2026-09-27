@@ -19,11 +19,16 @@
         "preorder_me_product_button_fMPhA4": {
           "type": "shopify://apps/preorder-me/blocks/product-button/d3a9a307-3c62-4d7b-8a5b-7ae9b6e399ce",
           "settings": {}
+        },
+        "preorder_me_product_button_XzMGWX": {
+          "type": "shopify://apps/preorder-me/blocks/product-button/d3a9a307-3c62-4d7b-8a5b-7ae9b6e399ce",
+          "settings": {}
         }
       },
       "block_order": [
         "judgeme_badge",
-        "preorder_me_product_button_fMPhA4"
+        "preorder_me_product_button_fMPhA4",
+        "preorder_me_product_button_XzMGWX"
       ],
       "settings": {
         "show_dynamic_checkout": false,
