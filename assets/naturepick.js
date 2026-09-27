@@ -1974,18 +1974,27 @@
     } catch (e) {
       session = null;
     }
-    if (!session || !session.token) {
-      show(button.dataset.msgLogin, `${button.dataset.b2bPageUrl}#login`);
-      return;
-    }
-
     const page = button.closest('[data-cart-page]') || document;
     const palletEl = $('[data-b2b-pallets]', page);
-    await loadPalletPrice();
     let quote = palletQuote(palletEl);
-    if (quote && quote.pricePending) quote = null; // no price from the service: it answers with its numbers below
     show('');
     if (!(await checkoutConfirm.ask({ quote, source: palletEl }))) return; // NO: stay on the cart
+
+    const submitStandardCheckout = () => {
+      const form = button.closest('form');
+      if (form) {
+        form.dataset.checkoutConfirmed = '1';
+        if (typeof form.requestSubmit === 'function') form.requestSubmit(button);
+        else form.submit();
+      } else {
+        window.location.href = NP.routes.cartUrl || '/cart';
+      }
+    };
+
+    if (!session || !session.token) {
+      submitStandardCheckout();
+      return;
+    }
 
     const label = button.textContent;
     button.dataset.busy = '1';
@@ -2025,14 +2034,15 @@
         return;
       }
       if (data.status === 'session') {
-        storage.set(B2B_SESSION_KEY, ''); // expired or revoked: sign in again on the B2B page
-        show(button.dataset.msgLogin, `${button.dataset.b2bPageUrl}#login`);
+        storage.set(B2B_SESSION_KEY, ''); // expired or revoked: fallback to standard checkout
+        submitStandardCheckout();
+        return;
       } else if (data.status === 'minimum') show(button.dataset.msgMinimum);
       else if (data.status === 'unavailable') show(button.dataset.msgUnavailable);
       else if (data.status === 'cartons') show(button.dataset.msgCartons);
-      else if (data.status !== 'cancelled') show(button.dataset.msgError);
+      else if (data.status !== 'cancelled') submitStandardCheckout();
     } catch (e) {
-      show(button.dataset.msgError);
+      submitStandardCheckout();
     }
     delete button.dataset.busy;
     button.textContent = label;
@@ -2045,12 +2055,18 @@
     applyPriceView(currentPriceView());
   }
 
+  let priceViewUpdateScheduled = false;
   new MutationObserver((mutations) => {
+    if (priceViewUpdateScheduled) return;
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== 1) continue;
         if (node.matches?.('[data-np-price][data-b2b-price]') || node.querySelector?.('[data-np-price][data-b2b-price]')) {
-          applyPriceView(currentPriceView());
+          priceViewUpdateScheduled = true;
+          requestAnimationFrame(() => {
+            applyPriceView(currentPriceView());
+            priceViewUpdateScheduled = false;
+          });
           return;
         }
       }
