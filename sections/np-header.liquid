@@ -67,7 +67,7 @@
 
 <header class="border-b border-white/10 bg-[var(--color-olive)] backdrop-blur" data-header>
   {%- if section.settings.show_announcement or b2b_active -%}
-    <div class="border-b border-[var(--color-gold)]/30 {% if b2b_active %}bg-[#141414] text-white{% else %}bg-[var(--color-paprika)] text-[var(--color-charcoal)]{% endif %}">
+    <div class="border-b border-[var(--color-gold)]/30 {% if b2b_active %}bg-[#141414] text-white{% else %}bg-[var(--color-paprika)] text-[var(--color-charcoal)]{% endif %}" {% if b2b_active %}style="background-color: #141414; color: #ffffff;"{% endif %}>
       <div class="container-page flex flex-col items-center justify-between gap-2 py-2 text-center text-xs sm:flex-row sm:text-left sm:text-sm">
         {%- if b2b_active -%}
           {%- if b2b_pallet_promo -%}
