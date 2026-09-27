@@ -52,6 +52,16 @@
     "show_quick_view": true,
     "soften_uppercase_titles": true,
     "show_default_origin": true,
+    "sections": {
+      "np-cart-drawer": {
+        "type": "np-cart-drawer",
+        "settings": {}
+      },
+      "np-overlays": {
+        "type": "np-overlays",
+        "settings": {}
+      }
+    },
     "content_for_index": [],
     "blocks": {
       "13768625480086291342": {
@@ -81,7 +91,7 @@
       },
       "8764476057892802672": {
         "type": "shopify://apps/stoq/blocks/main/4bb73be2-b7c2-4870-949f-c528145452a3",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
