@@ -13,55 +13,55 @@
   assign step2_desc_template = 'np.b2b_pallets.modal_step2_desc' | t: price: '%PRICE%'
 -%}
 
-<div id="np-b2b-promo-modal" hidden class="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6" data-b2b-promo-modal>
-  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-b2b-modal-close aria-hidden="true"></div>
+<div id="np-b2b-promo-modal" hidden class="fixed inset-0 flex items-center justify-center p-4 sm:p-6" style="position: fixed; inset: 0; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 1rem; background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" data-b2b-promo-modal>
+  <div class="absolute inset-0" style="position: absolute; inset: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85);" data-b2b-modal-close aria-hidden="true"></div>
 
-  <div role="dialog" aria-modal="true" aria-labelledby="np-b2b-modal-title" class="relative w-full max-w-xl overflow-hidden rounded-3xl border border-[var(--color-gold)]/50 bg-[#121814] p-6 text-white shadow-2xl shadow-black/80 sm:p-8">
-    <button type="button" data-b2b-modal-close aria-label="{{ 'np.b2b_pallets.modal_close' | t }}" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white">
+  <div role="dialog" aria-modal="true" aria-labelledby="np-b2b-modal-title" class="relative w-full max-w-xl overflow-y-auto rounded-3xl p-6 text-white sm:p-8" style="position: relative; z-index: 10; width: 100%; max-width: 36rem; max-height: 90vh; background-color: #121814 !important; color: #ffffff !important; border: 1.5px solid #e9a824; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); border-radius: 1.5rem; padding: 1.75rem;">
+    <button type="button" data-b2b-modal-close aria-label="{{ 'np.b2b_pallets.modal_close' | t }}" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-white/80 transition hover:text-white" style="background-color: rgba(255, 255, 255, 0.15); color: #ffffff;">
       {% render 'icon', name: 'close', class: 'h-5 w-5' %}
     </button>
 
     <div class="flex flex-col gap-6">
       <div>
-        <span class="inline-flex rounded-full border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--color-gold)]">
+        <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider" style="background-color: rgba(233, 168, 36, 0.2); border: 1px solid #e9a824; color: #e9a824;">
           {{ 'np.b2b_pallets.modal_badge' | t }}
         </span>
-        <h2 id="np-b2b-modal-title" class="mt-3 font-display text-2xl font-bold leading-tight text-white sm:text-3xl" data-pallet-price-template="{{ modal_headline_template | escape }}">
+        <h2 id="np-b2b-modal-title" class="mt-3 font-display text-2xl font-bold leading-tight sm:text-3xl" style="color: #ffffff;" data-pallet-price-template="{{ modal_headline_template | escape }}">
           {{ 'np.b2b_pallets.modal_headline' | t: price: price_text }}
         </h2>
       </div>
 
       <div class="flex flex-col gap-3.5 text-sm">
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-[var(--color-gold)]/30">
-          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+        <div class="rounded-2xl p-4 transition" style="background-color: #1c251f; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1rem; padding: 1rem;">
+          <h3 class="font-display font-semibold sm:text-base" style="color: #e9a824;">
             {{ 'np.b2b_pallets.modal_step1_title' | t }}
           </h3>
-          <p class="mt-1 text-xs leading-relaxed text-white/80 sm:text-sm">
+          <p class="mt-1 text-xs leading-relaxed sm:text-sm" style="color: #e2e8f0;">
             {{ 'np.b2b_pallets.modal_step1_desc' | t }}
           </p>
         </div>
 
-        <div class="rounded-2xl border border-[var(--color-gold)]/40 bg-[var(--color-gold)]/10 p-4">
-          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+        <div class="rounded-2xl p-4" style="background-color: #272010; border: 1.5px solid #e9a824; border-radius: 1rem; padding: 1rem;">
+          <h3 class="font-display font-semibold sm:text-base" style="color: #f59e0b;">
             {{ step2_title_template }}
           </h3>
-          <p class="mt-1 text-xs leading-relaxed text-white/90 sm:text-sm" data-pallet-price-template="{{ step2_desc_template | escape }}">
+          <p class="mt-1 text-xs leading-relaxed sm:text-sm" style="color: #ffffff;" data-pallet-price-template="{{ step2_desc_template | escape }}">
             {{ 'np.b2b_pallets.modal_step2_desc' | t: price: price_text }}
           </p>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-[var(--color-gold)]/30">
-          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+        <div class="rounded-2xl p-4 transition" style="background-color: #1c251f; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1rem; padding: 1rem;">
+          <h3 class="font-display font-semibold sm:text-base" style="color: #e9a824;">
             {{ 'np.b2b_pallets.modal_step3_title' | t }}
           </h3>
-          <p class="mt-1 text-xs leading-relaxed text-white/80 sm:text-sm">
+          <p class="mt-1 text-xs leading-relaxed sm:text-sm" style="color: #e2e8f0;">
             {{ 'np.b2b_pallets.modal_step3_desc' | t }}
           </p>
         </div>
       </div>
 
       <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        <button type="button" data-b2b-modal-close class="w-full rounded-full bg-[var(--color-gold)] px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wider text-[var(--color-charcoal)] transition hover:bg-yellow-400 sm:w-auto">
+        <button type="button" data-b2b-modal-close class="w-full rounded-full px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wider transition hover:opacity-90 sm:w-auto" style="background-color: #e9a824; color: #111827; font-weight: 700;">
           {{ 'np.b2b_pallets.modal_cta' | t }}
         </button>
       </div>
