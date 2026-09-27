@@ -1109,9 +1109,20 @@
       "no_articles": "Još nema članaka."
     },
     "b2b_pallets": {
-      "promo_title": "🚚 PROMOCIJA DOSTAVE",
-      "promo_headline": "Svaka paleta samo {{ price }}!",
-      "promo_text": "Vi plaćate {{ price }} po paleti, a ostatak troška dostave pokrivamo mi.",
+      "promo_title": "EKSKLUZIVNA B2B POGODNOST",
+      "promo_headline": "Častimo vas! Vi plaćate samo {{ price }} po paleti, a ostatak troška dostave plaćamo mi!",
+      "promo_text": "Častimo vas! Vi plaćate samo {{ price }} po paleti, a ostatak troška dostave plaćamo mi!",
+      "promo_learn_more": "Kako funkcionira? →",
+      "modal_badge": "EKSKLUZIVNA PROMOCIJA DOSTAVE",
+      "modal_headline": "Častimo vas! Svaka paleta samo {{ price }} — ostatak troška dostave plaćamo mi!",
+      "modal_step1_title": "1. Automatsko pakiranje u kutije i palete",
+      "modal_step1_desc": "Naš napredni sustav u košarici samostalno proračunava dimenzije kutija te ih slaže na najoptimalniji broj paleta u 3D prostoru.",
+      "modal_step2_title": "2. Fiksna promo cijena po paleti",
+      "modal_step2_desc": "Bez obzira na visinu, težinu ili stvarni trošak transporta iz Švedske, vi plaćate samo {{ price }} po paleti. Svu razliku do punog iznosa pokrivamo mi.",
+      "modal_step3_title": "3. Jednostavna B2B narudžba",
+      "modal_step3_desc": "Nakon ostvarenog veleprodajnog praga, kliknite na checkout — narudžba se automatski šalje u obradu po vašim veleprodajnim cijenama.",
+      "modal_cta": "Razumijem, započni kupnju",
+      "modal_close": "Zatvori",
       "pallets_needed": "Potrebne palete",
       "price_per_pallet": "Cijena po paleti",
       "pallet_count": {

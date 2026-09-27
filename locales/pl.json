@@ -1231,9 +1231,20 @@
       "no_articles": "Brak artykułów."
     },
     "b2b_pallets": {
-      "promo_title": "🚚 PROMOCJA DOSTAWY",
-      "promo_headline": "Każda paleta tylko {{ price }}!",
-      "promo_text": "Płacisz {{ price }} za paletę, a resztę kosztów dostawy pokrywamy my.",
+      "promo_title": "EKSKLUZYWNA OFERTA B2B",
+      "promo_headline": "Prezent od nas! Płacisz tylko {{ price }} za paletę — resztę kosztów dostawy pokrywamy my!",
+      "promo_text": "Prezent od nas! Płacisz tylko {{ price }} za paletę — resztę kosztów dostawy pokrywamy my!",
+      "promo_learn_more": "Jak to działa →",
+      "modal_badge": "EKSKLUZYWNA PROMOCJA DOSTAWY",
+      "modal_headline": "Prezent od nas! Każda paleta tylko {{ price }} — resztę kosztów dostawy pokrywamy my!",
+      "modal_step1_title": "1. Automatyczne pakowanie kartonów i palet",
+      "modal_step1_desc": "Nasz inteligentny system automatycznie wylicza wymiary kartonów i optymalnie pakuje produkty na palety w czasie rzeczywistym.",
+      "modal_step2_title": "2. Stała cena promocyjna za paletę",
+      "modal_step2_desc": "Niezależnie od wagi czy rzeczywistego kosztu transportu ze Szwecji, płacisz tylko {{ price }} za paletę. Całą resztę pokrywamy my.",
+      "modal_step3_title": "3. Wygodna realizacja zamówienia B2B",
+      "modal_step3_desc": "Po osiągnięciu progu hurtowego przejdź do kasy — Twoje zamówienie zostanie zrealizowane z uwzględnieniem cen hurtowych.",
+      "modal_cta": "Rozumiem, zacznij zakupy",
+      "modal_close": "Zamknij",
       "pallets_needed": "Potrzebne palety",
       "price_per_pallet": "Cena za paletę",
       "pallet_count": {

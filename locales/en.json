@@ -1166,9 +1166,20 @@
       "no_articles": "No articles yet."
     },
     "b2b_pallets": {
-      "promo_title": "🚚 SHIPPING PROMOTION",
-      "promo_headline": "Every pallet only {{ price }}!",
-      "promo_text": "You pay {{ price }} per pallet and we cover the rest of the shipping cost.",
+      "promo_title": "EXCLUSIVE B2B OFFER",
+      "promo_headline": "Our treat! You pay only {{ price }} per pallet — we cover all remaining shipping costs!",
+      "promo_text": "Our treat! You pay only {{ price }} per pallet — we cover all remaining shipping costs!",
+      "promo_learn_more": "How it works →",
+      "modal_badge": "EXCLUSIVE SHIPPING PROMOTION",
+      "modal_headline": "Our treat! Every pallet only {{ price }} — we cover all remaining shipping costs!",
+      "modal_step1_title": "1. Automatic carton & pallet packing",
+      "modal_step1_desc": "Our smart 3D calculation automatically computes carton dimensions and packs your order onto the optimal number of pallets in real time.",
+      "modal_step2_title": "2. Fixed promo rate per pallet",
+      "modal_step2_desc": "Regardless of total weight, volume, or actual freight cost from Sweden, you pay only {{ price }} per pallet. We cover the entire remaining balance.",
+      "modal_step3_title": "3. Seamless B2B checkout",
+      "modal_step3_desc": "Once you reach the wholesale threshold, simply proceed to checkout — your order is processed directly with your approved B2B pricing.",
+      "modal_cta": "Got it, start shopping",
+      "modal_close": "Close",
       "pallets_needed": "Pallets needed",
       "price_per_pallet": "Price per pallet",
       "pallet_count": {

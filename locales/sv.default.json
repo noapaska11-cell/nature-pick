@@ -848,9 +848,20 @@
       "no_articles": "Inga inlägg ännu."
     },
     "b2b_pallets": {
-      "promo_title": "🚚 FRAKTKAMPANJ",
-      "promo_headline": "Varje pall endast {{ price }}!",
-      "promo_text": "Du betalar {{ price }} per pall, resten av fraktkostnaden står vi för.",
+      "promo_title": "EXKLUSIVT B2B-ERBJUDANDE",
+      "promo_headline": "Vi bjuder på frakten! Du betalar endast {{ price }} per pall — resten står vi för!",
+      "promo_text": "Vi bjuder på frakten! Du betalar endast {{ price }} per pall — resten står vi för!",
+      "promo_learn_more": "Så fungerar det →",
+      "modal_badge": "EXKLUSIV FRAKTKAMPANJ",
+      "modal_headline": "Vi bjuder på frakten! Varje pall endast {{ price }} — resten står vi för!",
+      "modal_step1_title": "1. Automatisk kartong- & pallpackning",
+      "modal_step1_desc": "Vårt smarta system beräknar i realtid kartongmått och packar dina varor på optimalt antal pallar i varukorgen.",
+      "modal_step2_title": "2. Fast kampanjpris per pall",
+      "modal_step2_desc": "Oavsett vikt eller faktiska fraktkostnader från Sverige betalar du endast {{ price }} per pall. Hela resterande fraktbelopp täcks av oss.",
+      "modal_step3_title": "3. Smidig B2B-kassa",
+      "modal_step3_desc": "När du nått grossistgränsen klickar du bara på till kassan — din order behandlas direkt med dina godkända B2B-priser.",
+      "modal_cta": "Jag förstår, börja handla",
+      "modal_close": "Stäng",
       "pallets_needed": "Pallar som behövs",
       "price_per_pallet": "Pris per pall",
       "pallet_count": {

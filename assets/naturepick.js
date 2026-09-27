@@ -2380,10 +2380,14 @@
       if (searchModal && !searchModal.hidden) search.close();
       const menu = $('#np-mobile-menu');
       if (menu && !menu.hidden) setMobileMenu(false);
+      const b2bModal = $('[data-b2b-promo-modal]');
+      if (b2bModal && !b2bModal.hidden) b2bPromoModal.close();
       checkoutConfirm.answer(false);
       toast.hide();
     }
     if (event.key === 'Tab') {
+      const b2bDialog = $('[data-b2b-promo-modal]:not([hidden]) [role="dialog"]');
+      if (b2bDialog) trapFocus(b2bDialog, event);
       const drawer = $('[data-cart-drawer][data-open="true"] [data-cart-panel]');
       if (drawer) trapFocus(drawer, event);
       const quick = $('[data-quick-view-modal]:not([hidden]) [role="dialog"]');
@@ -2417,6 +2421,48 @@
     }
   });
 
+  /* ------------------------------------------------------------- B2B promo modal */
+  const b2bPromoModal = {
+    el: () => $('[data-b2b-promo-modal]'),
+    open() {
+      const modal = this.el();
+      if (!modal) return;
+      modal.hidden = false;
+      lockScroll(true);
+      try { sessionStorage.setItem('np-b2b-promo-modal-seen', '1'); } catch (e) {}
+    },
+    close() {
+      const modal = this.el();
+      if (!modal || modal.hidden) return;
+      modal.hidden = true;
+      lockScroll(false);
+    },
+    autoCheck() {
+      const modal = this.el();
+      if (!modal) return;
+      try {
+        if (!sessionStorage.getItem('np-b2b-promo-modal-seen')) {
+          setTimeout(() => this.open(), 500);
+        }
+      } catch (e) {
+        this.open();
+      }
+    }
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target.closest && target.closest('[data-open-b2b-modal]')) {
+      event.preventDefault();
+      b2bPromoModal.open();
+      return;
+    }
+    if (target.closest && target.closest('[data-b2b-modal-close]')) {
+      b2bPromoModal.close();
+      return;
+    }
+  });
+
   /* --------------------------------------------------------------------- start */
 
   // one failing initialiser must never stop the others (or leave the page half hidden)
@@ -2434,6 +2480,7 @@
     document.documentElement.setAttribute('data-np-ready', '1');
     attempt('wishlist', () => wishlist.sync());
     attempt('pallet price', () => loadPalletPrice());
+    attempt('b2b promo modal', () => b2bPromoModal.autoCheck());
     attempt('cookie banner', () => initCookieBanner());
     attempt('addresses', () => initAddresses());
     attempt('qr code', () => {
