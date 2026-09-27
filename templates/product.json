@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -6,10 +15,15 @@
         "judgeme_badge": {
           "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {}
+        },
+        "preorder_me_product_button_fMPhA4": {
+          "type": "shopify://apps/preorder-me/blocks/product-button/d3a9a307-3c62-4d7b-8a5b-7ae9b6e399ce",
+          "settings": {}
         }
       },
       "block_order": [
-        "judgeme_badge"
+        "judgeme_badge",
+        "preorder_me_product_button_fMPhA4"
       ],
       "settings": {
         "show_dynamic_checkout": false,
