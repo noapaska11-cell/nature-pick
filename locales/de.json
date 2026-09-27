@@ -1198,9 +1198,20 @@
       "no_articles": "Noch keine Beiträge."
     },
     "b2b_pallets": {
-      "promo_title": "🚚 VERSANDAKTION",
-      "promo_headline": "Jede Palette nur {{ price }}!",
-      "promo_text": "Sie zahlen {{ price }} pro Palette, den Rest der Versandkosten übernehmen wir.",
+      "promo_title": "EXKLUSIVES B2B-ANGEBOT",
+      "promo_headline": "Wir schenken Ihnen den Versand! Sie zahlen nur {{ price }} pro Palette — den Rest übernehmen wir!",
+      "promo_text": "Wir schenken Ihnen den Versand! Sie zahlen nur {{ price }} pro Palette — den Rest übernehmen wir!",
+      "promo_learn_more": "So funktioniert's →",
+      "modal_badge": "EXKLUSIVE VERSANDAKTION",
+      "modal_headline": "Wir schenken Ihnen den Versand! Jede Palette nur {{ price }} — den Rest übernehmen wir!",
+      "modal_step1_title": "1. Automatische Karton- & Palettenberechnung",
+      "modal_step1_desc": "Unser intelligentes System berechnet in Echtzeit alle Kartonmaße und packt Ihre Produkte optimal auf so wenige Paletten wie möglich.",
+      "modal_step2_title": "2. Fester Aktionspreis pro Palette",
+      "modal_step2_desc": "Unabhängig von Gewicht, Höhe oder den tatsächlichen Frachtkosten aus Schweden zahlen Sie nur {{ price }} pro Palette. Den Rest übernehmen wir komplett.",
+      "modal_step3_title": "3. Einfache B2B-Bestellung",
+      "modal_step3_desc": "Sobald Ihr Großhandels-Mindestbestellwert erreicht ist, klicken Sie einfach auf Kasse — Ihre Bestellung wird zu Ihren B2B-Konditionen verarbeitet.",
+      "modal_cta": "Verstanden, jetzt einkaufen",
+      "modal_close": "Schließen",
       "pallets_needed": "Benötigte Paletten",
       "price_per_pallet": "Preis pro Palette",
       "pallet_count": {

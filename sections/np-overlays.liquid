@@ -97,6 +97,12 @@
   </div>
 {%- endif -%}
 
+{%- comment -%} B2B shipping promotion & info pop-up modal {%- endcomment -%}
+{%- capture np_b2b_check -%}{%- render 'np-b2b-customer' -%}{%- endcapture -%}
+{%- if customer and np_b2b_check contains 'true' -%}
+  {% render 'np-b2b-promo-modal', cart: cart %}
+{%- endif -%}
+
 {%- comment -%} Structured data (home page only, like a single Organization/WebSite declaration) {%- endcomment -%}
 {%- if request.page_type == 'index' -%}
   {%- assign search_action_target = shop.url | append: routes.search_url | append: '?q={search_term_string}' -%}

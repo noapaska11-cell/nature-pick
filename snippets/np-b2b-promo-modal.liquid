@@ -1,0 +1,70 @@
+{%- comment -%}
+  B2B Shipping & Pallet Order Information Pop-Up Modal:
+  Triggered automatically on first B2B entry / login per session, or via [data-open-b2b-modal] trigger.
+{%- endcomment -%}
+{%- liquid
+  capture price_parts
+    render 'np-b2b-pallet-price', cart: cart
+  endcapture
+  assign price_parts = price_parts | strip | split: ':'
+  assign price_text = price_parts[2]
+  assign modal_headline_template = 'np.b2b_pallets.modal_headline' | t: price: '%PRICE%'
+  assign step2_title_template = 'np.b2b_pallets.modal_step2_title' | t
+  assign step2_desc_template = 'np.b2b_pallets.modal_step2_desc' | t: price: '%PRICE%'
+-%}
+
+<div id="np-b2b-promo-modal" hidden class="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6" data-b2b-promo-modal>
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-b2b-modal-close aria-hidden="true"></div>
+
+  <div role="dialog" aria-modal="true" aria-labelledby="np-b2b-modal-title" class="relative w-full max-w-xl overflow-hidden rounded-3xl border border-[var(--color-gold)]/50 bg-[#121814] p-6 text-white shadow-2xl shadow-black/80 sm:p-8">
+    <button type="button" data-b2b-modal-close aria-label="{{ 'np.b2b_pallets.modal_close' | t }}" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white">
+      {% render 'icon', name: 'close', class: 'h-5 w-5' %}
+    </button>
+
+    <div class="flex flex-col gap-6">
+      <div>
+        <span class="inline-flex rounded-full border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--color-gold)]">
+          {{ 'np.b2b_pallets.modal_badge' | t }}
+        </span>
+        <h2 id="np-b2b-modal-title" class="mt-3 font-display text-2xl font-bold leading-tight text-white sm:text-3xl" data-pallet-price-template="{{ modal_headline_template | escape }}">
+          {{ 'np.b2b_pallets.modal_headline' | t: price: price_text }}
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-3.5 text-sm">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-[var(--color-gold)]/30">
+          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+            {{ 'np.b2b_pallets.modal_step1_title' | t }}
+          </h3>
+          <p class="mt-1 text-xs leading-relaxed text-white/80 sm:text-sm">
+            {{ 'np.b2b_pallets.modal_step1_desc' | t }}
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-[var(--color-gold)]/40 bg-[var(--color-gold)]/10 p-4">
+          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+            {{ step2_title_template }}
+          </h3>
+          <p class="mt-1 text-xs leading-relaxed text-white/90 sm:text-sm" data-pallet-price-template="{{ step2_desc_template | escape }}">
+            {{ 'np.b2b_pallets.modal_step2_desc' | t: price: price_text }}
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-[var(--color-gold)]/30">
+          <h3 class="font-display font-semibold text-[var(--color-gold)] sm:text-base">
+            {{ 'np.b2b_pallets.modal_step3_title' | t }}
+          </h3>
+          <p class="mt-1 text-xs leading-relaxed text-white/80 sm:text-sm">
+            {{ 'np.b2b_pallets.modal_step3_desc' | t }}
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <button type="button" data-b2b-modal-close class="w-full rounded-full bg-[var(--color-gold)] px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wider text-[var(--color-charcoal)] transition hover:bg-yellow-400 sm:w-auto">
+          {{ 'np.b2b_pallets.modal_cta' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
