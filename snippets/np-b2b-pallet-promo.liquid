@@ -16,11 +16,17 @@
   assign text_template = 'np.b2b_pallets.promo_text' | t: price: '%PRICE%'
 -%}
 {%- if style == 'bar' -%}
-  <span class="mt-1 flex w-full flex-wrap items-center justify-center gap-x-2.5 gap-y-1 border-t border-white/20 pt-1.5 text-center text-xs sm:text-sm" data-b2b-pallet-only data-b2b-pallet-promo>
-    <strong class="rounded-full bg-[var(--color-gold)] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-charcoal)] shadow-sm">{{ 'np.b2b_pallets.promo_title' | t }}</strong>
-    <span class="font-semibold text-white" data-pallet-price-template="{{ headline_template | escape }}">{{ 'np.b2b_pallets.promo_headline' | t: price: price_text }}</span>
-    <span class="text-white/90" data-pallet-price-template="{{ text_template | escape }}">{{ 'np.b2b_pallets.promo_text' | t: price: price_text }}</span>
-  </span>
+  <div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-xs sm:justify-start sm:text-sm" data-b2b-pallet-only data-b2b-pallet-promo>
+    <span class="inline-flex rounded-full bg-[var(--color-gold)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-charcoal)] shadow-sm">
+      🚚 {{ 'np.b2b_pallets.promo_title' | t }}
+    </span>
+    <span class="font-semibold text-white" data-pallet-price-template="{{ headline_template | escape }}">
+      {{ 'np.b2b_pallets.promo_headline' | t: price: price_text }}
+    </span>
+    <span class="hidden opacity-90 md:inline" data-pallet-price-template="{{ text_template | escape }}">
+      — {{ 'np.b2b_pallets.promo_text' | t: price: price_text }}
+    </span>
+  </div>
 {%- else -%}
   <div class="rounded-2xl border border-[var(--color-gold)]/40 bg-[var(--color-olive-light)] p-4 text-[var(--color-olive-dark)] shadow-sm" data-b2b-pallet-only data-b2b-pallet-promo>
     <div class="flex items-center gap-2">
