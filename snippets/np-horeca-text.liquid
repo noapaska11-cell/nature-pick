@@ -1,0 +1,44 @@
+{%- comment -%}
+  Texts for HoReCa (business-only) products, in the storefront language (fallback English).
+  Param key: title | body | cta | cart
+{%- endcomment -%}
+{%- liquid
+  assign np_lang = request.locale.iso_code | slice: 0, 2 | downcase
+  case np_lang
+    when 'sv'
+      assign t_title = 'Endast för företagskunder'
+      assign t_body = 'Den här produkten ingår i vårt HoReCa-sortiment och säljs bara till godkända företagskunder (restauranger, hotell, catering). Logga in med ditt B2B-konto eller registrera ditt företag för att se pris och beställa.'
+      assign t_cta = 'Logga in / registrera företag'
+      assign t_cart = 'Varukorgen innehåller HoReCa-produkter som endast säljs till godkända företagskunder. Ta bort dem eller logga in med ditt B2B-konto för att gå vidare till kassan.'
+    when 'de'
+      assign t_title = 'Nur für Geschäftskunden'
+      assign t_body = 'Dieses Produkt gehört zu unserem HoReCa-Sortiment und wird nur an freigeschaltete Geschäftskunden (Gastronomie, Hotels, Catering) verkauft. Melde dich mit deinem B2B-Konto an oder registriere deine Firma, um Preis und Bestellung zu sehen.'
+      assign t_cta = 'Anmelden / Firma registrieren'
+      assign t_cart = 'Dein Warenkorb enthält HoReCa-Produkte, die nur an freigeschaltete Geschäftskunden verkauft werden. Entferne sie oder melde dich mit deinem B2B-Konto an, um zur Kasse zu gehen.'
+    when 'pl'
+      assign t_title = 'Tylko dla klientów biznesowych'
+      assign t_body = 'Ten produkt należy do asortymentu HoReCa i jest sprzedawany wyłącznie zatwierdzonym klientom biznesowym (restauracje, hotele, catering). Zaloguj się kontem B2B lub zarejestruj firmę, aby zobaczyć cenę i zamówić.'
+      assign t_cta = 'Zaloguj się / zarejestruj firmę'
+      assign t_cart = 'Koszyk zawiera produkty HoReCa sprzedawane wyłącznie zatwierdzonym klientom biznesowym. Usuń je lub zaloguj się kontem B2B, aby przejść do kasy.'
+    when 'hr'
+      assign t_title = 'Samo za poslovne kupce'
+      assign t_body = 'Ovaj proizvod pripada HoReCa asortimanu i prodaje se samo odobrenim poslovnim kupcima (restorani, hoteli, catering). Prijavi se B2B računom ili registriraj tvrtku da vidiš cijenu i naručiš.'
+      assign t_cta = 'Prijava / registracija tvrtke'
+      assign t_cart = 'Košarica sadrži HoReCa proizvode koji se prodaju samo odobrenim poslovnim kupcima. Ukloni ih ili se prijavi B2B računom za nastavak na blagajnu.'
+    else
+      assign t_title = 'Business customers only'
+      assign t_body = 'This product is part of our HoReCa range and is sold to approved business customers only (restaurants, hotels, catering). Log in with your B2B account or register your company to see the price and order.'
+      assign t_cta = 'Log in / register company'
+      assign t_cart = 'Your cart contains HoReCa products that are sold to approved business customers only. Remove them or log in with your B2B account to continue to checkout.'
+  endcase
+  case key
+    when 'title'
+      echo t_title
+    when 'body'
+      echo t_body
+    when 'cta'
+      echo t_cta
+    when 'cart'
+      echo t_cart
+  endcase
+-%}
