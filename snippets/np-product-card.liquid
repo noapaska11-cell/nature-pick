@@ -74,6 +74,7 @@
           {%- endcase -%}
         </span>
       {%- endif -%}
+      {%- render 'np-preorder', product: product, variant: variant, field: 'badge' -%}
       {%- unless product.available -%}
         <span class="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--color-charcoal-soft)]">{{ 'np.common.out_of_stock_badge' | t }}</span>
       {%- endunless -%}
@@ -128,6 +129,7 @@
       {%- if product.has_only_default_variant or product.variants.size == 1 -%}
         {%- form 'product', product, class: 'contents', data-ajax-cart: 'true', data-cart-feedback: 'toast' -%}
           <input type="hidden" name="id" value="{{ variant.id }}">
+          {%- render 'np-preorder', product: product, variant: variant, field: 'input' -%}
           {%- if box_size > 1 -%}
             {%- comment -%} B2B: the round button adds one whole carton {%- endcomment -%}
             <input type="hidden" name="quantity" value="{{ box_size }}">

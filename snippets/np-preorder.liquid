@@ -1,0 +1,72 @@
+{%- comment -%}
+  Pre-order with a deposit (PreOrder Globo selling plan "Partial Payment": 10 % at checkout, the rest charged
+  automatically on the shipping date). Applies only while the variant is out of stock (tracked inventory <= 0) but
+  still sellable, and the product carries a selling plan.
+  Params:
+    product, variant (required)
+    field: 'input'  - hidden selling_plan input for a product form (nothing when not a pre-order)
+           'notice' - pre-order notice with the deposit and the shipping date
+           'badge'  - short "pre-order" label for product cards
+           'check'  - outputs "preorder" when it applies
+{%- endcomment -%}
+{%- liquid
+  # shipping / remaining-balance date of the current pre-order campaign (same date as in PreOrder Globo)
+  assign np_po_date = '20.10.2026'
+
+  assign np_po_alloc = nil
+  if variant.available and variant.inventory_management != blank and variant.inventory_quantity <= 0 and product.selling_plan_groups.size > 0
+    assign np_po_alloc = variant.selling_plan_allocations | first
+  endif
+  # approved B2B customers check out through the B2B service (draft order, invoice): pre-order notice, no card deposit
+  assign np_po_b2b = false
+  if np_po_alloc and customer
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
+      assign np_po_b2b = true
+    endif
+  endif
+-%}
+{%- if np_po_alloc -%}
+  {%- liquid
+    assign np_lang = request.locale.iso_code | slice: 0, 2 | downcase
+    assign np_po_deposit = np_po_alloc.checkout_charge_amount | money_without_trailing_zeros
+    assign np_po_rest = np_po_alloc.remaining_balance_charge_amount | money_without_trailing_zeros
+    case np_lang
+      when 'sv'
+        assign t_badge = 'Förbeställ'
+        assign t_title = 'Förbeställning – skickas ' | append: np_po_date
+        assign t_body = 'Du betalar ' | append: np_po_deposit | append: ' (10 %) nu. Resterande ' | append: np_po_rest | append: ' dras automatiskt från ditt kort den ' | append: np_po_date | append: ', när varan skickas.'
+      when 'de'
+        assign t_badge = 'Vorbestellung'
+        assign t_title = 'Vorbestellung – Versand am ' | append: np_po_date
+        assign t_body = 'Du zahlst jetzt ' | append: np_po_deposit | append: ' (10 %). Der Rest von ' | append: np_po_rest | append: ' wird am ' | append: np_po_date | append: ' beim Versand automatisch von deiner Karte abgebucht.'
+      when 'pl'
+        assign t_badge = 'Przedsprzedaż'
+        assign t_title = 'Przedsprzedaż – wysyłka ' | append: np_po_date
+        assign t_body = 'Teraz płacisz ' | append: np_po_deposit | append: ' (10 %). Pozostałe ' | append: np_po_rest | append: ' zostanie automatycznie pobrane z Twojej karty ' | append: np_po_date | append: ' przy wysyłce.'
+      when 'hr'
+        assign t_badge = 'Prednarudžba'
+        assign t_title = 'Prednarudžba – slanje ' | append: np_po_date
+        assign t_body = 'Sada plaćaš ' | append: np_po_deposit | append: ' (10 %). Ostatak od ' | append: np_po_rest | append: ' automatski se naplaćuje s tvoje kartice ' | append: np_po_date | append: ' pri slanju.'
+      else
+        assign t_badge = 'Pre-order'
+        assign t_title = 'Pre-order – ships ' | append: np_po_date
+        assign t_body = 'You pay ' | append: np_po_deposit | append: ' (10 %) now. The remaining ' | append: np_po_rest | append: ' is charged automatically to your card on ' | append: np_po_date | append: ', when the item ships.'
+    endcase
+  -%}
+  {%- case field -%}
+    {%- when 'input' -%}
+      {%- unless np_po_b2b -%}<input type="hidden" name="selling_plan" value="{{ np_po_alloc.selling_plan.id }}">{%- endunless -%}
+    {%- when 'check' -%}
+      preorder
+    {%- when 'badge' -%}
+      <span class="rounded-full bg-[var(--color-olive)] px-3 py-1 text-xs font-semibold text-white">{{ t_badge }}</span>
+    {%- when 'notice' -%}
+      <div class="mb-4 rounded-2xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]" data-preorder-notice>
+        <p class="font-semibold">{{ t_title }}</p>
+        {%- unless np_po_b2b -%}<p class="mt-1">{{ t_body }}</p>{%- endunless -%}
+      </div>
+  {%- endcase -%}
+{%- endif -%}
