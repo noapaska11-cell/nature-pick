@@ -286,6 +286,8 @@
           {%- endunless -%}
 
           <div data-swap="buy" data-unit-price="{{ unit_cents }}" {% if b2b_active %}data-unit-price-retail="{{ current_variant.price }}"{% endif %} {% if unit_shop_cents %}data-unit-price-shop="{{ unit_shop_cents }}"{% endif %}>
+            {%- render 'np-preorder', product: product, variant: current_variant, field: 'notice' -%}
+            {%- render 'np-preorder', product: product, variant: current_variant, field: 'input' -%}
             {%- if current_variant.available -%}
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {% render 'np-quantity', size: 'md', id: qty_id, box: box_size %}

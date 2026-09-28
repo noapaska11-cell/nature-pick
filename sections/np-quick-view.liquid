@@ -62,6 +62,8 @@
         <a href="{{ pages.b2b.url | default: routes.account_login_url }}" class="btn-primary mt-3 w-full">{% render 'np-horeca-text', key: 'cta' %}</a>
       {%- else -%}
       {%- form 'product', product, id: qv_form_id, class: 'mt-5 flex flex-col gap-3', data-ajax-cart: 'true', data-cart-feedback: 'toast', data-close-quick-view: 'true' -%}
+          {%- render 'np-preorder', product: product, variant: variant, field: 'notice' -%}
+          {%- render 'np-preorder', product: product, variant: variant, field: 'input' -%}
         {%- if product.has_only_default_variant -%}
           <input type="hidden" name="id" value="{{ variant.id }}">
         {%- else -%}
