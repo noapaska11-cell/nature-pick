@@ -21,6 +21,16 @@
     endif
   endif
   assign b2b_minimum_met = true
+  # HoReCa products are for approved business customers only (snippet np-horeca-gate)
+  assign np_horeca_block = false
+  unless b2b_active
+    for item in cart.items
+      if item.product.tags contains 'HoReCa' or item.product.tags contains 'horeca' or item.product.tags contains 'HORECA'
+        assign np_horeca_block = true
+        break
+      endif
+    endfor
+  endunless
   if b2b_active
     capture wholesale_parts
       render 'np-b2b-cart-wholesale', cart: cart
@@ -192,6 +202,9 @@
             the price-view toggle (header, B2B customers only) is set to "B2B" - switched to "regular prices"
             there is no minimum, so the button becomes clickable again without a page reload.
           {%- endcomment -%}
+          {%- if np_horeca_block -%}
+            <p role="alert" class="mt-5 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]">{% render 'np-horeca-text', key: 'cart' %} <a href="{{ pages.b2b.url | default: routes.account_login_url }}" class="font-semibold underline">{% render 'np-horeca-text', key: 'cta' %}</a></p>
+          {%- endif -%}
           <button
             type="submit"
             name="checkout"
@@ -208,8 +221,8 @@
               data-msg-error="{{ 'np.cart.b2b_checkout_error' | t }}"
               data-label-busy="{{ 'np.cart.b2b_checkout_busy' | t }}"
             {% endif %}
-            {% unless b2b_minimum_met %}disabled aria-disabled="true"{% endunless %}
-            class="btn-primary mt-5 w-full{% unless b2b_minimum_met %} pointer-events-none opacity-50{% endunless %}"
+            {% if b2b_minimum_met == false or np_horeca_block %}disabled aria-disabled="true"{% endif %}
+            class="btn-primary mt-5 w-full{% if b2b_minimum_met == false or np_horeca_block %} pointer-events-none opacity-50{% endif %}"
           >{{ 'np.cart.checkout' | t }}</button>
           {%- if b2b_checkout_endpoint != blank -%}
             <p data-b2b-checkout-message hidden role="alert" class="mt-3 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>
