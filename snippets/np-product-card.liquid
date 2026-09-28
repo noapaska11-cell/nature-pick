@@ -9,6 +9,8 @@
     index   - position, used for the fallback gradient
     sizes   - image sizes attribute
 {%- endcomment -%}
+{%- capture np_horeca -%}{%- render 'np-horeca-gate', product: product -%}{%- endcapture -%}
+{%- unless np_horeca contains 'locked' -%}
 {%- liquid
   assign variant = product.selected_or_first_available_variant
   assign product_title = product.title | escape
@@ -151,3 +153,4 @@
     </div>
   </div>
 </div>
+{%- endunless -%}

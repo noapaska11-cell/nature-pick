@@ -1,0 +1,25 @@
+{%- comment -%}
+  HoReCa products (product tag "HoReCa", see the Nature Pick product register) are sold to approved business
+  customers only. Outputs "locked" when `product` is a HoReCa product and the visitor is NOT an approved B2B
+  customer (same check as every wholesale price: snippet np-b2b-customer), otherwise nothing. Usage:
+    capture np_horeca
+      render 'np-horeca-gate', product: product
+    endcapture
+    if np_horeca contains 'locked'
+{%- endcomment -%}
+{%- liquid
+  if product.tags contains 'HoReCa' or product.tags contains 'horeca' or product.tags contains 'HORECA'
+    assign np_horeca_b2b = false
+    if customer
+      capture np_b2b_check
+        render 'np-b2b-customer'
+      endcapture
+      if np_b2b_check contains 'true'
+        assign np_horeca_b2b = true
+      endif
+    endif
+    unless np_horeca_b2b
+      echo 'locked'
+    endunless
+  endif
+-%}

@@ -10,6 +10,8 @@
     {%- else -%}
       <ul class="flex flex-col gap-1" role="list">
         {%- for product in found_products limit: 8 -%}
+          {%- capture np_horeca -%}{%- render 'np-horeca-gate', product: product -%}{%- endcapture -%}
+          {%- if np_horeca contains 'locked' -%}{%- continue -%}{%- endif -%}
           {%- capture weight_label -%}{%- render 'np-weight', grams: product.selected_or_first_available_variant.weight -%}{%- endcapture -%}
           {%- assign weight_label = weight_label | strip -%}
           <li>
