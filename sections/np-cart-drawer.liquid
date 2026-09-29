@@ -72,7 +72,7 @@
               -%}
               <li class="flex gap-3" data-cart-line data-line-key="{{ item.key }}">
                 <a href="{{ item.url }}" class="block h-20 w-20 flex-shrink-0" tabindex="-1" aria-hidden="true">
-                  {%- render 'np-product-image', image: item.image, alt: item.image.alt, class: 'h-20 w-20 rounded-xl', sizes: '80px', widths: '80, 160, 240' -%}
+                  {%- render 'np-product-image', fit: 'contain', image: item.image, alt: item.image.alt, class: 'h-20 w-20 rounded-xl', sizes: '80px', widths: '80, 160, 240' -%}
                 </a>
                 <div class="flex flex-1 flex-col">
                   <div class="flex items-start justify-between gap-2">
