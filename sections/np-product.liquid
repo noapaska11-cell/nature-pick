@@ -235,7 +235,13 @@
         </div>
 
         {%- if product.description != blank -%}
-          <div class="np-prose mt-5">{%- render 'np-description', description: product.description -%}</div>
+          <div class="np-prose mt-5">{%- liquid
+            assign np_desc_grams = 0
+            if product.variants.size == 1
+              assign np_desc_grams = product.variants.first.weight
+            endif
+          -%}
+          {%- render 'np-description', description: product.description, grams: np_desc_grams -%}</div>
         {%- endif -%}
 
         {%- if how_to_use != blank and how_to_use.size > 0 -%}
