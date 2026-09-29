@@ -165,16 +165,16 @@
               {%- case media.media_type -%}
                 {%- when 'image' -%}
                   {%- if forloop.first -%}
-                    {{ media | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-cover' }}
+                    {{ media | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-contain p-3' }}
                   {%- else -%}
-                    {{ media | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-cover' }}
+                    {{ media | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '550, 720, 960, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: media_alt, class: 'h-full w-full object-contain p-3' }}
                   {%- endif -%}
                 {%- when 'video' -%}
-                  {{ media | video_tag: controls: true, image_size: '1200x', class: 'h-full w-full object-cover' }}
+                  {{ media | video_tag: controls: true, image_size: '1200x', class: 'h-full w-full object-contain' }}
                 {%- when 'external_video' -%}
                   {{ media | external_video_tag: class: 'h-full w-full' }}
                 {%- else -%}
-                  {{ media.preview_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: media_alt, class: 'h-full w-full object-cover' }}
+                  {{ media.preview_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: media_alt, class: 'h-full w-full object-contain p-3' }}
               {%- endcase -%}
             </div>
           {%- else -%}
@@ -194,7 +194,7 @@
                   aria-current="{% if media.id == current_variant.featured_media.id or forloop.first and current_variant.featured_media == blank %}true{% else %}false{% endif %}"
                   class="relative block aspect-square w-full overflow-hidden rounded-xl border-2 border-transparent bg-white transition-colors hover:border-[var(--color-line)] aria-[current=true]:border-[var(--color-paprika)]"
                 >
-                  {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 180, 240', sizes: '120px', alt: '', class: 'h-full w-full object-cover' }}
+                  {{ media.preview_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 180, 240', sizes: '120px', alt: '', class: 'h-full w-full object-contain p-1' }}
                 </button>
               </li>
             {%- endfor -%}

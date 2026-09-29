@@ -16,7 +16,7 @@
           {%- assign weight_label = weight_label | strip -%}
           <li>
             <a href="{{ product.url }}" class="flex items-center gap-3 rounded-2xl p-2 hover:bg-[var(--color-cream-soft)]">
-              {%- render 'np-product-image', image: product.featured_media, alt: product.title, class: 'h-14 w-14 flex-shrink-0 rounded-xl', sizes: '56px', widths: '56, 112, 168', index: forloop.index0 -%}
+              {%- render 'np-product-image', fit: 'contain', image: product.featured_media, alt: product.title, class: 'h-14 w-14 flex-shrink-0 rounded-xl', sizes: '56px', widths: '56, 112, 168', index: forloop.index0 -%}
               <div class="min-w-0 flex-1">
                 <p class="truncate text-sm font-medium text-[var(--color-charcoal)]">{{ product.title | escape }}</p>
                 {%- if weight_label != '' -%}

@@ -12,19 +12,25 @@
     eager    - true for above-the-fold images
     index    - number used to pick the fallback gradient
     icon     - fallback icon name (default 'leaf')
+    fit      - 'contain' shows the whole photo (product packshots are rarely square) without the hover zoom;
+               default fills and crops the box (lifestyle / article images)
 {%- endcomment -%}
 {%- liquid
   assign img_widths = widths | default: '240, 360, 540, 720, 960, 1200'
   assign img_sizes = sizes | default: '(min-width: 1024px) 25vw, 50vw'
   assign fallback_icon = icon | default: 'leaf'
   assign gradient_index = index | default: 0 | modulo: 8
+  assign img_class = 'absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105'
+  if fit == 'contain'
+    assign img_class = 'absolute inset-0 h-full w-full object-contain p-2'
+  endif
 -%}
 {%- if image != blank -%}
   <div class="relative overflow-hidden bg-white {{ class }}">
     {%- if eager -%}
-      {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'eager', fetchpriority: 'high', class: 'absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105' }}
+      {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'eager', fetchpriority: 'high', class: img_class }}
     {%- else -%}
-      {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'lazy', class: 'absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105' }}
+      {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'lazy', class: img_class }}
     {%- endif -%}
   </div>
 {%- else -%}

@@ -31,7 +31,7 @@
     {% render 'icon', name: 'close', class: 'h-4 w-4' %}
   </button>
 
-  {%- render 'np-product-image',
+  {%- render 'np-product-image', fit: 'contain',
     image: product.featured_media,
     alt: product.title,
     class: 'aspect-square w-full rounded-2xl',
