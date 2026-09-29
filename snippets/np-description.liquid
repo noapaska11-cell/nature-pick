@@ -1,0 +1,35 @@
+{%- comment -%}
+  Product description with its sub-headings bolded, in every storefront language.
+  Many descriptions (and their translations, which Shopify stores separately) have the section labels as plain
+  paragraphs - <p>Features</p>, <p>Förvaring</p> ... - so they read like body text. This wraps those known labels,
+  and a short first line that just names the product (e.g. "Ground cinnamon 150 g"), in <strong>. Text is never
+  changed or removed; descriptions that already use <strong> pass through unchanged apart from the labels.
+  Usage: {% render 'np-description', description: product.description %}
+{%- endcomment -%}
+{%- liquid
+  assign out = description
+  assign labels = 'Features|Uses|Usage|Storage|Ingredients|Net weight|Net Weight|Allergen information|Allergen Information|Allergy information|Allergens|Preparation|Packaging|Directions|Directions for use|Origin|Country of origin|Contents|The set contains|The gift box contains|Characteristics|Properties|Product description|Important information|Best before|Egenskaper|Användning|Förvaring|Ingredienser|Nettovikt|Allergiinformation|Allergener|Tillagning|Ursprung|Ursprungsland|Produktbeskrivning|Innehåll|Förpackning|Viktig information|Bäst före|Eigenschaften|Verwendung|Aufbewahrung|Zutaten|Nettogewicht|Allergene|Herkunft|Właściwości|Zastosowanie|Przechowywanie|Składniki|Waga netto|Alergeny|Pochodzenie|Svojstva|Upotreba|Čuvanje|Sastojci|Neto težina|Alergeni|Podrijetlo' | split: '|'
+  for label in labels
+    assign plain = '<p>' | append: label | append: '</p>'
+    assign bold = '<p><strong>' | append: label | append: '</strong></p>'
+    assign out = out | replace: plain, bold
+    assign plain = '<p>' | append: label | append: ':</p>'
+    assign bold = '<p><strong>' | append: label | append: ':</strong></p>'
+    assign out = out | replace: plain, bold
+  endfor
+
+  # a short first paragraph without a sentence ending is the product name line
+  assign first_p = out | split: '</p>' | first
+  assign first_head = first_p | strip | slice: 0, 3
+  if first_head == '<p>'
+    assign first_inner = first_p | split: '<p>' | last
+    assign first_text = first_inner | strip
+    assign first_last_char = first_text | slice: -1
+    unless first_inner contains '<' or first_text.size > 50 or first_text.size < 3 or first_last_char == '.' or first_last_char == '!' or first_last_char == '?'
+      assign first_plain = '<p>' | append: first_inner | append: '</p>'
+      assign first_bold = '<p><strong>' | append: first_inner | append: '</strong></p>'
+      assign out = out | replace_first: first_plain, first_bold
+    endunless
+  endif
+-%}
+{{ out }}
