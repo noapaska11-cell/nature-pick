@@ -13,7 +13,10 @@
 {%- unless np_horeca contains 'locked' -%}
 {%- liquid
   assign variant = product.selected_or_first_available_variant
-  assign product_title = product.title | escape
+  capture product_title
+    render 'np-title', title: product.title
+  endcapture
+  assign product_title = product_title | escape
   capture box_size
     render 'np-b2b-box-size', sku: variant.sku
   endcapture
@@ -33,7 +36,7 @@
   if settings.soften_uppercase_titles
     assign title_upper = product.title | upcase
     if product.title == title_upper
-      assign title_class = 'np-soft-case'
+      assign title_class = ''
     endif
   endif
 
@@ -110,7 +113,7 @@
 
   <div class="flex flex-1 flex-col gap-2 p-4">
     <a href="{{ product.url }}" class="flex-1">
-      <h2 class="font-display text-base font-medium leading-snug text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)] {{ title_class }}">{{ product.title | escape }}</h2>
+      <h2 class="font-display text-base font-medium leading-snug text-[var(--color-charcoal)] group-hover:text-[var(--color-paprika-dark)] {{ title_class }}">{{ product_title }}</h2>
       {%- if weight_label != '' -%}
         <p class="mt-0.5 text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
       {%- endif -%}

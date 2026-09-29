@@ -1,0 +1,23 @@
+{%- comment -%}
+  Product name in sentence case when it was typed in CAPITALS ("MALD KANEL (GROUND CINNAMON)" ->
+  "Mald kanel (ground cinnamon)"), in every language; names with normal casing are output unchanged.
+  Units ("10 × 10 mm", "300 g") do not stop a title from counting as capitals. A few names keep their
+  capitals (Asia Mix, Spice & Bloom, G-6, Yunnan ...). Output is NOT escaped - pipe it through escape.
+  Usage: {%- capture np_t -%}{% render 'np-title', title: product.title %}{%- endcapture -%}{{ np_t | escape }}
+{%- endcomment -%}
+{%- liquid
+  assign np_probe = title | replace: ' mm', ' MM' | replace: ' kg', ' KG' | replace: ' g', ' G'
+  assign np_probe_up = np_probe | upcase
+  assign np_probe_down = np_probe | downcase
+  if np_probe == np_probe_up and np_probe != np_probe_down
+    assign np_out = title | downcase | capitalize
+    assign np_fixes = 'asia mix>Asia Mix|Asia mix>Asia Mix|spice & bloom>Spice & Bloom|Spice & bloom>Spice & Bloom|g-6>G-6|w-6>W-6|mix vega>Mix Vega|Mix vega>Mix Vega|vega mix>Vega Mix|Vega mix>Vega Mix|Fruco mix>Fruco Mix|Mix classic>Mix Classic|Classic mix>Classic Mix|yunnan>Yunnan|elettaria>Elettaria|nature pick>Nature Pick|horeca>HoReCa' | split: '|'
+    for np_fix in np_fixes
+      assign np_pair = np_fix | split: '>'
+      assign np_out = np_out | replace: np_pair[0], np_pair[1]
+    endfor
+    echo np_out
+  else
+    echo title
+  endif
+-%}
