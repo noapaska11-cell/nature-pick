@@ -4,7 +4,10 @@
   paragraphs - <p>Features</p>, <p>Förvaring</p> ... - so they read like body text. This wraps those known labels,
   and a short first line that just names the product (e.g. "Ground cinnamon 150 g"), in <strong>. Text is never
   changed or removed; descriptions that already use <strong> pass through unchanged apart from the labels.
-  Usage: {% render 'np-description', description: product.description %}
+  With grams (the product's real weight from Shopify, single-variant products only) the net-weight line and a
+  weight in the product-name first line always show that weight, so a translation that was written for another
+  pack size can never show a wrong one.
+  Usage: {% render 'np-description', description: product.description, grams: variant.weight %}
 {%- endcomment -%}
 {%- liquid
   assign out = description
@@ -30,6 +33,72 @@
       assign first_bold = '<p><strong>' | append: first_inner | append: '</strong></p>'
       assign out = out | replace_first: first_plain, first_bold
     endunless
+  endif
+
+  # the real weight replaces whatever the text says on the net-weight line and in the product-name line
+  assign np_grams = grams | plus: 0
+  if np_grams > 0
+    if np_grams >= 1000
+      assign np_kg = np_grams | divided_by: 1000.0
+      assign np_kg_round = np_kg | round
+      if np_kg == np_kg_round
+        assign weight_text = np_kg_round | append: ' kg'
+      else
+        assign weight_text = np_kg | append: ' kg'
+      endif
+    else
+      assign weight_text = np_grams | append: ' g'
+    endif
+
+    assign weight_labels = 'Net weight|Net Weight|NET WEIGHT|Nettovikt|NETTOVIKT|Nettogewicht|Waga netto|Neto težina' | split: '|'
+    for wl in weight_labels
+      for closing in (1..3)
+        case closing
+          when 1
+            assign marker = wl | append: '</strong></p>'
+          when 2
+            assign marker = wl | append: ':</strong></p>'
+          else
+            assign marker = wl | append: '</strong><br>'
+        endcase
+        if out contains marker
+          assign np_parts = out | split: marker
+          assign np_rest = out | remove_first: np_parts[0] | remove_first: marker
+          assign np_head = np_rest | split: '</p>' | first
+          assign np_value = np_head | split: '<p>' | last | strip
+          assign np_value_down = np_value | downcase
+          assign np_value_first = np_value | slice: 0
+          # only a plain weight value such as "150 g", "1 kg" or "60 g or 160 g"
+          if np_value.size > 0 and np_value.size < 30 and '0123456789' contains np_value_first
+            unless np_value contains '<'
+              if np_value_down contains 'g'
+                assign np_new_head = np_head | replace: np_value, weight_text
+                assign np_new_rest = np_rest | replace_first: np_head, np_new_head
+                assign out = np_parts[0] | append: marker | append: np_new_rest
+              endif
+            endunless
+          endif
+        endif
+      endfor
+    endfor
+
+    # product-name first line ending in "<number> g" / "<number> kg"
+    assign np_first = out | split: '</p>' | first
+    assign np_first_text = np_first | strip_html | strip
+    assign np_words = np_first_text | split: ' '
+    if np_words.size >= 3 and np_first_text.size <= 60
+      assign np_unit = np_words | last | downcase
+      assign np_num_index = np_words.size | minus: 2
+      assign np_num = np_words[np_num_index]
+      assign np_num_first = np_num | slice: 0
+      if np_num.size > 0 and '0123456789' contains np_num_first
+        if np_unit == 'g' or np_unit == 'kg'
+          assign np_tail = np_num | append: ' ' | append: np_words.last
+          assign np_new_first = np_first | replace: np_tail, weight_text
+          assign out = out | replace_first: np_first, np_new_first
+        endif
+      endif
+    endif
   endif
 -%}
 {{ out }}
