@@ -149,6 +149,9 @@
       {%- endunless -%}
       <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
         <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'np.b2b_auth.shop_cta' | t }}</a>
+        {%- if collections.horeca.url != blank -%}
+          <a href="{{ collections.horeca.url }}" class="btn-secondary">{% render 'np-horeca-text', key: 'nav' %}</a>
+        {%- endif -%}
         <button type="button" data-b2b-logout class="btn-secondary">{{ 'np.b2b_auth.logout' | t }}</button>
       </div>
     </div>
