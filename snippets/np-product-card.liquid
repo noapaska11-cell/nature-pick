@@ -54,7 +54,7 @@
 <div class="group card-surface flex flex-col overflow-hidden transition-shadow hover:shadow-lg hover:shadow-[#c1440e]/5" data-product-card data-product-handle="{{ product.handle }}">
   <div class="relative aspect-square">
     <a href="{{ product.url }}" class="block h-full w-full" tabindex="-1" aria-hidden="true">
-      {%- render 'np-product-image',
+      {%- render 'np-product-image', fit: 'contain',
         image: product.featured_media,
         alt: card_alt,
         class: 'h-full w-full',
