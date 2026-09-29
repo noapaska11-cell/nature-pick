@@ -235,7 +235,7 @@
         </div>
 
         {%- if product.description != blank -%}
-          <div class="np-prose mt-5">{{ product.description }}</div>
+          <div class="np-prose mt-5">{%- render 'np-description', description: product.description -%}</div>
         {%- endif -%}
 
         {%- if how_to_use != blank and how_to_use.size > 0 -%}
