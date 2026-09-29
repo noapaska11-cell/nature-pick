@@ -23,6 +23,31 @@
     endif
   endfor
 -%}
+{%- liquid
+  # the HoReCa collection (handle "horeca") is for approved B2B customers only, like its products (np-horeca-gate)
+  assign horeca_locked = false
+  if collection.handle == 'horeca'
+    assign horeca_locked = true
+    if customer
+      capture np_b2b_check
+        render 'np-b2b-customer'
+      endcapture
+      if np_b2b_check contains 'true'
+        assign horeca_locked = false
+      endif
+    endif
+  endif
+-%}
+{%- if horeca_locked -%}
+  <section class="container-page py-16">
+    <div class="card-surface mx-auto max-w-xl p-8 text-center">
+      <p class="text-xs font-semibold uppercase tracking-wide text-[var(--color-olive-dark)]">HoReCa</p>
+      <h2 class="mt-2 font-display text-2xl font-semibold text-[var(--color-charcoal)]">{% render 'np-horeca-text', key: 'title' %}</h2>
+      <p class="mt-3 text-sm text-[var(--color-charcoal-soft)]">{% render 'np-horeca-text', key: 'body' %}</p>
+      <a href="{{ pages.b2b.url | default: routes.account_login_url }}" class="btn-primary mt-6 inline-flex">{% render 'np-horeca-text', key: 'cta' %}</a>
+    </div>
+  </section>
+{%- else -%}
 <section class="container-page py-10">
   {%- if section.settings.show_category_pills -%}
     <div class="mb-6 flex flex-wrap gap-2">
@@ -118,6 +143,7 @@
     </form>
   {%- endpaginate -%}
 </section>
+{%- endif -%}
 
 {% schema %}
 {

@@ -40,6 +40,12 @@
       assign b2b_company = customer.default_address.company | default: customer.name | default: customer.email
     endif
   endif
+  # HoReCa range (collection handle "horeca", automated on the product tag) - approved B2B customers only
+  assign horeca_href = ''
+  if b2b_active and collections.horeca.url != blank
+    assign horeca_href = collections.horeca.url
+  endif
+
   # B2B pallet shipping promotion - active whenever a B2B customer is logged in
   assign b2b_pallet_promo = false
   if b2b_active
@@ -183,6 +189,10 @@
 
       {%- render 'np-nav-links', menu: nav_menu, variant: 'desktop' -%}
 
+      {%- if horeca_href != blank -%}
+        <a href="{{ horeca_href }}" class="text-sm font-semibold text-[var(--color-charcoal)] hover:text-[var(--color-paprika-dark)]">{% render 'np-horeca-text', key: 'nav' %}</a>
+      {%- endif -%}
+
       {%- if section.settings.show_b2b and b2b_href != blank -%}
         <a href="{{ b2b_href }}" class="{{ b2b_link_class }}">
           {% render 'icon', name: 'building', class: 'h-3.5 w-3.5' %}
@@ -260,6 +270,10 @@
       {%- endif -%}
 
       {%- render 'np-nav-links', menu: nav_menu, variant: 'mobile' -%}
+
+      {%- if horeca_href != blank -%}
+        <a href="{{ horeca_href }}" class="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-[var(--color-charcoal)] hover:bg-[var(--color-cream)]">{% render 'np-horeca-text', key: 'nav' %}</a>
+      {%- endif -%}
 
       {%- if section.settings.show_b2b and b2b_href != blank -%}
         <a href="{{ b2b_href }}" class="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-[var(--color-paprika-dark)] hover:bg-[var(--color-cream)]">
