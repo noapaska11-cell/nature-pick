@@ -76,7 +76,7 @@
                 </a>
                 <div class="flex flex-1 flex-col">
                   <div class="flex items-start justify-between gap-2">
-                    <a href="{{ item.url }}" class="font-medium leading-snug hover:text-[var(--color-paprika-dark)]">{{ item.product.title | escape }}</a>
+                    <a href="{{ item.url }}" class="font-medium leading-snug hover:text-[var(--color-paprika-dark)]">{%- capture np_line_title -%}{% render 'np-title', title: item.product.title %}{%- endcapture -%}{{ np_line_title | escape }}</a>
                     <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="0" aria-label="{{ 'np.cart.remove_aria' | t }}" class="text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika)]">
                       {% render 'icon', name: 'close', class: 'h-4 w-4' %}
                     </button>

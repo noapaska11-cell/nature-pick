@@ -30,9 +30,9 @@
               <tr class="border-b border-[var(--color-line)] last:border-0 align-top">
                 <td class="px-4 py-3">
                   {%- if line_item.url != blank -%}
-                    <a href="{{ line_item.url }}" class="font-medium text-[var(--color-charcoal)] hover:text-[var(--color-paprika-dark)]">{{ line_item.title | escape }}</a>
+                    <a href="{{ line_item.url }}" class="font-medium text-[var(--color-charcoal)] hover:text-[var(--color-paprika-dark)]">{%- capture np_line_title -%}{% render 'np-title', title: line_item.title %}{%- endcapture -%}{{ np_line_title | escape }}</a>
                   {%- else -%}
-                    <span class="font-medium text-[var(--color-charcoal)]">{{ line_item.title | escape }}</span>
+                    <span class="font-medium text-[var(--color-charcoal)]">{%- capture np_line_title -%}{% render 'np-title', title: line_item.title %}{%- endcapture -%}{{ np_line_title | escape }}</span>
                   {%- endif -%}
                   {%- if line_item.sku != blank -%}
                     <p class="text-xs text-[var(--color-charcoal-soft)]">{{ 'customer.order.sku' | t }}: {{ line_item.sku }}</p>

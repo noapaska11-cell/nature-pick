@@ -8,7 +8,7 @@
   if settings.soften_uppercase_titles
     assign title_upper = product.title | upcase
     if product.title == title_upper
-      assign title_class = 'np-soft-case'
+      assign title_class = ''
     endif
   endif
   assign short_description = product.metafields.custom.short_description.value
@@ -40,7 +40,7 @@
   -%}
 
   <div>
-    <h2 id="quickview-title" class="pr-10 font-display text-2xl font-semibold text-[var(--color-charcoal)] {{ title_class }}">{{ product.title | escape }}</h2>
+    <h2 id="quickview-title" class="pr-10 font-display text-2xl font-semibold text-[var(--color-charcoal)] {{ title_class }}">{%- capture np_qv_title -%}{% render 'np-title', title: product.title %}{%- endcapture -%}{{ np_qv_title | escape }}</h2>
     {%- if weight_label != '' -%}
       <p class="mt-1 text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
     {%- endif -%}

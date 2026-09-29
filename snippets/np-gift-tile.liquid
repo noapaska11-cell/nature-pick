@@ -1,7 +1,10 @@
 {%- comment -%}One selectable product tile of the gift box builder (React <GiftBoxBuilder /> grid item). Param: product{%- endcomment -%}
 {%- liquid
   assign gift_variant = product.selected_or_first_available_variant
-  assign gift_title = product.title | escape
+  capture gift_title
+    render 'np-title', title: product.title
+  endcapture
+  assign gift_title = gift_title | escape
   assign gift_image = product.featured_media
 -%}
 {%- if product.available and gift_variant.available -%}
