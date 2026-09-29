@@ -22,16 +22,18 @@
   assign gradient_index = index | default: 0 | modulo: 8
   assign img_class = 'absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105'
   if fit == 'contain'
-    assign img_class = 'absolute inset-0 h-full w-full object-contain p-2'
+    assign img_class = ''
   endif
 -%}
 {%- if image != blank -%}
   <div class="relative overflow-hidden bg-white {{ class }}">
+    {%- if fit == 'contain' %}<div class="np-fit">{% endif -%}
     {%- if eager -%}
       {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'eager', fetchpriority: 'high', class: img_class }}
     {%- else -%}
       {{ image | image_url: width: 1200 | image_tag: widths: img_widths, sizes: img_sizes, alt: alt, loading: 'lazy', class: img_class }}
     {%- endif -%}
+    {%- if fit == 'contain' %}</div>{% endif %}
   </div>
 {%- else -%}
   {%- liquid
