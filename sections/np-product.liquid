@@ -2,7 +2,10 @@
   assign current_variant = product.selected_or_first_available_variant
   assign product_form_id = 'product-form-' | append: section.id
   assign qty_id = 'Quantity-' | append: section.id
-  assign product_title = product.title | escape
+  capture product_title
+    render 'np-title', title: product.title
+  endcapture
+  assign product_title = product_title | escape
 
   assign badge = ''
   if product.tags contains 'bestseller'
@@ -17,7 +20,7 @@
   if settings.soften_uppercase_titles
     assign title_upper = product.title | upcase
     if product.title == title_upper
-      assign title_class = 'np-soft-case'
+      assign title_class = ''
     endif
   endif
 
