@@ -47,12 +47,18 @@
             {%- for link in shop_menu.links limit: 6 -%}
               <li><a href="{{ link.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ link.title }}</a></li>
             {%- endfor -%}
+            {%- assign footer_more_categories = shop_menu.links.size | minus: 6 -%}
           {%- else -%}
             {%- for collection in collections limit: 6 -%}
               {%- unless collection.handle == 'frontpage' or collection.products_count == 0 -%}
                 <li><a href="{{ collection.url }}" class="text-sm text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ collection.title }}</a></li>
               {%- endunless -%}
             {%- endfor -%}
+            {%- assign footer_more_categories = collections.size | minus: 6 -%}
+          {%- endif -%}
+          {%- comment -%} the categories that do not fit stay one click away (and reachable for search engines) {%- endcomment -%}
+          {%- if footer_more_categories > 0 -%}
+            <li><a href="{{ routes.collections_url }}" class="text-sm font-medium text-[var(--color-charcoal-soft)] hover:text-[var(--color-paprika-dark)]">{{ 'np.common.see_all' | t }}</a></li>
           {%- endif -%}
         </ul>
       </div>
