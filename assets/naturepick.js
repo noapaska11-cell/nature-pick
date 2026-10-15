@@ -355,8 +355,15 @@
     setCount(count) {
       const n = Number(count) || 0;
       $$('[data-cart-badge]').forEach((badge) => {
+        const grew = n > (Number(badge.textContent) || 0);
         badge.textContent = n;
         badge.hidden = n < 1;
+        // visual answer to "added to cart" (np-design.css, .is-bumped): restart the pop on every increase
+        if (grew) {
+          badge.classList.remove('is-bumped');
+          void badge.offsetWidth;
+          badge.classList.add('is-bumped');
+        }
       });
     },
 
