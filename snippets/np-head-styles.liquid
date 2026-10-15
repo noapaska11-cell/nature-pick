@@ -55,6 +55,10 @@
 </style>
 
 <link rel="stylesheet" href="{{ 'naturepick.css' | asset_url }}">
+{%- comment -%} hand-written components outside the Tailwind build (B2B price block, cart lines and summary) {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'np-price.css' | asset_url }}">
+{%- comment -%} the "Rishtan glaze" design layer over the compiled Tailwind file (see the header of np-design.css) {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'np-design.css' | asset_url }}">
 <style>
   /* Phones: iOS Safari zooms the page when a focused field's text is under 16px. */
   @media (max-width: 767px) {
@@ -116,9 +120,12 @@
     {%- assign np_b2b_endpoint = settings.b2b_endpoint | strip -%}
     {%- if np_b2b_endpoint != blank -%}
       {%- comment -%} pallet price in the visitor's currency (100 EUR at the service's daily rate - the checkout charges the same) {%- endcomment -%}
-      <script>window.NP.palletPriceUrl = {{ np_b2b_endpoint | replace: '/register', '/pallet-price' | json }};</script>
+      {%- comment -%} b2bCheckout: this customer pays the price list at the B2B checkout, not Shopify's cart prices {%- endcomment -%}
+      <script>window.NP.palletPriceUrl = {{ np_b2b_endpoint | replace: '/register', '/pallet-price' | json }}; window.NP.b2bCheckout = true;</script>
     {%- endif -%}
     <script src="{{ 'np-pallets.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 {%- endif -%}
 <script src="{{ 'naturepick.js' | asset_url }}" defer="defer"></script>
+{%- comment -%} motion layer: reveals, word-by-word headings, depth, header on scroll - visual only (see its header) {%- endcomment -%}
+<script src="{{ 'np-motion.js' | asset_url }}" defer="defer"></script>

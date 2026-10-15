@@ -242,7 +242,10 @@
           <div class="min-w-0 flex-1">
             <p class="flex items-center gap-1.5 text-xs font-semibold text-[var(--color-olive-dark)]">${CHECK_ICON} ${escapeHtml(strings.added)}</p>
             <p class="truncate text-sm font-medium text-[var(--color-charcoal)]">${qty}${escapeHtml(item.product_title || item.title)}</p>
-            <p class="text-xs text-[var(--color-charcoal-soft)]">${formatMoney(item.final_line_price != null ? item.final_line_price : item.price * quantity)}</p>
+            ${
+              // Shopify's line price is the regular price; a B2B customer pays the price list, shown in the cart
+              NP.b2bCheckout ? '' : `<p class="text-xs text-[var(--color-charcoal-soft)]">${formatMoney(item.final_line_price != null ? item.final_line_price : item.price * quantity)}</p>`
+            }
           </div>
           <div class="flex flex-shrink-0 flex-col items-end gap-1.5">
             <button type="button" data-toast-close aria-label="${escapeHtml(strings.dismissToast)}" class="text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">${CLOSE_ICON}</button>
@@ -352,8 +355,15 @@
     setCount(count) {
       const n = Number(count) || 0;
       $$('[data-cart-badge]').forEach((badge) => {
+        const grew = n > (Number(badge.textContent) || 0);
         badge.textContent = n;
         badge.hidden = n < 1;
+        // visual answer to "added to cart" (np-design.css, .is-bumped): restart the pop on every increase
+        if (grew) {
+          badge.classList.remove('is-bumped');
+          void badge.offsetWidth;
+          badge.classList.add('is-bumped');
+        }
       });
     },
 
@@ -762,26 +772,33 @@
     updateTotals() {
       const buy = $('[data-swap="buy"]', this);
       if (!buy) return;
-      const useRetail = currentPriceView() === 'retail' && buy.dataset.unitPriceRetail !== undefined;
-      let unit = Number(useRetail ? buy.dataset.unitPriceRetail : buy.dataset.unitPrice);
-      if (!useRetail && buy.dataset.unitPriceShop !== undefined) {
-        const converted = fromShopCents(buy.dataset.unitPriceShop);
+      // A B2B customer's totals are always the B2B price - what the B2B checkout charges. The header's price-view
+      // toggle only switches the displayed product prices (np-price), never these totals.
+      let unit = Number(buy.dataset.unitPrice);
+      let money = formatMoney;
+      if (buy.dataset.unitPriceShop !== undefined) {
+        // price list (shop currency) in another storefront currency: Shopify's live rate, else the shop's currency
+        const shopCents = Number(buy.dataset.unitPriceShop);
+        const converted = fromShopCents(shopCents);
         if (converted !== null) unit = converted;
+        else {
+          unit = shopCents;
+          money = (cents) => formatMoneyIn(cents, NP.shopCurrency);
+        }
       }
       if (!Number.isFinite(unit)) return;
       const input = $('input[name="quantity"]', this);
       const quantity = Math.max(1, parseInt(input && input.value, 10) || 1);
-      const total = formatMoney(unit * quantity);
+      const total = money(unit * quantity);
       $$('[data-add-total]', this).forEach((el) => (el.textContent = total));
       $$('[data-sticky-total]', this).forEach((el) => (el.textContent = total));
       // B2B cartons: "2 cartons x 36 pcs x 19 kr = 1 368 kr excl. VAT"
       $$('[data-box-summary]', this).forEach((el) => {
         const box = parseInt(el.dataset.boxSize, 10) || 1;
-        const template = useRetail ? el.dataset.templateRetail : el.dataset.template;
-        el.textContent = (template || '')
+        el.textContent = (el.dataset.template || '')
           .replace('%BOXES%', String(Math.max(1, Math.round(quantity / box))))
           .replace('%PCS%', String(box))
-          .replace('%UNIT%', formatMoney(unit))
+          .replace('%UNIT%', money(unit))
           .replace('%TOTAL%', total)
           .replace('%WEIGHT%', formatGrams((Number(el.dataset.pieceGrams) || 0) * quantity));
       });
@@ -1574,21 +1591,20 @@
 
   /* ------------------------------------------------------------ B2B price view */
   /* Lets an approved B2B customer (header toggle, only shown once real B2B pricing is active)
-     switch every price on the site between the wholesale price (default) and the regular retail
+     switch the product prices on the site between the wholesale price (default) and the regular retail
      price, e.g. to see what an end customer would pay. Pure display preference, remembered in this
-     browser - it never changes what Shopify actually charges (cart and checkout always show the
-     real Shopify-computed price). A MutationObserver re-applies it to prices that appear later
-     (product cards loaded via AJAX, quick view, search, collection re-renders, ...).
-     Declared here, before customElements.define() below, because an already-upgraded <np-product>
-     can call updateTotals() -> currentPriceView() synchronously the moment it is defined. */
+     browser: both views always name both prices with their labels (snippets/np-price.liquid), and the
+     cart, the B2B minimum order and the B2B checkout never depend on it - a B2B customer always pays
+     the price list. A MutationObserver re-applies it to prices that appear later
+     (product cards loaded via AJAX, quick view, search, collection re-renders, ...). */
   const PRICE_VIEW_KEY = 'np-price-view'; // 'b2b' (default) | 'retail'
 
   const currentPriceView = () => (storage.get(PRICE_VIEW_KEY) === 'retail' ? 'retail' : 'b2b');
 
   /* The B2B price list and minimum order are entered in the shop's currency (SEK). Liquid has no exchange
      rate, so for any other storefront currency the theme renders them as data-*-shop-cents and they are
-     converted here with Shopify's own live rate. Returns null when the rate is unknown - callers then keep
-     the server-rendered fallback (the retail price) instead of showing an unconverted number. */
+     converted here with Shopify's own live rate. Returns null when the rate is unknown - callers then show
+     the amount in the shop's own currency (formatMoneyIn), never the retail price as a stand-in. */
   function fromShopCents(cents) {
     const amount = Number(cents);
     if (!Number.isFinite(amount)) return null;
@@ -1597,39 +1613,41 @@
     return rate > 0 ? Math.round(amount * rate) : null;
   }
 
+  /* Price-list amounts (shop currency) shown in another storefront currency: Liquid renders them as
+     <span data-shop-cents="1900" data-shop-cents-pending>…</span> (np-price, np-b2b-cart-line) and they are
+     converted here with Shopify's live rate - or, without a rate, shown in the shop's own currency. */
+  function syncShopMoney(root = document) {
+    $$('[data-shop-cents-pending]', root).forEach((el) => {
+      const cents = Number(el.dataset.shopCents);
+      if (!Number.isFinite(cents)) return;
+      const converted = fromShopCents(cents);
+      el.textContent = converted !== null ? formatMoney(converted) : formatMoneyIn(cents, NP.shopCurrency);
+      el.removeAttribute('data-shop-cents-pending');
+    });
+  }
+
+  /* B2B price blocks (np-price) carry both views - [data-price-view="b2b"] (default) and "retail" - each with its
+     own labels; the toggle only decides which one is visible. */
   function applyPriceView(view, root = document) {
+    const retail = view === 'retail';
     $$('[data-np-price][data-b2b-price]', root).forEach((el) => {
-      const strike = $('[data-price-strike]', el);
-      const main = $('[data-price-main]', el);
-      const badge = $('[data-price-badge]', el);
-      if (!main) return;
-      if (el.dataset.b2bShopCents !== undefined && !el.dataset.b2bText) {
-        const cents = fromShopCents(el.dataset.b2bShopCents);
-        if (cents === null) return; // no rate: the retail price stays, without the B2B badge
-        el.dataset.b2bText = formatMoney(cents);
-      }
-      const retail = view === 'retail';
-      main.textContent = retail ? el.dataset.retailText : el.dataset.b2bText;
-      if (strike) strike.hidden = retail;
-      if (badge) badge.hidden = retail;
+      $$('[data-price-view]', el).forEach((part) => {
+        part.hidden = (part.dataset.priceView === 'retail') !== retail;
+      });
     });
+    syncShopMoney(root);
     $$('[data-price-view-toggle]').forEach((button) => {
-      button.setAttribute('aria-pressed', String(view === 'retail'));
-      button.textContent = view === 'retail' ? button.dataset.labelShowB2b : button.dataset.labelShowRetail;
-    });
-    $$('[data-swap="buy"][data-unit-price-retail]').forEach((buy) => {
-      const productEl = buy.closest('np-product');
-      if (productEl && productEl.updateTotals) productEl.updateTotals();
+      button.setAttribute('aria-pressed', String(retail));
+      button.textContent = retail ? button.dataset.labelShowB2b : button.dataset.labelShowRetail;
     });
     applyB2bMinimumGate();
   }
 
-  /* The B2B minimum order (Theme settings > B2B / wholesale > "B2B minimum order value") only applies
-     while viewing B2B prices: switched to "regular prices" there is no minimum. data-b2b-minimum-met
-     carries the server's B2B-view verdict (rendered with the cart, via Section Rendering API on every
-     add/change); this only decides whether that verdict is currently enforced. Called from
-     applyPriceView() (toggle, initial load) and from cart.applySections() (after every cart change),
-     since cart line items are not [data-np-price] elements the price MutationObserver would catch. */
+  /* The B2B minimum order (Theme settings > B2B / wholesale > "B2B minimum order value") always applies to a B2B
+     customer's cart, whatever the price-view toggle shows: data-b2b-minimum-met carries the server's verdict
+     (rendered with the cart, via Section Rendering API on every add/change) and is re-checked here in a
+     foreign currency. Called from applyPriceView() (toggle, initial load) and from cart.applySections() (after
+     every cart change), since cart line items are not [data-np-price] elements the price MutationObserver would catch. */
   /* Wholesale value of the cart in its own currency, from np-b2b-cart-wholesale's two parts: price-list lines
      (shop currency, converted) + all other lines (already in the cart's currency). null without a rate. */
   function wholesaleCartCents(el) {
@@ -1657,25 +1675,21 @@
     });
   }
 
-  /* B2B cart lines (snippets/np-b2b-cart-line.liquid): in a currency other than the shop's the wholesale breakdown
-     is left empty by Liquid and filled in here with Shopify's live rate; hidden while viewing regular prices. */
-  function syncB2bCartLines(retailView) {
-    $$('[data-b2b-cart-line]').forEach((el) => {
-      if (!el.textContent.trim()) {
-        const unit = fromShopCents(el.dataset.unitShopCents);
-        const quantity = Number(el.dataset.quantity) || 0;
-        if (unit !== null) {
-          el.textContent = (el.dataset.template || '')
-            .replace('%CARTONS%', el.dataset.cartons || String(quantity))
-            .replace('%PCS%', el.dataset.box || '')
-            .replace('%UNIT%', formatMoney(unit))
-            .replace('%TOTAL%', formatMoney(unit * quantity));
-        }
-      }
-      el.hidden = retailView || !el.textContent.trim();
-    });
-    $$('[data-b2b-cart-weight]').forEach((el) => {
-      el.hidden = retailView;
+  /* B2B cart summary (snippets/np-b2b-cart-summary.liquid): the subtotal in the cart's currency, and the total once
+     the pallet shipping is known in that same currency - until then (or when the pallet price is in another
+     currency) the total stays the subtotal with "+ shipping" next to it. */
+  function syncB2bSummary() {
+    $$('[data-b2b-summary]').forEach((el) => {
+      const subtotal = wholesaleCartCents(el);
+      const value = $('[data-b2b-wholesale-total-value]', el);
+      if (value && subtotal !== null) value.textContent = formatMoney(subtotal);
+      const pallets = $('[data-b2b-pallets]', el);
+      const quote = pallets && pallets.npPalletQuote;
+      const withShipping = Boolean(subtotal !== null && quote && !quote.pricePending && quote.currency === NP.currency && Number.isFinite(quote.shippingCents));
+      const total = $('[data-b2b-grand-total]', el);
+      if (total && subtotal !== null) total.textContent = formatMoney(withShipping ? subtotal + quote.shippingCents : subtotal);
+      const plus = $('[data-b2b-grand-plus]', el);
+      if (plus) plus.hidden = withShipping;
     });
   }
 
@@ -1802,9 +1816,9 @@
       .replace('%PRICE%', formatMoneyIn(quote.pricePerPalletCents, quote.currency))
       .replace('%TOTAL%', formatMoneyIn(quote.shippingCents, quote.currency));
 
-  /* Recalculated on load and after every cart change (cart.applySections -> applyB2bMinimumGate). While a B2B
-     customer views regular prices the checkout is Shopify's ordinary one, so the pallet parts are hidden then. */
-  function syncB2bPallets(retailView) {
+  /* Recalculated on load and after every cart change (cart.applySections -> applyB2bMinimumGate). The pallet parts
+     are always shown to a B2B customer: the B2B checkout charges them whatever the price-view toggle displays. */
+  function syncB2bPallets() {
     applyPalletPriceTexts(); // a re-rendered cart brings the promotion back with Liquid's price
     $$('[data-b2b-pallets]').forEach((el) => {
       const quote = palletQuote(el);
@@ -1827,11 +1841,9 @@
       if (estimated) estimated.hidden = !quote.estimated;
     });
     $$('[data-b2b-pallet-only]').forEach((el) => {
-      el.hidden = retailView;
+      el.hidden = false;
     });
-    $$('[data-b2b-retail-only]').forEach((el) => {
-      el.hidden = !retailView;
-    });
+    syncB2bSummary(); // the total includes the shipping just calculated
   }
 
   /* "Continue with the purchase?" before every checkout (np-cart.liquid, [data-checkout-confirm]). Resolves true for
@@ -1906,27 +1918,19 @@
     }
   });
 
+  /* B2B parts of the cart (lines, summary, pallets, minimum order) always show what the B2B checkout charges - they do
+     not follow the header's price-view toggle, which only changes how product prices are displayed. */
   function applyB2bMinimumGate() {
-    const retailView = currentPriceView() === 'retail';
-    syncB2bCartLines(retailView);
-    syncB2bPallets(retailView);
+    syncShopMoney();
+    syncB2bPallets();
     $$('[data-b2b-minimum-order]').forEach((el) => {
       syncB2bMinimum(el);
-      el.hidden = retailView;
-    });
-    $$('[data-b2b-wholesale-total]').forEach((el) => {
-      const value = $('[data-b2b-wholesale-total-value]', el);
-      if (value && !value.textContent.trim()) {
-        const cents = wholesaleCartCents(el);
-        if (cents !== null) value.textContent = formatMoney(cents);
-      }
-      el.hidden = retailView || !(value && value.textContent.trim());
     });
     $$('[data-checkout-button][data-b2b-minimum-met]').forEach((button) => {
       const page = button.closest('[data-cart-page]');
       const notice = page && $('[data-b2b-minimum-order]', page);
       if (notice) button.dataset.b2bMinimumMet = notice.dataset.minimumMet;
-      const blocked = !retailView && button.dataset.b2bMinimumMet === 'false';
+      const blocked = button.dataset.b2bMinimumMet === 'false';
       button.disabled = blocked;
       button.setAttribute('aria-disabled', String(blocked));
       button.classList.toggle('pointer-events-none', blocked);
@@ -1942,15 +1946,15 @@
   /* B2B checkout at wholesale prices (cart page, only rendered for a B2B customer when the verification service is
      configured): instead of Shopify's normal checkout, the cart goes to the service, which creates a draft order with
      the price-list prices for the signed-in company and answers with that order's Shopify checkout URL. Needs the
-     company's e-mail + password sign-in from the B2B page (the token <np-b2b-session> keeps). Switched to "regular prices"
-     the button is an ordinary checkout again.
+     company's e-mail + password sign-in from the B2B page (the token <np-b2b-session> keeps). The header's price-view
+     toggle does not change this: a B2B customer always checks out here, at the price list.
      Before the order is created the company confirms "continue with the purchase?" with its pallets and pallet shipping.
      The service counts the pallets again with the same code and only creates the order when the count matches the
      confirmed one; otherwise (cart changed meanwhile, script missing) it answers with its numbers and the company
      confirms those - so the shipping shown here is always the shipping Shopify's checkout charges. */
   document.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-checkout-button][data-b2b-checkout]');
-    if (!button || currentPriceView() === 'retail') return;
+    if (!button) return;
     event.preventDefault();
     if (button.dataset.busy) return;
 
