@@ -730,8 +730,8 @@
     },
     "hero": {
       "eyebrow": "Ze słonecznych pól Wschodu",
-      "title": "Autentyczne smaki Azji Środkowej",
-      "subtitle": "Przyprawy, orzechy i bakalie starannie wyselekcjonowane w Uzbekistanie i regionie Azji Środkowej — dostarczane prosto do Twoich drzwi.",
+      "title": "Przyprawy, orzechy i bakalie z Azji Środkowej",
+      "subtitle": "Autentyczne smaki, starannie wyselekcjonowane w Uzbekistanie i regionie Azji Środkowej — dostarczane prosto do Twoich drzwi.",
       "cta": "Zobacz bestsellery"
     },
     "trust_bar": {
@@ -1183,37 +1183,51 @@
       "notter_snacks": {
         "name": "Orzechy i przekąski",
         "tagline": "Chrupiące, prażone, bez zbędnych dodatków",
-        "description": "Migdały, orzeszki ziemne i pestki prażone w niewielkich partiach, tak by zachować naturalny smak i chrupkość."
+        "description": "Migdały, orzeszki ziemne i pestki prażone w niewielkich partiach, tak by zachować naturalny smak i chrupkość.",
+        "seo_title": "Orzechy i przekąski z Azji Środkowej",
+        "seo_html": "<p>W Nature Pick znajdziesz migdały, orzeszki ziemne i pestki prażone w małych partiach, aby zachowały naturalny smak i chrupkość – bez zbędnych dodatków.</p><p>Sprawdzą się jako przekąska, w musli i sałatkach lub do wypieków. Masz ochotę na coś słodkiego? Połącz je z naszymi <a href=\"{{ collections }}/torkad-frukt\">suszonymi owocami</a>. Pochodzenie podajemy przy każdym produkcie.</p>"
       },
       "naturliga_kryddor": {
         "name": "Naturalne przyprawy",
         "tagline": "Intensywny aromat prosto do garnka",
-        "description": "Mielone i suszone przyprawy — od słodkiej papryki po kurkumę — bez konserwantów i sztucznych wypełniaczy."
+        "description": "Mielone i suszone przyprawy — od słodkiej papryki po kurkumę — bez konserwantów i sztucznych wypełniaczy.",
+        "seo_title": "Naturalne przyprawy online",
+        "seo_html": "<p>Mielone i suszone przyprawy – od słodkiej papryki po kurkumę – bez konserwantów i sztucznych wypełniaczy. Nature Pick wybiera przyprawy w Uzbekistanie i Azji Środkowej, regionie słynącym z przypraw o intensywnym smaku.</p><p>Używaj ich do gulaszy, plowu, marynat i sosów. Jeszcze więcej smaku dodadzą nasze <a href=\"{{ collections }}/soltorkade-gronsaker\">warzywa suszone na słońcu</a>.</p>"
       },
       "torkad_frukt": {
         "name": "Suszone owoce",
         "tagline": "Naturalna słodycz na zdrową przekąskę",
-        "description": "Jagody goji i inne suszone owoce, dosuszane bez dodatku cukru, gotowe do jedzenia prosto z opakowania."
+        "description": "Jagody goji i inne suszone owoce, dosuszane bez dodatku cukru, gotowe do jedzenia prosto z opakowania.",
+        "seo_title": "Suszone owoce bez dodatku cukru",
+        "seo_html": "<p>Jagody goji i inne suszone owoce, suszone bez dodatku cukru i gotowe do jedzenia prosto z opakowania. Uzbekistan słynie z moreli i suszonych owoców wyjątkowej jakości.</p><p>Suszone owoce to naturalnie słodka przekąska, świetna do owsianki, jogurtu i wypieków, a do tego dobrze komponują się z naszymi <a href=\"{{ collections }}/notter-snacks\">orzechami</a>.</p>"
       },
       "soltorkade_gronsaker": {
         "name": "Warzywa suszone na słońcu",
         "tagline": "Skoncentrowany smak lata",
-        "description": "Suszone pomidory, cebula i płatki papryki — idealne do sosów, past i dań jednogarnkowych."
+        "description": "Suszone pomidory, cebula i płatki papryki — idealne do sosów, past i dań jednogarnkowych.",
+        "seo_title": "Warzywa suszone na słońcu",
+        "seo_html": "<p>Suszone na słońcu pomidory, cebula i płatki papryki o skoncentrowanym smaku lata – idealne do sosów, past i dań jednogarnkowych.</p><p>Dodawaj je bezpośrednio do potraw, aby pogłębić smak, najlepiej razem z naszymi <a href=\"{{ collections }}/naturliga-kryddor\">naturalnymi przyprawami</a>.</p>"
       },
       "baljvaxter": {
         "name": "Rośliny strączkowe",
         "tagline": "Roślinne białko na co dzień",
-        "description": "Prażona ciecierzyca i inne strączki — sycąca przekąska lub baza pod domowe hummusy."
+        "description": "Prażona ciecierzyca i inne strączki — sycąca przekąska lub baza pod domowe hummusy.",
+        "seo_title": "Rośliny strączkowe i prażona ciecierzyca",
+        "seo_html": "<p>Prażona ciecierzyca i inne rośliny strączkowe – białko roślinne na co dzień. Sycąca przekąska prosto z torebki lub baza domowego hummusu.</p><p>Dopraw je naszymi <a href=\"{{ collections }}/naturliga-kryddor\">naturalnymi przyprawami</a> albo wymieszaj z <a href=\"{{ collections }}/notter-snacks\">orzechami i przekąskami</a>, tworząc własną mieszankę.</p>"
       },
       "ortteer": {
         "name": "Herbatki ziołowe",
         "tagline": "Naturalne mieszanki do parzenia",
-        "description": "Suszone zioła i mieszanki ziołowe do codziennego parzenia."
+        "description": "Suszone zioła i mieszanki ziołowe do codziennego parzenia.",
+        "seo_title": "Herbatki ziołowe i suszone zioła",
+        "seo_html": "<p>Suszone zioła i mieszanki ziołowe – naturalne mieszanki do codziennego parzenia.</p><p>Świetnie pasują do czegoś słodkiego z kategorii <a href=\"{{ collections }}/sotsaker-delikatesser\">słodycze i delikatesy</a> lub jako część <a href=\"{{ collections }}/gavopaket\">zestawu prezentowego</a>.</p>"
       },
       "sotsaker_delikatesser": {
         "name": "Słodycze i delikatesy",
         "tagline": "Drobne przyjemności z naturalnych składników",
-        "description": "Wyselekcjonowane specjały do kawy, na deser albo w prezencie."
+        "description": "Wyselekcjonowane specjały do kawy, na deser albo w prezencie.",
+        "seo_title": "Słodycze i delikatesy",
+        "seo_html": "<p>Wybrane specjały z naturalnych składników – do kawy, na deser lub na prezent.</p><p>Szukasz prezentu? Skomponuj własny <a href=\"{{ collections }}/gavopaket\">zestaw prezentowy</a> z co najmniej trzech produktów wysyłanych razem.</p>"
       },
       "gavopaket": {
         "name": "Zestawy prezentowe",
@@ -1293,6 +1307,11 @@
       "vat_exempt_note": "Twoja firma jest zwolniona z VAT – VAT nie jest doliczany.",
       "other_lines_note": "Produkty bez ceny B2B są rozliczane po cenie regularnej.",
       "price_view_hint": "Zmienia tylko sposób wyświetlania. W koszyku i przy kasie zawsze płacisz swoją cenę B2B."
+    },
+    "seo": {
+      "home_title": "Przyprawy, orzechy i bakalie z Azji Środkowej",
+      "home_description": "Przyprawy, orzechy, bakalie i warzywa suszone na słońcu z Uzbekistanu i Azji Środkowej. Wybrane u źródła, wysyłka ze Szwecji do całej Europy.",
+      "product_description": "{{ title }} od Nature Pick. Przyprawy, orzechy i bakalie z jasno opisanym pochodzeniem – wysyłka ze Szwecji do całej Europy."
     }
   }
 }
