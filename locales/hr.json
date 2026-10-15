@@ -607,9 +607,9 @@
       "link_b2b": "B2B suradnja"
     },
     "hero": {
-      "eyebrow": "From Sunny Eastern Fields",
-      "title": "Autentični okusi Srednje Azije",
-      "subtitle": "Začini, orašasti plodovi i suho voće pažljivo odabrani u Uzbekistanu i regiji Srednje Azije — dostavljeno izravno na tvoja vrata.",
+      "eyebrow": "Sa sunčanih polja Istoka",
+      "title": "Začini, orašasti plodovi i suho voće iz Srednje Azije",
+      "subtitle": "Autentični okusi, pažljivo odabrani u Uzbekistanu i regiji Srednje Azije — dostavljeno izravno na tvoja vrata.",
       "cta": "Pogledaj bestselere"
     },
     "trust_bar": {
@@ -1061,37 +1061,51 @@
       "notter_snacks": {
         "name": "Orašasti plodovi i grickalice",
         "tagline": "Hrskavo, prženo, bez nepotrebnih dodataka",
-        "description": "Bademi, kikiriki i sjemenke prženi u malim serijama kako bi se zadržao prirodan okus i hrskavost."
+        "description": "Bademi, kikiriki i sjemenke prženi u malim serijama kako bi se zadržao prirodan okus i hrskavost.",
+        "seo_title": "Orašasti plodovi i grickalice iz Srednje Azije",
+        "seo_html": "<p>U ponudi Nature Picka su bademi, kikiriki i sjemenke prženi u malim serijama kako bi zadržali prirodan okus i hrskavost – bez nepotrebnih dodataka.</p><p>Idealni su kao međuobrok, u müsliju i salatama ili za kolače. Želite i nešto slatko? Kombinirajte ih s našim <a href=\"{{ collections }}/torkad-frukt\">suhim voćem</a>. Podrijetlo je navedeno za svaki proizvod.</p>"
       },
       "naturliga_kryddor": {
         "name": "Prirodni začini",
         "tagline": "Intenzivna aroma izravno u lonac",
-        "description": "Mljeveni i sušeni začini — od slatke paprike do kurkume — bez konzervansa i umjetnih punila."
+        "description": "Mljeveni i sušeni začini — od slatke paprike do kurkume — bez konzervansa i umjetnih punila.",
+        "seo_title": "Prirodni začini online",
+        "seo_html": "<p>Mljeveni i sušeni začini – od slatke paprike do kurkume – bez konzervansa i umjetnih punila. Nature Pick začine bira u Uzbekistanu i Srednjoj Aziji, regiji poznatoj po začinima intenzivna okusa.</p><p>Koristite ih u varivima, plovu, marinadama i umacima. Za još više okusa probajte naše <a href=\"{{ collections }}/soltorkade-gronsaker\">povrće sušeno na suncu</a>.</p>"
       },
       "torkad_frukt": {
         "name": "Suho voće",
         "tagline": "Prirodna slatkoća za zdravu grickalicu",
-        "description": "Bobice goji i drugo suho voće, sušeno bez dodanog šećera, spremno za jelo izravno iz pakiranja."
+        "description": "Bobice goji i drugo suho voće, sušeno bez dodanog šećera, spremno za jelo izravno iz pakiranja.",
+        "seo_title": "Suho voće bez dodanog šećera",
+        "seo_html": "<p>Goji bobice i drugo suho voće, sušeno bez dodanog šećera i spremno za jelo ravno iz pakiranja. Uzbekistan je poznat po marelicama i suhom voću iznimne kvalitete.</p><p>Suho voće prirodno je sladak međuobrok, odlično u zobenoj kaši, jogurtu i kolačima, a lijepo se slaže s našim <a href=\"{{ collections }}/notter-snacks\">orašastim plodovima</a>.</p>"
       },
       "soltorkade_gronsaker": {
         "name": "Povrće sušeno na suncu",
         "tagline": "Koncentrirani okus ljeta",
-        "description": "Sušene rajčice, luk i pahuljice paprike — savršeno za umake, namaze i jela iz jedne posude."
+        "description": "Sušene rajčice, luk i pahuljice paprike — savršeno za umake, namaze i jela iz jedne posude.",
+        "seo_title": "Povrće sušeno na suncu",
+        "seo_html": "<p>Rajčice sušene na suncu, luk i pahuljice paprike s koncentriranim okusom ljeta – savršeni za umake, namaze i jela iz jednog lonca.</p><p>Dodajte ih izravno u jelo za dublji okus, najbolje uz naše <a href=\"{{ collections }}/naturliga-kryddor\">prirodne začine</a>.</p>"
       },
       "baljvaxter": {
         "name": "Mahunarke",
         "tagline": "Biljne bjelančevine svaki dan",
-        "description": "Pečeni slanutak i druge mahunarke — sit međuobrok ili osnova za domaći humus."
+        "description": "Pečeni slanutak i druge mahunarke — sit međuobrok ili osnova za domaći humus.",
+        "seo_title": "Mahunarke i pečeni slanutak",
+        "seo_html": "<p>Pečeni slanutak i druge mahunarke – biljni proteini za svaki dan. Zasitan međuobrok ravno iz vrećice ili osnova za domaći humus.</p><p>Začinite ih našim <a href=\"{{ collections }}/naturliga-kryddor\">prirodnim začinima</a> ili ih pomiješajte s <a href=\"{{ collections }}/notter-snacks\">orašastim plodovima i grickalicama</a> za vlastitu mješavinu.</p>"
       },
       "ortteer": {
         "name": "Biljni čajevi",
         "tagline": "Prirodne mješavine za kuhanje čaja",
-        "description": "Sušeno bilje i biljne mješavine za svakodnevno kuhanje čaja."
+        "description": "Sušeno bilje i biljne mješavine za svakodnevno kuhanje čaja.",
+        "seo_title": "Biljni čajevi i sušeno bilje",
+        "seo_html": "<p>Sušeno bilje i biljne mješavine – prirodne mješavine za svakodnevnu pripremu čaja.</p><p>Lijepo se slažu s nečim slatkim iz ponude <a href=\"{{ collections }}/sotsaker-delikatesser\">slastica i delicija</a> ili kao dio <a href=\"{{ collections }}/gavopaket\">poklon-seta</a>.</p>"
       },
       "sotsaker_delikatesser": {
         "name": "Slastice i delicije",
         "tagline": "Male poslastice od prirodnih sastojaka",
-        "description": "Odabrani specijaliteti uz kavu, za desert ili kao poklon."
+        "description": "Odabrani specijaliteti uz kavu, za desert ili kao poklon.",
+        "seo_title": "Slastice i delicije",
+        "seo_html": "<p>Odabrane delicije od prirodnih sastojaka – uz kavu, za desert ili kao poklon.</p><p>Tražite poklon? Složite vlastiti <a href=\"{{ collections }}/gavopaket\">poklon-set</a> od najmanje tri proizvoda koji se šalju zajedno.</p>"
       },
       "gavopaket": {
         "name": "Poklon-setovi",
@@ -1170,6 +1184,11 @@
       "vat_exempt_note": "Vaša je tvrtka oslobođena PDV-a – PDV se ne dodaje.",
       "other_lines_note": "Proizvodi bez B2B cijene naplaćuju se po redovnoj cijeni.",
       "price_view_hint": "Mijenja samo prikaz. U košarici i na blagajni uvijek plaćate svoju B2B cijenu."
+    },
+    "seo": {
+      "home_title": "Začini, orašasti plodovi i suho voće iz Srednje Azije",
+      "home_description": "Začini, orašasti plodovi, suho voće i povrće sušeno na suncu iz Uzbekistana i Srednje Azije. Odabrano na izvoru, šaljemo iz Švedske diljem Europe.",
+      "product_description": "{{ title }} – Nature Pick. Začini, orašasti plodovi i suho voće s jasno navedenim podrijetlom – šaljemo iz Švedske diljem Europe."
     }
   },
   "gempages": {
