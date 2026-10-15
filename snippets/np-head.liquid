@@ -13,18 +13,105 @@
   <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
 {%- endif -%}
 
+{%- liquid
+  # Search result title: product names typed in CAPITALS read in sentence case, as on the page (snippet np-title)
+  assign seo_title = page_title
+  if request.page_type == 'product'
+    capture seo_title
+      render 'np-title', title: page_title
+    endcapture
+  endif
+  assign seo_title = seo_title | strip
+
+  # Search result text when Shopify has none (no SEO description and no text in the admin): the same translated
+  # texts the page itself shows, so every language gets its own description
+  assign seo_description = page_description | strip_html | strip
+  if seo_description == blank
+    case request.page_type
+      when 'index'
+        assign seo_description = 'np.hero.subtitle' | t
+      when 'collection'
+        if collection.handle == 'all'
+          assign seo_description = 'np.collection.all_products_description' | t
+        else
+          assign seo_description_key = 'np.categories.' | append: collection.handle | replace: '-', '_' | append: '.description'
+          assign seo_description = seo_description_key | t
+        endif
+      when 'page'
+        case page.handle
+          when 'faq'
+            assign seo_description = 'np.faq.page_description' | t
+          when 'about'
+            assign seo_description = 'np.about_page.description' | t
+          when 'contact'
+            assign seo_description = 'np.contact_page.description' | t
+          when 'b2b'
+            assign seo_description = 'np.b2b_page.description' | t
+          when 'spice-club'
+            assign seo_description = 'np.spice_club_page.description' | t
+        endcase
+    endcase
+    if seo_description contains 'ranslation missing'
+      assign seo_description = ''
+    endif
+  endif
+  assign seo_description = seo_description | strip_html | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | strip | truncate: 160
+
+  # Pages that must not show up in Google: search results, cart, customer account, wishlist, password page,
+  # HoReCa products and the HoReCa collection (a visitor who is not an approved B2B customer only sees a login
+  # notice there), and anything hidden with the seo.hidden metafield (which also removes it from the sitemap)
+  assign seo_noindex = false
+  case request.page_type
+    when 'search', 'cart', 'password', 'gift_card', 'captcha'
+      assign seo_noindex = true
+    when 'page'
+      if page.handle == 'wishlist' or page.template_suffix == 'wishlist'
+        assign seo_noindex = true
+      endif
+    when 'product'
+      capture seo_horeca
+        render 'np-horeca-gate', product: product
+      endcapture
+      if seo_horeca contains 'locked'
+        assign seo_noindex = true
+      endif
+    when 'collection'
+      if collection.handle == 'horeca'
+        assign seo_noindex = true
+        if customer
+          capture seo_b2b
+            render 'np-b2b-customer'
+          endcapture
+          if seo_b2b contains 'true'
+            assign seo_noindex = false
+          endif
+        endif
+      endif
+  endcase
+  if request.page_type contains 'customers/'
+    assign seo_noindex = true
+  endif
+  if product.metafields.seo.hidden.value == 1 or collection.metafields.seo.hidden.value == 1 or page.metafields.seo.hidden.value == 1 or article.metafields.seo.hidden.value == 1
+    assign seo_noindex = true
+  endif
+-%}
+
 <title>
-  {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {{- seo_title | escape_once -}}
+  {%- if current_tags %} &ndash; {{ current_tags | join: ', ' | escape_once }}{% endif -%}
   {%- if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: number: current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape_once }}{% endunless -%}
 </title>
 
-{%- if page_description -%}
-  <meta name="description" content="{{ page_description | escape }}">
+{%- if seo_description != blank -%}
+  <meta name="description" content="{{ seo_description | escape_once }}">
 {%- endif -%}
 
-{%- render 'meta-tags' -%}
+{%- if seo_noindex -%}
+  <meta name="robots" content="noindex, follow">
+{%- endif -%}
+
+{%- render 'meta-tags', seo_title: seo_title, seo_description: seo_description -%}
 
 {%- comment -%} Fallback share image when a page has no image of its own {%- endcomment -%}
 {%- unless page_image -%}
