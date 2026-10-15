@@ -105,15 +105,37 @@
 
 {%- comment -%} Structured data (home page only, like a single Organization/WebSite declaration) {%- endcomment -%}
 {%- if request.page_type == 'index' -%}
-  {%- assign search_action_target = shop.url | append: routes.search_url | append: '?q={search_term_string}' -%}
+  {%- liquid
+    assign search_action_target = shop.url | append: routes.search_url | append: '?q={search_term_string}'
+    if settings.logo != blank
+      assign org_logo = settings.logo | image_url: width: 600 | prepend: 'https:'
+    else
+      assign org_logo = 'np-logo.webp' | asset_url | prepend: 'https:'
+    endif
+    # the brand's own profiles (Theme settings > Social media), so Google can tie them to the shop
+    assign org_profiles = ''
+    assign org_profile_links = settings.social_instagram_link | append: '|' | append: settings.social_facebook_link | append: '|' | append: settings.social_tiktok_link | append: '|' | append: settings.social_youtube_link | split: '|'
+    for org_profile in org_profile_links
+      assign org_profile = org_profile | strip
+      if org_profile contains 'http'
+        if org_profiles != ''
+          assign org_profiles = org_profiles | append: ','
+        endif
+        assign org_profile_json = org_profile | json
+        assign org_profiles = org_profiles | append: org_profile_json
+      endif
+    endfor
+  -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": {{ shop.url | append: '/#organization' | json }},
       "name": {{ shop.name | json }},
       "url": {{ shop.url | json }},
-      {%- if settings.logo != blank -%}
-      "logo": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | json }},
+      "logo": {{ org_logo | json }},
+      {%- if org_profiles != '' -%}
+      "sameAs": [{{ org_profiles }}],
       {%- endif -%}
       "contactPoint": {
         "@type": "ContactPoint",
@@ -123,6 +145,9 @@
       "parentOrganization": {
         "@type": "Organization",
         "name": {{ settings.company_name | json }},
+        {%- if settings.company_vat != blank -%}
+        "vatID": {{ settings.company_vat | json }},
+        {%- endif -%}
         "address": {{ settings.company_address | json }}
       }
     }
@@ -133,6 +158,8 @@
       "@type": "WebSite",
       "name": {{ shop.name | json }},
       "url": {{ shop.url | json }},
+      "inLanguage": {{ request.locale.iso_code | json }},
+      "publisher": { "@id": {{ shop.url | append: '/#organization' | json }} },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {{ search_action_target | json }},

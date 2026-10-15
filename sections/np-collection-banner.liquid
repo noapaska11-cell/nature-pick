@@ -54,6 +54,25 @@
   </div>
 </section>
 
+{%- comment -%} Breadcrumb for Google (Home > category), same trail as the one above the heading {%- endcomment -%}
+{%- liquid
+  if is_all
+    assign crumb_name = 'np.collection.all_products_title' | t
+  else
+    assign crumb_name = collection.title
+  endif
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": {{ 'np.common.home' | t | json }}, "item": {{ routes.root_url | prepend: request.origin | json }} },
+      { "@type": "ListItem", "position": 2, "name": {{ crumb_name | json }}, "item": {{ collection.url | prepend: request.origin | json }} }
+    ]
+  }
+</script>
+
 {% schema %}
 {
   "name": "Collection banner",

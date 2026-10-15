@@ -5,6 +5,7 @@
   capture product_title
     render 'np-title', title: product.title
   endcapture
+  assign product_title_text = product_title
   assign product_title = product_title | escape
 
   assign badge = ''
@@ -198,7 +199,13 @@
       <div data-gallery>
         <div class="relative aspect-square w-full overflow-hidden rounded-3xl bg-white">
           {%- for media in product.media -%}
-            {%- assign media_alt = media.alt | default: product.title | escape -%}
+            {%- liquid
+              assign media_alt = media.alt | default: product_title_text
+              if media_alt == product.title
+                assign media_alt = product_title_text
+              endif
+              assign media_alt = media_alt | escape
+            -%}
             <div data-gallery-item data-media-id="{{ media.id }}" {% unless media.id == current_variant.featured_media.id or forloop.first and current_variant.featured_media == blank %}hidden{% endunless %} class="absolute inset-0">
               {%- case media.media_type -%}
                 {%- when 'image' -%}
@@ -216,7 +223,7 @@
               {%- endcase -%}
             </div>
           {%- else -%}
-            {%- render 'np-product-image', image: blank, alt: product.title, class: 'absolute inset-0', index: product.id -%}
+            {%- render 'np-product-image', image: blank, alt: product_title_text, class: 'absolute inset-0', index: product.id -%}
           {%- endfor -%}
         </div>
 
@@ -464,18 +471,27 @@
   {%- endif -%}
 
   <script type="application/json" data-variants>{{ product.variants | json }}</script>
-  <script type="application/ld+json">{{ product | structured_data }}</script>
+  {%- liquid
+    # Shopify's product data for Google, with the product name in sentence case like on the page (snippet np-title)
+    assign product_ld = product | structured_data
+    if product_title_text != product.title
+      assign product_ld_from = product.title | json
+      assign product_ld_to = product_title_text | json
+      assign product_ld = product_ld | replace: product_ld_from, product_ld_to
+    endif
+  -%}
+  <script type="application/ld+json">{{ product_ld }}</script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": {{ 'np.common.home' | t | json }}, "item": {{ shop.url | json }} }
+        { "@type": "ListItem", "position": 1, "name": {{ 'np.common.home' | t | json }}, "item": {{ routes.root_url | prepend: request.origin | json }} }
         {%- if crumb_collection != blank -%}
           , { "@type": "ListItem", "position": 2, "name": {{ crumb_collection.title | json }}, "item": {{ crumb_collection.url | prepend: request.origin | json }} }
-          , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ product.url | prepend: request.origin | json }} }
+          , { "@type": "ListItem", "position": 3, "name": {{ product_title_text | json }}, "item": {{ product.url | prepend: request.origin | json }} }
         {%- else -%}
-          , { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ product.url | prepend: request.origin | json }} }
+          , { "@type": "ListItem", "position": 2, "name": {{ product_title_text | json }}, "item": {{ product.url | prepend: request.origin | json }} }
         {%- endif -%}
       ]
     }
