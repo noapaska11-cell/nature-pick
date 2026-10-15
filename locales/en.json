@@ -668,8 +668,8 @@
     },
     "hero": {
       "eyebrow": "From Sunny Eastern Fields",
-      "title": "Authentic flavors of Central Asia",
-      "subtitle": "Spices, nuts and dried fruit carefully selected in Uzbekistan and the Central Asian region — delivered straight to your door.",
+      "title": "Spices, nuts and dried fruit from Central Asia",
+      "subtitle": "Authentic flavors, carefully selected in Uzbekistan and the Central Asian region — delivered straight to your door.",
       "cta": "Shop bestsellers"
     },
     "trust_bar": {
@@ -1118,37 +1118,51 @@
       "notter_snacks": {
         "name": "Nuts & snacks",
         "tagline": "Crunchy, roasted, no unnecessary additives",
-        "description": "Almonds, peanuts and seeds roasted in small batches to keep their natural flavor and crunch."
+        "description": "Almonds, peanuts and seeds roasted in small batches to keep their natural flavor and crunch.",
+        "seo_title": "Nuts and snacks from Central Asia",
+        "seo_html": "<p>At Nature Pick you'll find almonds, peanuts and seeds roasted in small batches to keep their natural flavor and crunch – with no unnecessary additives.</p><p>Enjoy them as a snack, in muesli and salads or in baking. Fancy something sweet as well? Combine them with our <a href=\"{{ collections }}/torkad-frukt\">dried fruit</a>. The origin is stated for every product.</p>"
       },
       "naturliga_kryddor": {
         "name": "Natural spices",
         "tagline": "Intense aroma straight into the pot",
-        "description": "Ground and dried spices — from sweet paprika to turmeric — with no preservatives or artificial fillers."
+        "description": "Ground and dried spices — from sweet paprika to turmeric — with no preservatives or artificial fillers.",
+        "seo_title": "Natural spices online",
+        "seo_html": "<p>Ground and dried spices – from sweet paprika to turmeric – with no preservatives or artificial fillers. Nature Pick selects its spices in Uzbekistan and Central Asia, a region known for intensely flavored spices.</p><p>Use them in stews, plov, marinades and sauces. For even more flavor, try our <a href=\"{{ collections }}/soltorkade-gronsaker\">sun-dried vegetables</a>.</p>"
       },
       "torkad_frukt": {
         "name": "Dried fruit",
         "tagline": "Natural sweetness for a healthy snack",
-        "description": "Goji berries and other dried fruit, dried without added sugar and ready to eat straight from the pack."
+        "description": "Goji berries and other dried fruit, dried without added sugar and ready to eat straight from the pack.",
+        "seo_title": "Dried fruit with no added sugar",
+        "seo_html": "<p>Goji berries and other dried fruit, dried without added sugar and ready to eat straight from the pack. Uzbekistan is known for apricots and dried fruit of exceptional quality.</p><p>Dried fruit makes a naturally sweet snack, works in porridge, yogurt and baking, and pairs well with our <a href=\"{{ collections }}/notter-snacks\">nuts</a>.</p>"
       },
       "soltorkade_gronsaker": {
         "name": "Sun-dried vegetables",
         "tagline": "The concentrated taste of summer",
-        "description": "Sun-dried tomatoes, onion and pepper flakes — perfect for sauces, spreads and one-pot dishes."
+        "description": "Sun-dried tomatoes, onion and pepper flakes — perfect for sauces, spreads and one-pot dishes.",
+        "seo_title": "Sun-dried vegetables",
+        "seo_html": "<p>Sun-dried tomatoes, onion and pepper flakes with the concentrated taste of summer – perfect for sauces, spreads and one-pot dishes.</p><p>Add them straight to your cooking for a deeper flavor, ideally together with our <a href=\"{{ collections }}/naturliga-kryddor\">natural spices</a>.</p>"
       },
       "baljvaxter": {
         "name": "Legumes",
         "tagline": "Plant-based protein for every day",
-        "description": "Roasted chickpeas and other legumes — a filling snack or a base for homemade hummus."
+        "description": "Roasted chickpeas and other legumes — a filling snack or a base for homemade hummus.",
+        "seo_title": "Legumes and roasted chickpeas",
+        "seo_html": "<p>Roasted chickpeas and other legumes – plant-based protein for every day. A filling snack straight from the bag or a base for homemade hummus.</p><p>Season them with our <a href=\"{{ collections }}/naturliga-kryddor\">natural spices</a> or mix them with <a href=\"{{ collections }}/notter-snacks\">nuts and snacks</a> for your own snack mix.</p>"
       },
       "ortteer": {
         "name": "Herbal teas",
         "tagline": "Natural blends for brewing",
-        "description": "Dried herbs and herbal blends for everyday brewing."
+        "description": "Dried herbs and herbal blends for everyday brewing.",
+        "seo_title": "Herbal teas and dried herbs",
+        "seo_html": "<p>Dried herbs and herbal blends – natural blends for everyday brewing.</p><p>They go well with something sweet from our <a href=\"{{ collections }}/sotsaker-delikatesser\">sweets & delicacies</a> or as part of a <a href=\"{{ collections }}/gavopaket\">gift set</a>.</p>"
       },
       "sotsaker_delikatesser": {
         "name": "Sweets & delicacies",
         "tagline": "Small pleasures made from natural ingredients",
-        "description": "Selected specialties for your coffee, dessert, or as a gift."
+        "description": "Selected specialties for your coffee, dessert, or as a gift.",
+        "seo_title": "Sweets and delicacies",
+        "seo_html": "<p>Selected specialties made from natural ingredients – for your coffee, for dessert or as a gift.</p><p>Looking for a present? Build your own <a href=\"{{ collections }}/gavopaket\">gift set</a> with at least three products shipped together.</p>"
       },
       "gavopaket": {
         "name": "Gift sets",
@@ -1225,6 +1239,11 @@
       "vat_exempt_note": "Your company is VAT exempt – no VAT is added.",
       "other_lines_note": "Items without a B2B price are charged at the regular price.",
       "price_view_hint": "Changes the display only. In the cart and at checkout you always pay your B2B price."
+    },
+    "seo": {
+      "home_title": "Spices, nuts and dried fruit from Central Asia",
+      "home_description": "Buy spices, nuts, dried fruit and sun-dried vegetables from Uzbekistan and Central Asia. Selected at the source, shipped from Sweden across Europe.",
+      "product_description": "{{ title }} from Nature Pick. Spices, nuts and dried fruit with a clearly stated origin – shipped from Sweden across Europe."
     }
   }
 }

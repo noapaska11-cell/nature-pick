@@ -317,6 +317,27 @@
     ]
   },
   {
+    "name": "SEO",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Ownership codes for Google Search Console and Bing Webmaster Tools. Choose the \"HTML tag\" method there and paste the code (or the whole <meta ...> tag) here."
+      },
+      {
+        "type": "text",
+        "id": "google_site_verification",
+        "label": "Google Search Console verification code",
+        "info": "Example: abc123XYZ... (the content value of the google-site-verification tag)."
+      },
+      {
+        "type": "text",
+        "id": "bing_site_verification",
+        "label": "Bing Webmaster Tools verification code",
+        "info": "The content value of the msvalidate.01 tag."
+      }
+    ]
+  },
+  {
     "name": "Storefront features",
     "settings": [
       {

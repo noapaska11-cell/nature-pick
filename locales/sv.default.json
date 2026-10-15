@@ -350,8 +350,8 @@
     },
     "hero": {
       "eyebrow": "Från soliga fält i öst",
-      "title": "Autentiska smaker från Centralasien",
-      "subtitle": "Kryddor, nötter och torkad frukt noggrant utvalda i Uzbekistan och Centralasien — levererade direkt till din dörr.",
+      "title": "Kryddor, nötter och torkad frukt från Centralasien",
+      "subtitle": "Autentiska smaker, noggrant utvalda i Uzbekistan och Centralasien — levererade direkt till din dörr.",
       "cta": "Se bästsäljare"
     },
     "trust_bar": {
@@ -800,37 +800,51 @@
       "notter_snacks": {
         "name": "Nötter & snacks",
         "tagline": "Krispiga, rostade, utan onödiga tillsatser",
-        "description": "Mandlar, jordnötter och kärnor rostade i små satser för att bevara naturlig smak och knaprighet."
+        "description": "Mandlar, jordnötter och kärnor rostade i små satser för att bevara naturlig smak och knaprighet.",
+        "seo_title": "Nötter och snacks från Centralasien",
+        "seo_html": "<p>Hos Nature Pick hittar du mandlar, jordnötter och kärnor som rostas i små satser för att bevara den naturliga smaken och knaprigheten – utan onödiga tillsatser.</p><p>Nötter passar som mellanmål, i müsli och sallader eller i bakning. Vill du ha något sött till? Kombinera dem med vår <a href=\"{{ collections }}/torkad-frukt\">torkade frukt</a>. Ursprunget anges för varje produkt.</p>"
       },
       "naturliga_kryddor": {
         "name": "Naturliga kryddor",
         "tagline": "Intensiv arom rakt ner i grytan",
-        "description": "Malda och torkade kryddor — från söt paprika till gurkmeja — utan konserveringsmedel eller konstgjorda fyllmedel."
+        "description": "Malda och torkade kryddor — från söt paprika till gurkmeja — utan konserveringsmedel eller konstgjorda fyllmedel.",
+        "seo_title": "Naturliga kryddor online",
+        "seo_html": "<p>Malda och torkade kryddor – från söt paprika till gurkmeja – utan konserveringsmedel eller konstgjorda fyllmedel. Nature Pick väljer ut kryddorna i Uzbekistan och Centralasien, en region känd för intensivt smaksatta kryddor.</p><p>Använd dem i grytor, plov, marinader och såser. För ännu mer smak, prova våra <a href=\"{{ collections }}/soltorkade-gronsaker\">soltorkade grönsaker</a>.</p>"
       },
       "torkad_frukt": {
         "name": "Torkad frukt",
         "tagline": "Naturlig sötma till ett hälsosamt mellanmål",
-        "description": "Gojibär och annan torkad frukt, torkad utan tillsatt socker och redo att ätas direkt ur förpackningen."
+        "description": "Gojibär och annan torkad frukt, torkad utan tillsatt socker och redo att ätas direkt ur förpackningen.",
+        "seo_title": "Torkad frukt utan tillsatt socker",
+        "seo_html": "<p>Gojibär och annan torkad frukt, torkad utan tillsatt socker och redo att ätas direkt ur förpackningen. Uzbekistan är känt för aprikoser och torkad frukt av exceptionell kvalitet.</p><p>Torkad frukt är ett naturligt sött mellanmål, passar i gröt, yoghurt och bakning och blir en god blandning tillsammans med våra <a href=\"{{ collections }}/notter-snacks\">nötter</a>.</p>"
       },
       "soltorkade_gronsaker": {
         "name": "Soltorkade grönsaker",
         "tagline": "Sommarens koncentrerade smak",
-        "description": "Soltorkade tomater, lök och paprikaflingor — perfekt för såser, röror och grytor."
+        "description": "Soltorkade tomater, lök och paprikaflingor — perfekt för såser, röror och grytor.",
+        "seo_title": "Soltorkade grönsaker",
+        "seo_html": "<p>Soltorkade tomater, lök och paprikaflingor med sommarens koncentrerade smak – perfekt för såser, röror och grytor.</p><p>Lägg dem direkt i maten för en djupare smak, gärna tillsammans med våra <a href=\"{{ collections }}/naturliga-kryddor\">naturliga kryddor</a>.</p>"
       },
       "baljvaxter": {
         "name": "Baljväxter",
         "tagline": "Växtbaserat protein varje dag",
-        "description": "Rostade kikärter och andra baljväxter — ett mättande mellanmål eller en bas för hemgjord hummus."
+        "description": "Rostade kikärter och andra baljväxter — ett mättande mellanmål eller en bas för hemgjord hummus.",
+        "seo_title": "Baljväxter och rostade kikärter",
+        "seo_html": "<p>Rostade kikärter och andra baljväxter – växtbaserat protein för varje dag. Ett mättande mellanmål direkt ur påsen eller en bas för hemgjord hummus.</p><p>Krydda dem med våra <a href=\"{{ collections }}/naturliga-kryddor\">naturliga kryddor</a> eller blanda dem med <a href=\"{{ collections }}/notter-snacks\">nötter och snacks</a> till en egen snacksmix.</p>"
       },
       "ortteer": {
         "name": "Örtteer",
         "tagline": "Naturliga blandningar att brygga",
-        "description": "Torkade örter och örtblandningar för vardagligt bryggande."
+        "description": "Torkade örter och örtblandningar för vardagligt bryggande.",
+        "seo_title": "Örtteer och torkade örter",
+        "seo_html": "<p>Torkade örter och örtblandningar – naturliga blandningar att brygga i vardagen.</p><p>De passar fint tillsammans med något gott från <a href=\"{{ collections }}/sotsaker-delikatesser\">sötsaker & delikatesser</a> eller som en del av ett <a href=\"{{ collections }}/gavopaket\">presentset</a>.</p>"
       },
       "sotsaker_delikatesser": {
         "name": "Sötsaker & delikatesser",
         "tagline": "Små glädjeämnen av naturliga ingredienser",
-        "description": "Utvalda delikatesser till kaffet, till efterrätt eller som present."
+        "description": "Utvalda delikatesser till kaffet, till efterrätt eller som present.",
+        "seo_title": "Sötsaker och delikatesser",
+        "seo_html": "<p>Utvalda delikatesser av naturliga ingredienser – till kaffet, till efterrätten eller som present.</p><p>Vill du ge bort något? Bygg ett eget <a href=\"{{ collections }}/gavopaket\">presentset</a> med minst tre produkter som skickas tillsammans.</p>"
       },
       "gavopaket": {
         "name": "Presentset",
@@ -907,6 +921,11 @@
       "vat_exempt_note": "Ert företag är momsbefriat – ingen moms tillkommer.",
       "other_lines_note": "Varor utan B2B-pris debiteras till ordinarie pris.",
       "price_view_hint": "Ändrar bara visningen. I varukorgen och kassan betalar ni alltid ert B2B-pris."
+    },
+    "seo": {
+      "home_title": "Kryddor, nötter och torkad frukt från Centralasien",
+      "home_description": "Köp kryddor, nötter, torkad frukt och soltorkade grönsaker från Uzbekistan och Centralasien. Utvalda vid källan, skickas från Sverige till hela Europa.",
+      "product_description": "{{ title }} från Nature Pick. Kryddor, nötter och torkad frukt med tydligt angivet ursprung – skickas från Sverige till hela Europa."
     }
   },
   "onboarding": {
