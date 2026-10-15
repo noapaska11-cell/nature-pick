@@ -1,9 +1,14 @@
 {%- comment -%}
-  Wholesale breakdown of one cart line for a B2B customer, e.g. "2 × carton of 36 pcs × 19 kr = 1 368 kr excl. VAT"
-  (cartons only when the SKU has a carton size). Renders nothing for a retail visitor or a SKU without a wholesale
-  price. The list price is in the shop's currency: in any other currency naturepick.js fills the text in with
-  Shopify's live rate (data-unit-shop-cents, see syncB2bCartLines).
-  Params: item, box (pieces per carton, 0 = single pieces)
+  What a B2B customer pays for one cart line - the cart page and the cart drawer show this instead of Shopify's own
+  line price, which is the regular (retail) price: the B2B checkout charges the price list, not the cart price.
+    part: 'meta'  -> "Pris per st: 19 kr exkl. moms" + "Antal: 2 kartonger (72 st)" (+ net weight from the price list)
+    part: 'total' -> line total as the main amount + its VAT label, the regular line price below it (small, struck)
+  Same rules as np-b2b-cart-wholesale and the verification service's checkout: a SKU in the price list costs its list
+  price (excl. VAT), any other line the wholesale discount % off the regular price, else the regular price (both keep
+  the regular price's VAT status). The price list is in the shop's currency: in any other currency the amounts are
+  rendered as data-shop-cents and naturepick.js converts them with Shopify's live rate (syncShopMoney).
+  Renders nothing for a retail visitor - the caller then shows its regular retail markup.
+  Params: item, box (pieces per carton, 0 = single pieces), part
 {%- endcomment -%}
 {%- liquid
   assign line_b2b = false
@@ -17,29 +22,69 @@
   endif
 -%}
 {%- if line_b2b -%}
-  {%- capture unit_major -%}{%- render 'np-b2b-wholesale-price', sku: item.sku -%}{%- endcapture -%}
-  {%- assign unit_major = unit_major | strip -%}
-  {%- if unit_major != '' -%}
+  {%- liquid
+    capture unit_major
+      render 'np-b2b-wholesale-price', sku: item.sku
+    endcapture
+    assign unit_major = unit_major | strip
+    if cart.taxes_included
+      assign retail_vat_text = 'np.price.incl_vat' | t
+    else
+      assign retail_vat_text = 'np.price.excl_vat' | t
+    endif
+    assign line_box = box | plus: 0
+    assign listed = false
+    assign discounted = false
+    assign in_shop_currency = false
+    if cart.currency.iso_code == shop.currency
+      assign in_shop_currency = true
+    endif
+    if unit_major != ''
+      assign listed = true
+      assign vat_text = 'np.price.excl_vat' | t
+      assign unit_cents = unit_major | plus: 0 | times: 100 | round
+      assign line_cents = unit_cents | times: item.quantity
+    else
+      assign vat_text = retail_vat_text
+      assign in_shop_currency = true
+      assign unit_cents = item.original_price
+      assign line_cents = item.original_line_price
+      if settings.b2b_discount_percent > 0
+        assign discounted = true
+        assign multiplier = 100 | minus: settings.b2b_discount_percent
+        assign unit_cents = item.original_price | times: multiplier | divided_by: 100
+        assign line_cents = item.original_line_price | times: multiplier | divided_by: 100
+      endif
+    endif
+  -%}
+  {%- capture unit_amount -%}
+    {%- if in_shop_currency -%}
+      {{- unit_cents | money_without_trailing_zeros -}}
+    {%- else -%}
+      <span data-shop-cents="{{ unit_cents }}" data-shop-cents-pending>…</span>
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- capture line_amount -%}
+    {%- if in_shop_currency -%}
+      {{- line_cents | money_without_trailing_zeros -}}
+    {%- else -%}
+      <span data-shop-cents="{{ line_cents }}" data-shop-cents-pending>…</span>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- if part == 'meta' -%}
     {%- liquid
-      assign unit_shop_cents = unit_major | plus: 0 | times: 100 | round
-      assign line_box = box | plus: 0
-      assign excl_vat_text = 'np.b2b_box.excl_vat' | t
       if line_box > 1
         assign line_cartons = item.quantity | divided_by: line_box
-        assign template = 'np.b2b_box.cart_line_cartons' | t: cartons: '%CARTONS%', pcs: '%PCS%', unit: '%UNIT%', total: '%TOTAL%'
+        assign qty_text = 'np.price.qty_cartons' | t: count: line_cartons, pcs: item.quantity
       else
-        assign line_cartons = item.quantity
-        assign template = 'np.b2b_box.cart_line_pieces' | t: qty: '%CARTONS%', unit: '%UNIT%', total: '%TOTAL%'
-      endif
-      assign template = template | append: ' ' | append: excl_vat_text
-      assign text = ''
-      if cart.currency.iso_code == shop.currency
-        assign unit_text = unit_shop_cents | money_without_trailing_zeros
-        assign total_text = unit_shop_cents | times: item.quantity | money_without_trailing_zeros
-        assign text = template | replace: '%CARTONS%', line_cartons | replace: '%PCS%', line_box | replace: '%UNIT%', unit_text | replace: '%TOTAL%', total_text
+        assign qty_text = 'np.price.qty_pieces' | t: count: item.quantity
       endif
     -%}
-    <p class="mt-1 text-xs font-medium text-[var(--color-olive-dark)]" data-b2b-cart-line data-unit-shop-cents="{{ unit_shop_cents }}" data-quantity="{{ item.quantity }}" data-cartons="{{ line_cartons }}" data-box="{{ line_box }}" data-template="{{ template | escape }}">{{ text }}</p>
+    <dl class="np-line-meta">
+      <div><dt>{{ 'np.price.unit_price' | t }}</dt> <dd>{{ unit_amount }} {{ vat_text }}</dd></div>
+      <div><dt>{{ 'np.price.quantity' | t }}</dt> <dd>{{ qty_text }}</dd></div>
+    </dl>
     {%- liquid
       # total net weight of the line from the price list (grams per piece), e.g. 2 cartons x 36 x 125 g = 9 kg
       capture piece_grams
@@ -48,7 +93,15 @@
       assign line_grams = piece_grams | strip | plus: 0 | times: item.quantity
     -%}
     {%- if line_grams > 0 -%}
-      <p class="text-xs text-[var(--color-charcoal-soft)]" data-b2b-cart-weight>{% render 'np-weight', grams: line_grams %}</p>
+      <p class="np-line-meta np-line-meta--weight" data-b2b-cart-weight>{% render 'np-weight', grams: line_grams %}</p>
     {%- endif -%}
+  {%- else -%}
+    <div class="np-line-total">
+      <span class="np-line-total__amount">{{ line_amount }}</span>
+      <span class="np-line-total__vat">{{ vat_text }}</span>
+      {%- if listed or discounted -%}
+        <span class="np-line-total__ref">{{ 'np.price.regular_price' | t }} <s>{{ item.original_line_price | money_without_trailing_zeros }}</s> {{ retail_vat_text }}</span>
+      {%- endif -%}
+    </div>
   {%- endif -%}
 {%- endif -%}

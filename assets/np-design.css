@@ -1,0 +1,1700 @@
+/*
+  Nature Pick - "Rishtan glaze" design layer.
+
+  The storefront is glazed like a dish from Rishtan in the Fergana Valley, where the products come from: one clay
+  body (cream), one deep green glaze (whole fields: header, hero, origin, footer), ochre brushwork (rim lines, the one
+  primary action, ratings). Depth at rest comes from flat planes laid over each other; motion adds lift.
+
+  This file is loaded after assets/naturepick.css (compiled Tailwind, frozen) and assets/np-price.css from
+  snippets/np-head-styles.liquid. It is not layered, so it wins over Tailwind's @layer utilities without !important.
+  It restyles existing markup only: no text, link or behaviour changes.
+*/
+
+/* ================================================================ tokens */
+:root {
+  --np-glaze: var(--color-olive);
+  --np-glaze-deep: var(--color-olive-dark);
+  --np-clay: var(--color-cream);
+  --np-clay-raised: var(--color-paper);
+  --np-wash: var(--color-olive-light);
+  --np-ochre: var(--color-paprika);
+  --np-ochre-ink: var(--color-paprika-dark);
+  --np-ochre-text: #85560a; /* 5.1:1 on cream - small ochre text */
+  --np-ink: var(--color-charcoal);
+  --np-ink-soft: var(--color-charcoal-soft);
+  --np-rule: var(--color-line);
+
+  --np-radius-tile: 0.75rem;
+  --np-radius-dish: 1.5rem;
+  --np-radius-inner: 1rem;
+
+  /* motion: one family of curves, exponential ease-out for everything that arrives */
+  --np-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --np-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --np-ease-press: cubic-bezier(0.3, 0, 0.5, 1);
+  --np-dur-fast: 180ms;
+  --np-dur-base: 320ms;
+  --np-dur-slow: 640ms;
+  --np-dur-reveal: 1000ms;
+  --np-stagger: 70ms;
+
+  --np-shadow-lift: 0 22px 40px -24px rgb(39 62 43 / 0.45), 0 6px 14px -10px rgb(39 62 43 / 0.25);
+  --np-shadow-float: 0 30px 60px -30px rgb(39 62 43 / 0.5), 0 10px 24px -16px rgb(39 62 43 / 0.3);
+
+  --np-section-space: clamp(3.25rem, 2.2rem + 3.2vw, 6rem);
+}
+
+@property --np-rim-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ================================================================ browser surfaces */
+html {
+  scrollbar-color: color-mix(in srgb, var(--np-glaze) 55%, transparent) var(--np-clay);
+  -webkit-tap-highlight-color: transparent;
+}
+#np-app {
+  background: var(--np-clay);
+  color: var(--np-ink);
+  caret-color: var(--np-ochre-ink);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: color-mix(in srgb, var(--np-ochre) 55%, transparent);
+  color: var(--np-glaze-deep);
+}
+#np-app :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--np-ochre-ink);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+#np-app :where([data-header], footer, .bg-\[var\(--color-charcoal\)\], .bg-\[var\(--color-olive\)\]) :where(a, button, input, select, summary):focus-visible {
+  outline-color: var(--color-gold-on-dark);
+}
+#np-app :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+#np-app :where(p, li, dd) {
+  text-wrap: pretty;
+}
+#np-app :where(a) {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+#np-app [data-np-price],
+#np-app .tabular-nums,
+#np-app [data-cart-badge] {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* a retail price never breaks between amount and currency */
+#np-app [data-np-price]:not(.np-price--b2b) {
+  white-space: nowrap;
+}
+/* a struck regular price stays readable (it was 0.6em of the price, under 11px on cards) */
+#np-app [data-np-price] > s {
+  font-size: max(0.6em, 0.8125rem);
+}
+/* review app histogram counts: readable on the clay ground */
+#np-app .jdgm-histogram__frequency,
+#np-app .jdgm-histogram__percentage {
+  color: var(--np-ink-soft);
+}
+
+/* ================================================================ type */
+/* Display: Fraunces carries the voice - fewer, larger steps, tracked tight. */
+#np-app .font-display {
+  font-feature-settings: "kern", "liga";
+  letter-spacing: -0.015em;
+}
+#np-app h1.font-display {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+#np-app h2.font-display.text-3xl {
+  font-size: clamp(2rem, 1.35rem + 2.4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+/* Section labels (existing copy, kept) become a quiet note on a painted rim line: a short ochre stroke, then the words
+   in their own sentence case - not a tiny tracked all-caps kicker shouting above the heading. */
+#np-app .section-label {
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+#np-app .section-label.text-\[var\(--color-paprika-dark\)\],
+#np-app .text-\[var\(--color-paprika-dark\)\] {
+  color: var(--np-ochre-text);
+}
+#np-app .section-label svg {
+  display: none;
+}
+#np-app .section-label::before {
+  content: "";
+  flex: none;
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.85;
+}
+#np-app .section-label.justify-center::after {
+  content: "";
+  flex: none;
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.85;
+}
+#np-app .section-label + h2,
+#np-app .section-label + * h2 {
+  margin-top: 0.85rem;
+}
+
+/* ================================================================ rhythm */
+#np-app main > .shopify-section > section > .container-page.py-16,
+#np-app main > .shopify-section > div > .container-page.py-16,
+#np-app main > .shopify-section > div > section > .container-page.py-16,
+#np-app main .container-page.py-16 {
+  padding-block: var(--np-section-space);
+}
+#np-app main .container-page.py-14 {
+  padding-block: clamp(3rem, 2.2rem + 3vw, 5.5rem);
+}
+
+/* ================================================================ controls: glazed tiles */
+#np-app .btn-primary,
+#np-app .btn-secondary {
+  border-radius: var(--np-radius-tile);
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  transition:
+    background-color var(--np-dur-base) var(--np-ease-out),
+    color var(--np-dur-base) var(--np-ease-out),
+    border-color var(--np-dur-base) var(--np-ease-out),
+    box-shadow var(--np-dur-base) var(--np-ease-out),
+    transform var(--np-dur-base) var(--np-ease-out);
+}
+#np-app .btn-primary {
+  background: var(--np-ochre);
+  color: var(--np-glaze-deep);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.45),
+    inset 0 -2px 0 rgb(156 101 8 / 0.28);
+}
+#np-app .btn-primary:hover {
+  background: #f7c24a;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    inset 0 -2px 0 rgb(156 101 8 / 0.3),
+    0 14px 26px -16px rgb(156 101 8 / 0.75);
+}
+#np-app .btn-primary:active,
+#np-app .btn-secondary:active {
+  transform: translateY(0) scale(0.96);
+  transition-duration: 90ms;
+  transition-timing-function: var(--np-ease-press);
+}
+#np-app .btn-primary:disabled,
+#np-app .btn-primary[aria-disabled="true"] {
+  box-shadow: none;
+  transform: none;
+}
+#np-app .btn-secondary {
+  border-width: 1.5px;
+}
+#np-app .btn-primary svg,
+#np-app .btn-secondary svg {
+  transition: transform var(--np-dur-base) var(--np-ease-out);
+}
+
+/* Text pills (badges, chips, steppers, small buttons) become small glazed tiles; true circles - icon buttons that set
+   their own width - stay round like a dish. */
+#np-app :is(a, button, span, label, div).rounded-full:not([class*=" w-"]):not([class^="w-"]):not([class*=" h-"]):not([class^="h-"]):not([class*=" size-"]):not([class*="min-w-"]):not(.np-spinner) {
+  border-radius: var(--np-radius-tile);
+}
+#np-app span.rounded-full:not([class*=" w-"]):not([class^="w-"]):is(.text-xs, .text-\[10px\], .text-\[11px\]) {
+  border-radius: 0.4rem;
+}
+#np-app .input-field {
+  border-radius: var(--np-radius-tile);
+  transition: border-color var(--np-dur-base) var(--np-ease-out), box-shadow var(--np-dur-base) var(--np-ease-out);
+}
+#np-app .input-field:hover {
+  border-color: color-mix(in srgb, var(--np-glaze) 35%, var(--np-rule));
+}
+#np-app .input-field:focus {
+  outline: none;
+  border-color: var(--np-glaze);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--np-ochre) 45%, transparent);
+}
+
+/* ================================================================ header: one glaze band */
+#np-app [data-header] {
+  background: var(--np-glaze);
+  border-bottom-color: rgb(255 255 255 / 0.08);
+}
+/* announcement strip: deeper glaze, ochre brush text - not a second yellow flood above the header */
+#np-app [data-header] > div:first-child.bg-\[var\(--color-paprika\)\] {
+  background: var(--np-glaze-deep);
+  color: var(--color-gold-on-dark);
+  border-bottom-color: rgb(255 255 255 / 0.06);
+}
+#np-app [data-header] > div:first-child > .container-page {
+  letter-spacing: 0.04em;
+}
+#np-app [data-header] nav.lg\:flex > a:not([class*="border"]),
+#np-app [data-header] nav.lg\:flex [data-dropdown-toggle] {
+  position: relative;
+  color: rgb(255 255 255 / 0.92);
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  transition: color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app [data-header] nav.lg\:flex > a:not([class*="border"])::after,
+#np-app [data-header] nav.lg\:flex [data-dropdown-toggle]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.45rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-gold-on-dark);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--np-dur-slow) var(--np-ease-out);
+}
+#np-app [data-header] nav.lg\:flex > a:not([class*="border"]):hover::after,
+#np-app [data-header] nav.lg\:flex [data-dropdown-toggle]:hover::after,
+#np-app [data-header] nav.lg\:flex [aria-expanded="true"]::after,
+#np-app [data-header] nav.lg\:flex > a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+#np-app [data-header] nav.lg\:flex > a:not([class*="border"]):hover,
+#np-app [data-header] nav.lg\:flex [data-dropdown-toggle]:hover {
+  color: #fff;
+}
+/* the HoReCa link was dark green on the dark green header */
+#np-app [data-header] nav.lg\:flex > a.text-\[var\(--color-charcoal\)\] {
+  color: rgb(255 255 255 / 0.92);
+}
+#np-app [data-header] .rounded-full.h-10.w-10 {
+  transition: background-color var(--np-dur-base) var(--np-ease-out), transform var(--np-dur-base) var(--np-ease-out);
+}
+#np-app [data-header] .rounded-full.h-10.w-10:active {
+  transform: scale(0.96);
+}
+#np-app [data-cart-badge] {
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--np-glaze);
+}
+
+/* shop dropdown: a raised clay plate that settles in */
+#np-app .np-dropdown [data-dropdown-panel] > div {
+  border-radius: var(--np-radius-dish);
+  border-color: color-mix(in srgb, var(--np-rule) 70%, transparent);
+  box-shadow: var(--np-shadow-float);
+}
+#np-app .np-dropdown [data-dropdown-panel] a.rounded-xl {
+  border-radius: 0.5rem;
+  transition: background-color var(--np-dur-fast) var(--np-ease-out);
+}
+@supports (transition-behavior: allow-discrete) {
+  #np-app .np-dropdown [data-dropdown-panel] {
+    opacity: 0;
+    translate: -50% 0.5rem;
+    transition:
+      opacity var(--np-dur-base) var(--np-ease-out),
+      translate var(--np-dur-slow) var(--np-ease-out),
+      display var(--np-dur-base) allow-discrete;
+  }
+  #np-app .np-dropdown:is(:hover, :focus-within, .is-open) [data-dropdown-panel] {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  @starting-style {
+    #np-app .np-dropdown:is(:hover, :focus-within, .is-open) [data-dropdown-panel] {
+      opacity: 0;
+      translate: -50% 0.5rem;
+    }
+  }
+}
+
+/* ================================================================ hero: one deep glaze field */
+#np-app .np-section-hero > section {
+  background: var(--np-glaze-deep);
+}
+#np-app .np-hero-fade {
+  background:
+    linear-gradient(90deg, rgb(32 52 36 / 0.95) 0%, rgb(39 62 43 / 0.82) 38%, rgb(47 74 51 / 0.28) 72%, rgb(47 74 51 / 0) 100%),
+    linear-gradient(0deg, rgb(32 52 36 / 0.55) 0%, rgb(32 52 36 / 0) 40%);
+}
+#np-app .np-section-hero .absolute.inset-0.-z-10 img {
+  animation: np-hero-settle 2.6s var(--np-ease-out) both;
+  transform-origin: 70% 40%;
+}
+/* the gold border-left becomes a painted brush stroke beside the eyebrow */
+#np-app .np-section-hero .max-w-2xl.border-l-2 {
+  border-left: 0;
+  padding-left: 0;
+}
+#np-app .np-section-hero .max-w-2xl > span:first-child {
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+#np-app .np-section-hero .max-w-2xl > span:first-child svg {
+  display: none;
+}
+#np-app .np-section-hero .max-w-2xl > span:first-child::before {
+  content: "";
+  width: 2.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+#np-app .np-section-hero h1 {
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+@media (min-width: 1024px) {
+  #np-app .np-section-hero h1 {
+    font-size: clamp(4.5rem, 2rem + 4.2vw, 6rem);
+    line-height: 0.94;
+  }
+}
+/* entrance: the headline rises word by word (np-motion.js), then the origin line, the words and the action follow */
+#np-app .np-section-hero .max-w-2xl > :is(span, p, div) {
+  animation: np-rise var(--np-dur-reveal) var(--np-ease-out) both;
+}
+#np-app .np-section-hero .max-w-2xl > span:first-child { animation-delay: 520ms; }
+#np-app .np-section-hero .max-w-2xl > p { animation-delay: 640ms; }
+#np-app .np-section-hero .max-w-2xl > div { animation-delay: 780ms; }
+#np-app .np-section-hero > section > .container-page {
+  z-index: 1;
+}
+#np-app .np-section-hero .max-w-2xl > p {
+  color: rgb(255 255 255 / 0.84);
+  max-width: 34rem;
+}
+/* the phone hero's picture is a dish too: same painted rim */
+#np-app .np-section-hero .sm\:hidden.rounded-3xl::before {
+  content: "";
+  position: absolute;
+  inset: 0.55rem;
+  z-index: 2;
+  border-radius: calc(var(--np-radius-dish) - 0.55rem);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--np-ochre) 60%, transparent);
+  pointer-events: none;
+}
+#np-app .np-section-hero .sm\:hidden.rounded-3xl {
+  border-radius: var(--np-radius-dish);
+  animation: np-rise var(--np-dur-reveal) var(--np-ease-out) 480ms both;
+}
+
+/* ================================================================ B2B lane on the home page */
+#np-app [data-b2b-banner] {
+  background: var(--np-wash);
+  position: relative;
+}
+#np-app [data-b2b-banner]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--np-ochre) 0 18%, transparent 18% 20%, var(--np-ochre) 20% 21%, transparent 21%);
+  opacity: 0.9;
+}
+#np-app [data-b2b-banner] > .container-page {
+  padding-block: clamp(2.25rem, 1.8rem + 1.8vw, 3.5rem);
+}
+#np-app [data-b2b-banner] .h-12.w-12 {
+  background: var(--np-glaze);
+  color: var(--color-gold-on-dark);
+}
+#np-app [data-b2b-banner] h2 {
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+/* ================================================================ "why" row: potter's stamps, not section numbers */
+#np-app section.border-y > .container-page.py-12 > .grid > div > span.font-display:first-child {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  margin-bottom: 0.65rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 48'%3E%3Cpath d='M22 1.5 42 13v22L22 46.5 2 35V13z' fill='none' stroke='%239c6508' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M22 6.2 38 15.4v17.2L22 41.8 6 32.6V15.4z' fill='none' stroke='%23f5b82e' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  height: 3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--np-ochre-ink);
+}
+#np-app section.border-y > .container-page.py-12 > .grid > div > p.text-sm {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+#np-app section.border-y > .container-page.py-12 > .grid > div > p.text-xs {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-width: 28ch;
+}
+
+/* ================================================================ cards: the dish is the object */
+/* No raised white card any more: the packshot sits in a sage dish with a painted ochre rim, and its name, weight and
+   price are written on the clay ground beneath it. The dish lifts and its rim turns under the pointer. */
+#np-app :is([data-product-card], a.card-surface).card-surface {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+/* every contained packshot (cards, gallery, quick view, search, cart) sits on the sage wash, never on white */
+#np-app .bg-white:has(> .np-fit) {
+  background: var(--np-wash);
+}
+#np-app [data-product-card] > .relative.aspect-square,
+#np-app a.card-surface:not([data-product-card]) > :first-child {
+  position: relative;
+  background: var(--np-wash);
+  border-radius: var(--np-radius-dish);
+  overflow: hidden;
+  isolation: isolate;
+  transform: perspective(900px) rotateX(var(--np-tx, 0deg)) rotateY(var(--np-ty, 0deg)) translateY(var(--np-lift, 0px));
+  transition:
+    transform 700ms var(--np-ease-out),
+    box-shadow 700ms var(--np-ease-out);
+}
+#np-app [data-product-card] > .relative.aspect-square .np-fit,
+#np-app a.card-surface:not([data-product-card]) > :first-child .np-fit {
+  padding: 0;
+}
+#np-app [data-product-card] > .relative.aspect-square .np-fit img,
+#np-app a.card-surface:not([data-product-card]) > :first-child .np-fit img {
+  border-radius: 0;
+  /* the packshot's own backdrop fills the dish edge to edge - no paler bands round landscape photos */
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+#np-app [data-product-card] > .relative.aspect-square img,
+#np-app a.card-surface:not([data-product-card]) > :first-child img {
+  transition: transform 1100ms var(--np-ease-out);
+}
+
+/* the painted rim: a static ochre ring inside every dish, at rest - on touch screens too */
+#np-app [data-product-card] > .relative.aspect-square::before,
+#np-app a.card-surface:not([data-product-card]) > :first-child::before,
+#np-app np-product [data-gallery] > .relative.aspect-square::before {
+  content: "";
+  position: absolute;
+  inset: 0.55rem;
+  z-index: 1;
+  border-radius: calc(var(--np-radius-dish) - 0.55rem);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--np-ochre) 55%, transparent);
+  pointer-events: none;
+  transition: inset 700ms var(--np-ease-out), opacity 700ms var(--np-ease-out);
+}
+/* the wheel: on hover a brighter arc of the rim travels round */
+#np-app [data-product-card] > .relative.aspect-square::after,
+#np-app a.card-surface:not([data-product-card]) > :first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0.55rem;
+  z-index: 2;
+  border-radius: calc(var(--np-radius-dish) - 0.55rem);
+  padding: 1.5px;
+  background:
+    radial-gradient(60% 60% at var(--np-gx, 50%) var(--np-gy, 30%), rgb(255 255 255 / 0.22), transparent 70%) border-box,
+    conic-gradient(from var(--np-rim-angle), transparent 0deg, var(--np-ochre) 50deg, transparent 120deg, transparent 180deg, color-mix(in srgb, var(--np-ochre) 70%, transparent) 230deg, transparent 300deg) border-box;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity var(--np-dur-slow) var(--np-ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  #np-app [data-product-card]:hover > .relative.aspect-square,
+  #np-app a.card-surface:not([data-product-card]):hover > :first-child {
+    --np-lift: -6px;
+    box-shadow: var(--np-shadow-lift);
+  }
+  #np-app [data-product-card]:hover > .relative.aspect-square::after,
+  #np-app a.card-surface:not([data-product-card]):hover > :first-child::after {
+    opacity: 1;
+    animation: np-wheel 5.5s linear infinite;
+  }
+  #np-app [data-product-card]:hover > .relative.aspect-square img {
+    transform: scale(1.05);
+  }
+  #np-app a.card-surface:not([data-product-card]):hover > :first-child img {
+    transform: scale(1.06) rotate(-0.6deg);
+  }
+}
+
+/* the caption on the clay ground */
+#np-app [data-product-card] > .flex-1.p-4 {
+  padding: 0.95rem 0.15rem 0.25rem;
+}
+#np-app [data-product-card] h2.font-display {
+  font-size: 1.08rem;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+#np-app a.card-surface:not([data-product-card]) > .p-4 {
+  padding: 0.9rem 0.15rem 0.25rem;
+}
+#np-app a.card-surface:not([data-product-card]) h3.font-display {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  transition: color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app [data-product-card] form button.rounded-full.h-10.w-10 {
+  background: var(--np-glaze);
+  transition: background-color var(--np-dur-base) var(--np-ease-out), transform var(--np-dur-base) var(--np-ease-out);
+}
+#np-app [data-product-card] form button.rounded-full.h-10.w-10:hover {
+  background: var(--np-glaze-deep);
+}
+#np-app [data-product-card] form button.rounded-full.h-10.w-10:active {
+  transform: scale(0.96);
+  transition-duration: 90ms;
+}
+#np-app [data-wishlist-toggle] {
+  z-index: 3;
+  transition: background-color var(--np-dur-base) var(--np-ease-out), transform var(--np-dur-base) var(--np-ease-out), color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app [data-wishlist-toggle]:active {
+  transform: scale(0.96);
+}
+#np-app [data-wishlist-toggle][aria-pressed="true"] {
+  animation: np-pop 420ms var(--np-ease-out);
+}
+#np-app [data-product-card] .pointer-events-none.absolute.left-3.top-3 {
+  z-index: 3;
+}
+#np-app .np-card-quick-view {
+  z-index: 3;
+  transition:
+    opacity var(--np-dur-base) var(--np-ease-out),
+    transform var(--np-dur-slow) var(--np-ease-out),
+    background-color var(--np-dur-fast) var(--np-ease-out);
+}
+
+/* ================================================================ category grid: a bento of dishes */
+@media (min-width: 1024px) {
+  #np-app .grid.lg\:grid-cols-4:has(> a.card-surface:not([data-product-card]):nth-child(8):last-child) {
+    grid-auto-flow: dense;
+    gap: 1.5rem 1.25rem;
+  }
+  #np-app .grid.lg\:grid-cols-4 > a.card-surface:not([data-product-card]):first-child:nth-last-child(8) {
+    grid-column: span 2;
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+  }
+  #np-app .grid.lg\:grid-cols-4 > a.card-surface:not([data-product-card]):first-child:nth-last-child(8) > :first-child {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+  #np-app .grid.lg\:grid-cols-4 > a.card-surface:not([data-product-card]):first-child:nth-last-child(8) h3.font-display {
+    font-size: clamp(1.6rem, 1rem + 1.2vw, 2.1rem);
+    letter-spacing: -0.025em;
+  }
+  #np-app .grid.lg\:grid-cols-4 > a.card-surface:not([data-product-card]):nth-child(8):last-child:nth-child(8) {
+    grid-column: span 2;
+  }
+  #np-app .grid.lg\:grid-cols-4 > a.card-surface:not([data-product-card]):nth-child(8):last-child > :first-child {
+    aspect-ratio: 8 / 3;
+  }
+}
+
+/* ================================================================ home product rails on phones */
+@media (max-width: 639px) {
+  #np-app .np-reveal .grid.grid-cols-2:has(> [data-product-card]) {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    margin-inline: -1.25rem;
+    padding: 0.25rem 1.25rem 1rem;
+    align-items: flex-start;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  #np-app .np-reveal .grid.grid-cols-2:has(> [data-product-card])::-webkit-scrollbar {
+    display: none;
+  }
+  #np-app .np-reveal .grid.grid-cols-2 > [data-product-card] {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+  }
+}
+
+/* ================================================================ green fields (origin story, B2B page bands) */
+#np-app .bg-\[var\(--color-charcoal\)\],
+#np-app .bg-\[var\(--color-olive\)\] {
+  background-color: var(--np-glaze);
+}
+#np-app :is(.bg-\[var\(--color-charcoal\)\], .bg-\[var\(--color-olive\)\]) :is(.rounded-3xl, .rounded-2xl) {
+  border-radius: var(--np-radius-dish);
+}
+
+/* ================================================================ FAQ */
+#np-app details {
+  transition: background-color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app details > summary {
+  cursor: pointer;
+}
+#np-app details > summary svg {
+  transition: transform var(--np-dur-slow) var(--np-ease-out);
+}
+#np-app details[open] > summary svg {
+  transform: rotate(180deg);
+}
+@supports (interpolate-size: allow-keywords) {
+  #np-app {
+    interpolate-size: allow-keywords;
+  }
+  #np-app details::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      height var(--np-dur-slow) var(--np-ease-out),
+      opacity var(--np-dur-base) var(--np-ease-out),
+      content-visibility var(--np-dur-slow) allow-discrete;
+  }
+  #np-app details[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+/* ================================================================ overlays: drawer, quick view, toast */
+#np-app .np-overlay {
+  background: rgb(23 37 26 / 0.42);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  transition: opacity 420ms var(--np-ease-out);
+}
+#np-app .np-drawer {
+  transition: transform 420ms var(--np-ease-out), visibility 0s linear 420ms;
+  box-shadow: -30px 0 60px -30px rgb(23 37 26 / 0.45);
+}
+#np-app .np-drawer.is-open {
+  transition: transform 620ms var(--np-ease-out), visibility 0s;
+}
+#np-app .np-drawer.is-open [data-cart-line] {
+  animation: np-rise 700ms var(--np-ease-out) both;
+}
+#np-app .np-drawer.is-open [data-cart-line]:nth-child(1) { animation-delay: 120ms; }
+#np-app .np-drawer.is-open [data-cart-line]:nth-child(2) { animation-delay: 170ms; }
+#np-app .np-drawer.is-open [data-cart-line]:nth-child(3) { animation-delay: 220ms; }
+#np-app .np-drawer.is-open [data-cart-line]:nth-child(4) { animation-delay: 270ms; }
+#np-app .np-drawer.is-open [data-cart-line]:nth-child(n + 5) { animation-delay: 320ms; }
+#np-app .np-toast {
+  transition: opacity 360ms var(--np-ease-out), transform 620ms var(--np-ease-out);
+  transform: translateY(1rem) scale(0.97);
+}
+#np-app .np-toast.is-visible {
+  transform: translateY(0) scale(1);
+}
+#np-app [role="dialog"].rounded-3xl {
+  border-radius: var(--np-radius-dish);
+}
+
+/* ================================================================ reveals: dishes settling onto the wheel */
+#np-app .np-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity var(--np-dur-reveal) var(--np-ease-out),
+    transform var(--np-dur-reveal) var(--np-ease-out);
+}
+#np-app .np-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* Grid items arrive in order, one after another (numbered, like a chase). An animation rather than a transition, with
+   fill-mode backwards only, so once a card has arrived its own hover lift answers at once, never after its stagger. */
+#np-app .np-reveal:not(.is-visible) .grid > :is(a, div, article) {
+  opacity: 0;
+}
+#np-app .np-reveal.is-visible .grid > :is(a, div, article) {
+  animation: np-arrive 950ms var(--np-ease-out) backwards;
+  animation-delay: calc(var(--np-stagger) * var(--np-i, 0));
+}
+#np-app .np-reveal .grid > :nth-child(1) { --np-i: 1; }
+#np-app .np-reveal .grid > :nth-child(2) { --np-i: 2; }
+#np-app .np-reveal .grid > :nth-child(3) { --np-i: 3; }
+#np-app .np-reveal .grid > :nth-child(4) { --np-i: 4; }
+#np-app .np-reveal .grid > :nth-child(5) { --np-i: 5; }
+#np-app .np-reveal .grid > :nth-child(6) { --np-i: 6; }
+#np-app .np-reveal .grid > :nth-child(7) { --np-i: 7; }
+#np-app .np-reveal .grid > :nth-child(8) { --np-i: 8; }
+#np-app .np-reveal .grid > :nth-child(n + 9) { --np-i: 9; }
+/* script blocked or not started: everything stays visible (same safety net as naturepick.css) */
+.np-no-script #np-app .np-reveal .grid > * {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* ================================================================ product page: buy first, read after */
+/* Same DOM, new reading order: title -> rating -> price -> buy (bundles, quantity, button) -> reassurance, then the
+   long description and the spec table. The gallery stays in view while the description scrolls past it. */
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > :is(form, [data-swap="notify"]) {
+  order: 5;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .flex.flex-wrap.gap-4 {
+  order: 6;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .np-prose,
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .np-prose ~ div.mt-5 {
+  order: 10;
+  margin-top: 2.5rem;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .np-prose {
+  padding-top: 0;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > [data-swap="specs"] {
+  order: 11;
+}
+/* one star row: when the review app shows its badge, the theme's own row steps aside */
+#np-app np-product [data-swap="weight"] + div.mt-3:has(+ .np-app-embed .jdgm-preview-badge) {
+  display: none;
+}
+#np-app np-product h1.font-display {
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+#np-app np-product [data-swap="price"] > p.font-display {
+  margin-top: 1.5rem;
+}
+#np-app np-product [data-swap="buy"] .btn-primary {
+  min-height: 3.25rem;
+}
+#np-app np-product .np-prose {
+  max-width: 62ch;
+}
+#np-app np-product [data-gallery] > .relative.aspect-square {
+  border-radius: var(--np-radius-dish);
+  background: var(--np-wash);
+}
+#np-app np-product [data-gallery] > .relative.aspect-square .np-fit {
+  padding: 0;
+}
+#np-app np-product [data-gallery] > .relative.aspect-square .np-fit img {
+  border-radius: 0;
+}
+#np-app np-product [data-gallery] [data-gallery-thumb] {
+  background: var(--np-wash);
+  border-radius: var(--np-radius-tile);
+  transition: box-shadow var(--np-dur-base) var(--np-ease-out), transform var(--np-dur-base) var(--np-ease-out);
+}
+#np-app np-product [data-gallery] [data-gallery-thumb]:hover {
+  transform: translateY(-2px);
+}
+@media (min-width: 1024px) {
+  #np-app np-product .grid.lg\:grid-cols-2 {
+    gap: clamp(2.5rem, 1rem + 4vw, 5rem);
+    align-items: start;
+  }
+  #np-app np-product [data-gallery] {
+    position: sticky;
+    top: 8.5rem;
+  }
+}
+/* review app: speak in the shop's own type */
+#np-app .jdgm-widget {
+  font-family: var(--font-manrope);
+}
+#np-app .jdgm-widget :is(.jdgm-rev-widg__title, .jdgm-rev__title) {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+/* ================================================================ collection page */
+#np-app section.border-b.bg-\[var\(--color-cream-soft\)\] {
+  background: var(--np-clay-raised);
+  border-bottom-color: color-mix(in srgb, var(--np-rule) 70%, transparent);
+}
+#np-app section.border-b.bg-\[var\(--color-cream-soft\)\] h1 {
+  font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+#np-app section.border-b.bg-\[var\(--color-cream-soft\)\] .container-page.py-12 {
+  padding-block: clamp(2rem, 1.4rem + 2.4vw, 3.75rem);
+}
+#np-app [data-collection-form] .np-select,
+#np-app [data-collection-form] select {
+  border-radius: var(--np-radius-tile);
+}
+/* phones: the link row is one scrollable line, so the first products arrive sooner */
+@media (max-width: 639px) {
+  #np-app section.container-page.py-10 > .mb-6.flex.flex-wrap.gap-2 {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: -1.25rem;
+    padding: 0 1.25rem 0.25rem;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  #np-app section.container-page.py-10 > .mb-6.flex.flex-wrap.gap-2 > * {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  #np-app section.container-page.py-10 > .mb-6.flex.flex-wrap.gap-2::-webkit-scrollbar {
+    display: none;
+  }
+  #np-app section.border-b.bg-\[var\(--color-cream-soft\)\] .np-prose {
+    font-size: 0.98rem;
+  }
+}
+#np-app .np-drawer [data-cart-line] > a:first-child,
+#np-app [data-cart-page] [data-cart-line] > a:first-child {
+  background: var(--np-wash);
+  border-radius: var(--np-radius-tile);
+  overflow: hidden;
+}
+#np-app [data-collection-form] details.rounded-2xl {
+  border-radius: var(--np-radius-tile);
+}
+
+/* ================================================================ B2B page: the form column leads, the facts stay beside it */
+@media (min-width: 1024px) {
+  #np-app section.container-page.lg\:grid-cols-\[1fr_1\.2fr\] > :first-child {
+    position: sticky;
+    top: 8.5rem;
+    align-self: start;
+  }
+}
+#np-app np-tabs.card-surface {
+  border-radius: var(--np-radius-dish);
+  box-shadow: inset 0 0 0 1px var(--np-rule), var(--np-shadow-lift);
+}
+#np-app np-tabs [role="tab"] {
+  position: relative;
+  transition: color var(--np-dur-base) var(--np-ease-out), background-color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app np-tabs [role="tab"]::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--np-ochre);
+  transform: scaleX(0);
+  transition: transform var(--np-dur-slow) var(--np-ease-out);
+}
+#np-app np-tabs [role="tab"][aria-selected="true"]::after {
+  transform: scaleX(1);
+}
+
+/* ================================================================ newsletter + footer: the page closes on the glaze */
+#np-app section.bg-\[var\(--color-paprika-light\)\] {
+  background: var(--np-clay-raised);
+  border-top: 1px solid color-mix(in srgb, var(--np-rule) 70%, transparent);
+}
+#np-app section.bg-\[var\(--color-paprika-light\)\] h2 {
+  max-width: 22ch;
+}
+#np-app footer.border-t {
+  background: var(--np-glaze-deep);
+  border-top: 0;
+  color: rgb(246 241 231 / 0.78);
+}
+#np-app footer :is(p, span, li).text-\[var\(--color-charcoal-soft\)\],
+#np-app footer .text-\[var\(--color-charcoal-soft\)\] {
+  color: rgb(246 241 231 / 0.74);
+}
+#np-app footer :is(p, h2, h3, span).text-\[var\(--color-charcoal\)\],
+#np-app footer .font-semibold.text-\[var\(--color-charcoal\)\] {
+  color: var(--color-gold-on-dark);
+  letter-spacing: 0.02em;
+}
+#np-app footer a.text-sm {
+  display: inline-block;
+  padding-block: 0.3rem;
+  color: rgb(246 241 231 / 0.84);
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+  transition: color var(--np-dur-base) var(--np-ease-out), background-size var(--np-dur-slow) var(--np-ease-out);
+}
+#np-app footer a.text-sm:hover {
+  color: #fff;
+  background-size: 100% 1px;
+}
+#np-app footer .mt-4.flex.flex-col.gap-2\.5 {
+  gap: 0.25rem;
+}
+#np-app footer .border-t.border-\[var\(--color-line\)\] {
+  border-color: rgb(255 255 255 / 0.12);
+}
+#np-app footer :is(strong, b, .np-strong, .np-em, .text-\[var\(--color-charcoal\)\]) {
+  color: var(--np-clay);
+}
+#np-app footer img.h-16.w-16 {
+  border-radius: 0.75rem;
+  background: var(--np-clay);
+  padding: 0.35rem;
+}
+#np-app footer :is(a, button).h-9.w-9,
+#np-app footer a.rounded-full {
+  color: rgb(246 241 231 / 0.9);
+}
+
+/* ================================================================ cart drawer + cart page */
+#np-app .np-drawer {
+  border-radius: var(--np-radius-dish) 0 0 var(--np-radius-dish);
+}
+@media (max-width: 479px) {
+  #np-app .np-drawer {
+    border-radius: 0;
+  }
+}
+#np-app .np-drawer [data-cart-line] img,
+#np-app [data-cart-page] [data-cart-line] img {
+  border-radius: var(--np-radius-tile);
+}
+/* quantity steppers: 44px targets */
+#np-app :is(.np-drawer, [data-cart-page]) [data-cart-change]:is(button) {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--np-dur-fast) var(--np-ease-out), background-color var(--np-dur-fast) var(--np-ease-out);
+}
+#np-app .np-drawer [data-cart-change][data-quantity="0"]:is(button) {
+  margin: -0.75rem -0.75rem 0 0;
+  border-radius: var(--np-radius-tile);
+}
+#np-app :is(.np-drawer, [data-cart-page]) [data-cart-change]:is(button):active {
+  background: color-mix(in srgb, var(--np-wash) 45%, transparent);
+}
+#np-app [data-cart-page] aside.rounded-2xl {
+  border-radius: var(--np-radius-dish);
+}
+@media (min-width: 1024px) {
+  #np-app [data-cart-page] aside.rounded-2xl {
+    position: sticky;
+    top: 8.5rem;
+  }
+}
+#np-app [data-cart-page] ul.rounded-2xl {
+  border-radius: var(--np-radius-dish);
+  background: var(--np-clay-raised);
+}
+
+/* added to cart: the badge answers */
+#np-app [data-cart-badge].is-bumped {
+  animation: np-pop 520ms var(--np-ease-out);
+}
+
+/* ================================================================ touch targets */
+#np-app [data-wishlist-toggle] {
+  position: absolute;
+}
+#np-app [data-wishlist-toggle]::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+#np-app [data-header] .rounded-full.h-10.w-10::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+#np-app [data-product-card] form button.rounded-full.h-10.w-10,
+#np-app [data-header] .rounded-full.h-10.w-10 {
+  position: relative;
+}
+#np-app [data-product-card] form button.rounded-full.h-10.w-10 {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+/* ================================================================ details */
+/* image outlines: a neutral 1px edge so packshots never bleed into the wash or the paper */
+#np-app np-product [data-gallery] > .relative.aspect-square,
+#np-app np-product [data-gallery] [data-gallery-thumb],
+#np-app :is(.np-drawer, [data-cart-page]) [data-cart-line] > a:first-child,
+#np-app .np-section-hero .sm\:hidden.rounded-3xl {
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+#np-app :is(.np-drawer, [data-cart-page]) [data-cart-line] :is(span, p).text-center,
+#np-app [data-free-shipping],
+#np-app .np-line-total,
+#np-app .np-summary {
+  font-variant-numeric: tabular-nums;
+}
+/* breadcrumbs: taller hit area, same layout */
+#np-app nav[aria-label] > a.hover\:text-\[var\(--color-paprika-dark\)\] {
+  padding-block: 0.65rem;
+  margin-block: -0.65rem;
+}
+/* newsletter submit and social icons: full-size targets */
+#np-app form button[type="submit"].h-8.w-8.rounded-full {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--np-glaze);
+  color: #fff;
+  transition: background-color var(--np-dur-base) var(--np-ease-out), transform var(--np-dur-base) var(--np-ease-out);
+}
+#np-app form button[type="submit"].h-8.w-8.rounded-full:hover {
+  background: var(--np-glaze-deep);
+}
+#np-app form button[type="submit"].h-8.w-8.rounded-full:active {
+  transform: scale(0.96);
+}
+#np-app footer a.h-9.w-9 {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-color: rgb(246 241 231 / 0.28);
+  transition: background-color var(--np-dur-base) var(--np-ease-out), color var(--np-dur-base) var(--np-ease-out);
+}
+#np-app footer a.h-9.w-9:hover {
+  background: var(--np-clay);
+  color: var(--np-glaze-deep);
+}
+@media (max-width: 767px) {
+  #np-app footer a.text-sm {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-block: 0;
+  }
+  #np-app footer .mt-4.flex.flex-col.gap-2\.5 {
+    gap: 0;
+  }
+}
+
+/* ================================================================ mobile */
+@media (max-width: 1023px) {
+  #np-app #np-mobile-menu:not([hidden]) {
+    animation: np-menu-in 460ms var(--np-ease-out) both;
+  }
+  #np-app #np-mobile-menu:not([hidden]) > * > * {
+    animation: np-menu-in 420ms var(--np-ease-out) both;
+  }
+  #np-app #np-mobile-menu:not([hidden]) > * > :nth-child(2) { animation-delay: 30ms; }
+  #np-app #np-mobile-menu:not([hidden]) > * > :nth-child(3) { animation-delay: 60ms; }
+  #np-app #np-mobile-menu:not([hidden]) > * > :nth-child(4) { animation-delay: 90ms; }
+  #np-app #np-mobile-menu:not([hidden]) > * > :nth-child(n + 5) { animation-delay: 120ms; }
+  #np-app #np-mobile-menu a.rounded-lg {
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    border-radius: var(--np-radius-tile);
+  }
+}
+@media (max-width: 639px) {
+  #np-app [data-header] > div:first-child > .container-page {
+    padding-block: 0.4rem;
+    font-size: 0.72rem;
+  }
+  #np-app [data-header] > .container-page.h-18 {
+    height: 4rem;
+  }
+  #np-app .np-section-hero .container-page {
+    min-height: 0;
+    padding-block: 2.75rem 2rem;
+  }
+  #np-app [data-product-card] > .flex-1.p-4 {
+    padding: 0.8rem 0.85rem 0.9rem;
+  }
+  #np-app [data-product-card] h2.font-display,
+  #np-app a.card-surface:not([data-product-card]) h3.font-display {
+    font-size: 0.98rem;
+  }
+  #np-app a.card-surface:not([data-product-card]) > .p-4 {
+    padding: 0.75rem 0.85rem 0.9rem;
+  }
+}
+
+/* ================================================================ page edge */
+/* The CSS reset is scoped to #np-app, so <body> kept the browser's 8px margin: a cream frame round every page. */
+body {
+  margin: 0;
+}
+
+/* ================================================================ labels: under the heading, not above it */
+/* Same words, same DOM: the label now follows its heading as a quiet line on the painted rim. */
+#np-app :is(div, section):has(> .section-label + h2) {
+  display: flex;
+  flex-direction: column;
+}
+#np-app :is(div, section):has(> .section-label + h2).items-center {
+  align-items: center;
+}
+#np-app :is(div, section):has(> .section-label + h2) > .section-label {
+  order: 2;
+  margin-top: 0.9rem;
+}
+#np-app :is(div, section):has(> .section-label + h2) > h2 {
+  order: 1;
+  margin-top: 0;
+}
+#np-app :is(div, section):has(> .section-label + h2) > :not(.section-label, h2) {
+  order: 3;
+}
+/* hero: headline first, then the line of origin, then the words and the action */
+#np-app .np-section-hero .max-w-2xl {
+  display: flex;
+  flex-direction: column;
+}
+#np-app .np-section-hero .max-w-2xl > h1 {
+  order: 0;
+  margin-top: 0;
+}
+#np-app .np-section-hero .max-w-2xl > span:first-child {
+  order: 1;
+  margin-top: 1.5rem;
+}
+#np-app .np-section-hero .max-w-2xl > p {
+  order: 2;
+}
+#np-app .np-section-hero .max-w-2xl > div {
+  order: 3;
+}
+/* origin story: its gold pill becomes the same quiet line, under the heading */
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 {
+  display: flex;
+  flex-direction: column;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 > span.rounded-full:first-child {
+  order: 2;
+  align-self: flex-start;
+  margin-top: 1rem;
+  padding: 0;
+  gap: 0.75rem;
+  background: none;
+  color: var(--color-gold-on-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 > span.rounded-full:first-child svg {
+  display: none;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 > span.rounded-full:first-child::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 > h2 {
+  order: 1;
+  margin-top: 0;
+  font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .order-1 > :not(span:first-child, h2) {
+  order: 3;
+}
+
+/* ================================================================ facts instead of icon rows */
+/* "why" row: no numbers, no stamps - four statements divided by painted rules */
+#np-app section.border-y > .container-page.py-12 > .grid > div > span.font-display:first-child {
+  display: none;
+}
+#np-app section.border-y > .container-page.py-12 > .grid > div {
+  position: relative;
+  padding-top: 1.25rem;
+}
+#np-app section.border-y > .container-page.py-12 > .grid > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--np-ochre);
+  transform-origin: left;
+}
+#np-app section.border-y > .container-page.py-12 > .grid > div > p.text-sm {
+  font-size: 1.35rem;
+}
+/* reassurance lines (product page, cart, origin story): plain words between hairlines, no icon chips */
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .flex.flex-wrap.gap-4 svg,
+#np-app [data-cart-page] aside .mt-4.flex.flex-col svg,
+#np-app section.bg-\[var\(--color-olive\)\] ul > li > span:first-child {
+  display: none;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .flex.flex-wrap.gap-4 {
+  gap: 0;
+  border-block: 1px solid var(--np-rule);
+  padding-block: 0.85rem;
+}
+#np-app np-product .grid.lg\:grid-cols-2 > div:nth-child(2) > .flex.flex-wrap.gap-4 > span + span::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 0.9em;
+  margin-inline: 0.9rem;
+  vertical-align: -0.1em;
+  background: var(--np-rule);
+}
+#np-app [data-cart-page] aside .mt-4.flex.flex-col.gap-1\.5 {
+  gap: 0;
+}
+#np-app [data-cart-page] aside .mt-4.flex.flex-col.gap-1\.5 > span {
+  padding-block: 0.45rem;
+  border-top: 1px solid color-mix(in srgb, var(--np-rule) 70%, transparent);
+}
+#np-app section.bg-\[var\(--color-olive\)\] ul.flex-col {
+  gap: 0;
+}
+#np-app section.bg-\[var\(--color-olive\)\] ul > li {
+  padding-block: 0.8rem;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+}
+#np-app section.bg-\[var\(--color-olive\)\] ul > li:last-child {
+  border-bottom: 1px solid rgb(255 255 255 / 0.14);
+}
+
+/* ================================================================ origin story: two dishes, one laid over the other */
+#np-app section.bg-\[var\(--color-olive\)\] {
+  overflow: clip;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .grid.grid-cols-2.gap-4 {
+  gap: 0;
+  align-items: center;
+  padding-block: 1.5rem 2.5rem;
+}
+@media (max-width: 767px) {
+  #np-app section.bg-\[var\(--color-olive\)\] .grid.grid-cols-2.gap-4 > :last-child {
+    margin-top: 12%;
+  }
+}
+#np-app section.bg-\[var\(--color-olive\)\] .grid.grid-cols-2.gap-4 > * {
+  border-radius: var(--np-radius-dish);
+  translate: 0 var(--np-drift, 0px);
+  box-shadow: 0 0 0 6px var(--np-glaze);
+}
+#np-app section.bg-\[var\(--color-olive\)\] .grid.grid-cols-2.gap-4 > :first-child {
+  transform: rotate(-3deg);
+  z-index: 1;
+}
+#np-app section.bg-\[var\(--color-olive\)\] .grid.grid-cols-2.gap-4 > :last-child {
+  margin-left: -18%;
+  margin-top: 22%;
+  transform: rotate(2.5deg);
+  z-index: 2;
+}
+
+/* ================================================================ ornament: the dish's painted rims and medallion */
+/* every glaze field opens with a painted rim band: a heavy ochre line and a fine one beside it */
+#np-app :is(section.bg-\[var\(--color-olive\)\], footer.border-t, [data-b2b-banner]) {
+  position: relative;
+}
+#np-app :is(section.bg-\[var\(--color-olive\)\], footer.border-t)::before,
+#np-app [data-b2b-banner]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 9px;
+  background:
+    linear-gradient(var(--np-ochre), var(--np-ochre)) 0 0 / 100% 3px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--np-ochre) 55%, transparent), color-mix(in srgb, var(--np-ochre) 55%, transparent)) 0 7px / 100% 1px no-repeat;
+  opacity: 0.85;
+  pointer-events: none;
+}
+/* glaze has a surface: a fine, still grain over the green fields */
+#np-app :is(section.bg-\[var\(--color-olive\)\], footer.border-t, .np-section-hero > section)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+#np-app :is(section.bg-\[var\(--color-olive\)\], footer.border-t) > * {
+  position: relative;
+  z-index: 1;
+}
+/* the lyagan medallion: a painted dish pattern turning very slowly behind the hero and the footer */
+#np-app .np-section-hero > section > .container-page::before,
+#np-app footer.border-t > .container-page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(46rem, 90vw);
+  aspect-ratio: 1;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' fill='none' stroke='%23f5b82e'%3E%3Ccircle cx='200' cy='200' r='196' stroke-width='3'/%3E%3Ccircle cx='200' cy='200' r='186' stroke-width='1'/%3E%3Ccircle cx='200' cy='200' r='140' stroke-width='2'/%3E%3Ccircle cx='200' cy='200' r='62' stroke-width='2'/%3E%3Ccircle cx='200' cy='200' r='54' stroke-width='1'/%3E%3Cg stroke-width='1.6'%3E%3Cpath id='p' d='M200 62c26 30 26 48 0 78-26-30-26-48 0-78z'/%3E%3Cuse href='%23p' transform='rotate(30 200 200)'/%3E%3Cuse href='%23p' transform='rotate(60 200 200)'/%3E%3Cuse href='%23p' transform='rotate(90 200 200)'/%3E%3Cuse href='%23p' transform='rotate(120 200 200)'/%3E%3Cuse href='%23p' transform='rotate(150 200 200)'/%3E%3Cuse href='%23p' transform='rotate(180 200 200)'/%3E%3Cuse href='%23p' transform='rotate(210 200 200)'/%3E%3Cuse href='%23p' transform='rotate(240 200 200)'/%3E%3Cuse href='%23p' transform='rotate(270 200 200)'/%3E%3Cuse href='%23p' transform='rotate(300 200 200)'/%3E%3Cuse href='%23p' transform='rotate(330 200 200)'/%3E%3C/g%3E%3Cg stroke-width='1.2'%3E%3Cpath id='q' d='M200 4c10 14 10 26 0 40-10-14-10-26 0-40z'/%3E%3Cuse href='%23q' transform='rotate(20 200 200)'/%3E%3Cuse href='%23q' transform='rotate(40 200 200)'/%3E%3Cuse href='%23q' transform='rotate(60 200 200)'/%3E%3Cuse href='%23q' transform='rotate(80 200 200)'/%3E%3Cuse href='%23q' transform='rotate(100 200 200)'/%3E%3Cuse href='%23q' transform='rotate(120 200 200)'/%3E%3Cuse href='%23q' transform='rotate(140 200 200)'/%3E%3Cuse href='%23q' transform='rotate(160 200 200)'/%3E%3Cuse href='%23q' transform='rotate(180 200 200)'/%3E%3Cuse href='%23q' transform='rotate(200 200 200)'/%3E%3Cuse href='%23q' transform='rotate(220 200 200)'/%3E%3Cuse href='%23q' transform='rotate(240 200 200)'/%3E%3Cuse href='%23q' transform='rotate(260 200 200)'/%3E%3Cuse href='%23q' transform='rotate(280 200 200)'/%3E%3Cuse href='%23q' transform='rotate(300 200 200)'/%3E%3Cuse href='%23q' transform='rotate(320 200 200)'/%3E%3Cuse href='%23q' transform='rotate(340 200 200)'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  animation: np-medallion 120s linear infinite;
+}
+#np-app .np-section-hero > section > .container-page {
+  position: relative;
+}
+#np-app .np-section-hero > section > .container-page::before {
+  right: max(-14rem, -18vw);
+  top: 50%;
+  margin-top: min(-23rem, -45vw);
+  opacity: 0.16;
+}
+#np-app footer.border-t > .container-page {
+  position: relative;
+  overflow: hidden;
+}
+#np-app footer.border-t > .container-page::before {
+  right: -16rem;
+  bottom: -26rem;
+  opacity: 0.07;
+}
+
+/* ================================================================ hero: the first viewport is the whole screen */
+@media (min-width: 640px) {
+  #np-app .np-section-hero .container-page.flex {
+    min-height: min(calc(100svh - 7rem), 58rem);
+  }
+}
+#np-app .np-section-hero .absolute.inset-0.-z-10 img {
+  translate: 0 var(--np-drift, 0px);
+  scale: 1.08;
+}
+
+/* ================================================================ header: glaze glass while scrolling, away while reading */
+#np-app .shopify-section-group-header-group {
+  transition: transform 520ms var(--np-ease-out);
+}
+#np-app .shopify-section-group-header-group.np-head-away {
+  transform: translateY(-100%);
+  transition-duration: 380ms;
+}
+/* scrolled: the glaze band stays opaque and gains a soft edge; while it is away the edge goes too */
+#np-app .shopify-section-group-header-group.np-head-scrolled [data-header] {
+  box-shadow: 0 14px 28px -22px rgb(23 37 26 / 0.65);
+}
+#np-app .shopify-section-group-header-group.np-head-away [data-header] {
+  box-shadow: none;
+}
+#np-app [data-header] {
+  transition: background-color var(--np-dur-slow) var(--np-ease-out), box-shadow var(--np-dur-slow) var(--np-ease-out);
+}
+
+/* announcement band: one message, running slowly, pausing under the pointer */
+#np-app .np-marquee {
+  overflow: hidden;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+#np-app .np-marquee__track {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  animation: np-marquee 38s linear infinite;
+  white-space: nowrap;
+}
+#np-app .np-marquee:hover .np-marquee__track {
+  animation-play-state: paused;
+}
+/* each copy ends in a small ochre lozenge, so the spacing repeats exactly and the loop never jumps */
+#np-app .np-marquee__track > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+#np-app .np-marquee__track > *::after {
+  content: "";
+  width: 0.38rem;
+  height: 0.38rem;
+  border: 1px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+
+/* ================================================================ the primary action: a glaze sheen passes over it */
+#np-app .btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  translate: var(--np-mx, 0px) var(--np-my, 0px);
+  transition:
+    background-color var(--np-dur-base) var(--np-ease-out),
+    box-shadow var(--np-dur-base) var(--np-ease-out),
+    transform var(--np-dur-base) var(--np-ease-out),
+    translate 600ms var(--np-ease-out);
+}
+#np-app .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.55) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 900ms var(--np-ease-out);
+  pointer-events: none;
+}
+#np-app .btn-primary:hover::after {
+  transform: translateX(120%);
+}
+
+/* ================================================================ motion states (np-motion.js sets html.np-motion) */
+/* words rise out of their own line */
+.np-motion #np-app .np-split .np-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.12em 0.02em 0.14em;
+  margin: -0.12em -0.02em -0.14em;
+}
+.np-motion #np-app .np-split .np-w__i {
+  display: inline-block;
+  transform: translateY(108%) rotate(4deg);
+  transform-origin: 0 100%;
+  transition: transform 1100ms var(--np-ease-out);
+  transition-delay: calc(min(var(--np-wi), 14) * 55ms);
+}
+.np-motion #np-app .np-split.is-in .np-w__i {
+  transform: none;
+}
+/* blocks settle in, numbered */
+.np-motion #np-app [data-np-in] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 900ms var(--np-ease-out),
+    transform 1000ms var(--np-ease-out);
+  transition-delay: calc(var(--np-i, 0) * 80ms);
+}
+.np-motion #np-app [data-np-in].is-in {
+  opacity: 1;
+  transform: none;
+}
+/* rules and rim lines draw themselves */
+.np-motion #np-app .section-label::before,
+.np-motion #np-app section.border-y > .container-page.py-12 > .grid > div::before {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--np-ease-out) 250ms;
+}
+.np-motion #np-app .section-label.is-in::before,
+.np-motion #np-app section.border-y > .container-page.py-12 > .grid > div.is-in::before {
+  transform: none;
+}
+/* the origin route draws from Uzbekistan to Europe */
+.np-motion #np-app .np-reveal .absolute.top-5.h-px.border-dashed {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1800ms var(--np-ease-in-out) 200ms;
+}
+.np-motion #np-app .np-reveal.is-visible .absolute.top-5.h-px.border-dashed {
+  transform: none;
+}
+/* once arrived, a card's own hover answers at once */
+.np-motion #np-app [data-np-in].is-in:hover {
+  transition-delay: 0s;
+}
+
+/* ================================================================ page transitions (same-origin navigations) */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: np-page-out 220ms var(--np-ease-in-out) both;
+}
+::view-transition-new(root) {
+  animation: np-page-in 520ms var(--np-ease-out) both;
+}
+
+/* ================================================================ keyframes */
+@keyframes np-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes np-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+}
+@keyframes np-hero-settle {
+  from {
+    transform: scale(1.08);
+    filter: saturate(0.8) brightness(0.92);
+  }
+  to {
+    transform: scale(1);
+    filter: none;
+  }
+}
+@keyframes np-wheel {
+  to {
+    --np-rim-angle: 360deg;
+  }
+}
+@keyframes np-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+@keyframes np-medallion {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes np-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes np-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes np-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes np-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* ================================================================ reduced motion: state changes stay, travel goes */
+/* ================================================================ reduced motion: still smooth, nothing travels */
+/* Visitors who ask their system for less motion keep every state change and its order, as soft fades: nothing slides,
+   tilts, drifts, turns or runs. (Not a global kill switch - the arrival order and hierarchy stay.) */
+@keyframes np-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #np-app .np-section-hero .max-w-2xl > :is(span, p, div),
+  #np-app .np-section-hero .sm\:hidden.rounded-3xl,
+  #np-app .np-reveal.is-visible .grid > :is(a, div, article),
+  #np-app .np-drawer.is-open [data-cart-line],
+  #np-app #np-mobile-menu:not([hidden]),
+  #np-app #np-mobile-menu:not([hidden]) > * > * {
+    animation-name: np-fade;
+  }
+  #np-app .np-section-hero .absolute.inset-0.-z-10 img {
+    animation: none;
+    translate: none;
+  }
+  #np-app .np-reveal,
+  #np-app .np-reveal.is-visible {
+    transform: none;
+  }
+  .np-motion #np-app .np-split .np-w__i {
+    transform: none;
+    opacity: 0;
+    transition: opacity 700ms var(--np-ease-out);
+    transition-delay: calc(min(var(--np-wi), 14) * 40ms);
+  }
+  .np-motion #np-app .np-split.is-in .np-w__i {
+    opacity: 1;
+  }
+  .np-motion #np-app [data-np-in] {
+    transform: none;
+    transition: opacity 700ms var(--np-ease-out);
+    transition-delay: calc(var(--np-i, 0) * 60ms);
+  }
+  .np-motion #np-app .section-label::before,
+  .np-motion #np-app section.border-y > .container-page.py-12 > .grid > div::before,
+  .np-motion #np-app .np-reveal .absolute.top-5.h-px.border-dashed {
+    transform: none;
+  }
+  #np-app .np-marquee__track,
+  #np-app .np-section-hero > section > .container-page::before,
+  #np-app footer.border-t > .container-page::before,
+  #np-app [data-product-card] > .relative.aspect-square::after,
+  #np-app a.card-surface:not([data-product-card]) > :first-child::after,
+  #np-app [data-cart-badge].is-bumped,
+  #np-app [data-wishlist-toggle][aria-pressed="true"] {
+    animation: none !important;
+  }
+  #np-app [data-product-card] > .relative.aspect-square,
+  #np-app a.card-surface:not([data-product-card]) > :first-child,
+  #np-app [data-product-card] > .relative.aspect-square img,
+  #np-app a.card-surface:not([data-product-card]) > :first-child img,
+  #np-app .btn-primary,
+  #np-app .btn-secondary,
+  #np-app .btn-primary::after {
+    transform: none !important;
+    translate: none !important;
+  }
+  #np-app .shopify-section-group-header-group {
+    transition: none;
+  }
+  #np-app .shopify-section-group-header-group.np-head-away {
+    transform: none;
+  }
+  #np-app .np-drawer,
+  #np-app .np-drawer.is-open {
+    transition-duration: 160ms;
+  }
+  #np-app .np-dropdown [data-dropdown-panel] {
+    translate: -50% 0;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-name: np-fade;
+    animation-duration: 200ms;
+  }
+  ::view-transition-old(root) {
+    animation-direction: reverse;
+  }
+}

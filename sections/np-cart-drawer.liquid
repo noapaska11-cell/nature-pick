@@ -32,10 +32,13 @@
       </div>
 
       {%- if cart.item_count > 0 -%}
-        {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
-        {%- if progress_html contains 'data-free-shipping' -%}
-          <div class="border-b border-[var(--color-line)] px-5 py-3">{{ progress_html }}</div>
-        {%- endif -%}
+        {%- comment -%} the B2B checkout charges pallet shipping, so the retail free-shipping progress does not apply to it {%- endcomment -%}
+        {%- unless pallet_mode -%}
+          {%- capture progress_html -%}{% render 'np-free-shipping', cart: cart %}{%- endcapture -%}
+          {%- if progress_html contains 'data-free-shipping' -%}
+            <div class="border-b border-[var(--color-line)] px-5 py-3">{{ progress_html }}</div>
+          {%- endif -%}
+        {%- endunless -%}
         {%- if b2b_active -%}
           <div class="border-b border-[var(--color-line)] px-5 py-3">{% render 'np-b2b-minimum-order', cart: cart %}</div>
         {%- endif -%}
@@ -88,13 +91,17 @@
                   {%- if weight_label != '' -%}
                     <p class="text-sm text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
                   {%- endif -%}
-                  {%- for allocation in item.line_level_discount_allocations -%}
-                    <p class="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-olive-dark)]">
-                      {% render 'icon', name: 'check', class: 'h-3 w-3' %} {{ allocation.discount_application.title | escape }}
-                    </p>
-                  {%- endfor -%}
-                  {%- render 'np-b2b-cart-line', item: item, box: line_box -%}
-                  <div class="mt-2 flex items-center justify-between">
+                  {%- comment -%} Shopify's own discounts belong to the regular checkout - the B2B checkout charges the price list {%- endcomment -%}
+                  {%- if pallet_mode -%}
+                    {%- render 'np-b2b-cart-line', item: item, box: line_box, part: 'meta' -%}
+                  {%- else -%}
+                    {%- for allocation in item.line_level_discount_allocations -%}
+                      <p class="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-olive-dark)]">
+                        {% render 'icon', name: 'check', class: 'h-3 w-3' %} {{ allocation.discount_application.title | escape }}
+                      </p>
+                    {%- endfor -%}
+                  {%- endif -%}
+                  <div class="mt-2 flex items-start justify-between gap-3">
                     <div class="flex items-center rounded-full border border-[var(--color-line)]">
                       <button type="button" data-cart-change data-line-key="{{ item.key }}" data-quantity="{{ qty_minus }}" aria-label="{{ 'np.common.decrease_qty' | t }}" class="px-2.5 py-1 text-[var(--color-charcoal-soft)] hover:text-[var(--color-charcoal)]">
                         {% render 'icon', name: 'minus', class: 'h-3.5 w-3.5' %}
@@ -104,12 +111,16 @@
                         {% render 'icon', name: 'plus', class: 'h-3.5 w-3.5' %}
                       </button>
                     </div>
-                    <span class="font-display font-semibold">
-                      {%- if item.original_line_price > item.final_line_price -%}
-                        <s class="mr-1 text-xs font-normal text-[var(--color-charcoal-soft)]">{{ item.original_line_price | money_without_trailing_zeros }}</s>
-                      {%- endif -%}
-                      {{ item.final_line_price | money_without_trailing_zeros }}
-                    </span>
+                    {%- if pallet_mode -%}
+                      {%- render 'np-b2b-cart-line', item: item, box: line_box, part: 'total' -%}
+                    {%- else -%}
+                      <span class="font-display font-semibold">
+                        {%- if item.original_line_price > item.final_line_price -%}
+                          <s class="mr-1 text-xs font-normal text-[var(--color-charcoal-soft)]">{{ item.original_line_price | money_without_trailing_zeros }}</s>
+                        {%- endif -%}
+                        {{ item.final_line_price | money_without_trailing_zeros }}
+                      </span>
+                    {%- endif -%}
                   </div>
                 </div>
               </li>
@@ -120,23 +131,25 @@
 
       {%- if cart.item_count > 0 -%}
         <div class="border-t border-[var(--color-line)] px-5 py-4">
-          {%- for discount in cart.cart_level_discount_applications -%}
-            <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-olive-dark)]">
-              <span>{{ discount.title | escape }}</span>
-              <span>-{{ discount.total_allocated_amount | money_without_trailing_zeros }}</span>
-            </div>
-          {%- endfor -%}
-          <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-charcoal-soft)]"{% if pallet_mode %} data-b2b-retail-only hidden{% endif %}>
-            <span>{{ 'np.cart.shipping' | t }}</span>
-            <span>{{ 'np.cart.calculated_at_checkout' | t }}</span>
-          </div>
           {%- if pallet_mode -%}
-            <div class="mb-3 text-sm text-[var(--color-charcoal-soft)]">{% render 'np-b2b-pallet-summary', cart: cart %}</div>
+            {%- comment -%} what the B2B checkout charges - Shopify's own cart total is the regular prices {%- endcomment -%}
+            <div class="mb-4">{% render 'np-b2b-cart-summary', cart: cart %}</div>
+          {%- else -%}
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-olive-dark)]">
+                <span>{{ discount.title | escape }}</span>
+                <span>-{{ discount.total_allocated_amount | money_without_trailing_zeros }}</span>
+              </div>
+            {%- endfor -%}
+            <div class="mb-1 flex items-center justify-between text-sm text-[var(--color-charcoal-soft)]">
+              <span>{{ 'np.cart.shipping' | t }}</span>
+              <span>{{ 'np.cart.calculated_at_checkout' | t }}</span>
+            </div>
+            <div class="mb-4 flex items-center justify-between font-display text-lg font-semibold">
+              <span>{{ 'np.cart.subtotal' | t }}</span>
+              <span>{{ cart.total_price | money_without_trailing_zeros }}</span>
+            </div>
           {%- endif -%}
-          <div class="mb-4 flex items-center justify-between font-display text-lg font-semibold">
-            <span>{{ 'np.cart.subtotal' | t }}</span>
-            <span>{{ cart.total_price | money_without_trailing_zeros }}</span>
-          </div>
           <a href="{{ routes.cart_url }}" class="btn-primary w-full">{{ 'np.cart.go_to_cart' | t }}</a>
         </div>
       {%- endif -%}
