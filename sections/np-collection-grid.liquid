@@ -142,6 +142,27 @@
       </div>
     </form>
   {%- endpaginate -%}
+
+  {%- comment -%}
+    A short guide to the category under the products (np.categories.<handle>.seo_title / seo_html, every language),
+    for shoppers and search engines. First page only, so the paginated pages do not repeat it.
+  {%- endcomment -%}
+  {%- liquid
+    assign guide_key = 'np.categories.' | append: collection.handle | replace: '-', '_'
+    assign guide_title_key = guide_key | append: '.seo_title'
+    assign guide_body_key = guide_key | append: '.seo_html'
+    assign guide_title = guide_title_key | t
+    assign guide_body = guide_body_key | t: collections: routes.collections_url
+    if guide_title contains 'ranslation missing' or guide_body contains 'ranslation missing'
+      assign guide_body = ''
+    endif
+  -%}
+  {%- if current_page == 1 and guide_body != blank -%}
+    <div class="np-prose mt-12 max-w-3xl border-t border-[var(--color-line)] pt-6">
+      <h2>{{ guide_title }}</h2>
+      {{ guide_body }}
+    </div>
+  {%- endif -%}
 </section>
 {%- endif -%}
 

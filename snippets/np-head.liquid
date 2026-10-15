@@ -21,6 +21,13 @@
       render 'np-title', title: page_title
     endcapture
   endif
+  # Home page without its own title (Online Store > Preferences): say what the shop sells, in the visitor's language
+  if request.page_type == 'index' and page_title == shop.name
+    assign seo_home_title = 'np.seo.home_title' | t
+    unless seo_home_title contains 'ranslation missing'
+      assign seo_title = seo_home_title
+    endunless
+  endif
   assign seo_title = seo_title | strip
 
   # Search result text when Shopify has none (no SEO description and no text in the admin): the same translated
@@ -29,7 +36,9 @@
   if seo_description == blank
     case request.page_type
       when 'index'
-        assign seo_description = 'np.hero.subtitle' | t
+        assign seo_description = 'np.seo.home_description' | t
+      when 'product'
+        assign seo_description = 'np.seo.product_description' | t: title: seo_title
       when 'collection'
         if collection.handle == 'all'
           assign seo_description = 'np.collection.all_products_description' | t
@@ -42,13 +51,17 @@
           when 'faq'
             assign seo_description = 'np.faq.page_description' | t
           when 'about'
-            assign seo_description = 'np.about_page.description' | t
+            assign seo_description = 'np.about_page.meta_description' | t
+          when 'origin'
+            assign seo_description = 'np.origin_page.meta_description' | t
           when 'contact'
-            assign seo_description = 'np.contact_page.description' | t
+            assign seo_description = 'np.contact_page.meta_description' | t
           when 'b2b'
-            assign seo_description = 'np.b2b_page.description' | t
+            assign seo_description = 'np.b2b_page.meta_description' | t
           when 'spice-club'
-            assign seo_description = 'np.spice_club_page.description' | t
+            assign seo_description = 'np.spice_club_page.meta_description' | t
+          when 'shipping-returns'
+            assign seo_description = 'np.shipping_returns_page.meta_description' | t
         endcase
     endcase
     if seo_description contains 'ranslation missing'
@@ -100,7 +113,7 @@
   {{- seo_title | escape_once -}}
   {%- if current_tags %} &ndash; {{ current_tags | join: ', ' | escape_once }}{% endif -%}
   {%- if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: number: current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape_once }}{% endunless -%}
+  {%- unless seo_title contains shop.name %} &ndash; {{ shop.name | escape_once }}{% endunless -%}
 </title>
 
 {%- if seo_description != blank -%}
@@ -109,6 +122,19 @@
 
 {%- if seo_noindex -%}
   <meta name="robots" content="noindex, follow">
+{%- endif -%}
+
+{%- comment -%}
+  Search Console / Bing Webmaster Tools ownership (Theme settings > SEO). The setting takes the code alone or the whole
+  <meta ...> tag the tool shows - only the content value is used.
+{%- endcomment -%}
+{%- if settings.google_site_verification != blank -%}
+  {%- assign seo_verify = settings.google_site_verification | split: 'content="' | last | split: '"' | first | strip -%}
+  <meta name="google-site-verification" content="{{ seo_verify | escape }}">
+{%- endif -%}
+{%- if settings.bing_site_verification != blank -%}
+  {%- assign seo_verify = settings.bing_site_verification | split: 'content="' | last | split: '"' | first | strip -%}
+  <meta name="msvalidate.01" content="{{ seo_verify | escape }}">
 {%- endif -%}
 
 {%- render 'meta-tags', seo_title: seo_title, seo_description: seo_description -%}

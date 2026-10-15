@@ -700,8 +700,8 @@
     },
     "hero": {
       "eyebrow": "Von sonnigen Feldern im Osten",
-      "title": "Authentische Aromen Zentralasiens",
-      "subtitle": "Gewürze, Nüsse und Trockenfrüchte, sorgfältig ausgewählt in Usbekistan und der zentralasiatischen Region — direkt zu dir nach Hause geliefert.",
+      "title": "Gewürze, Nüsse und Trockenfrüchte aus Zentralasien",
+      "subtitle": "Authentische Aromen, sorgfältig ausgewählt in Usbekistan und der zentralasiatischen Region — direkt zu dir nach Hause geliefert.",
       "cta": "Bestseller entdecken"
     },
     "trust_bar": {
@@ -1150,37 +1150,51 @@
       "notter_snacks": {
         "name": "Nüsse & Snacks",
         "tagline": "Knusprig, geröstet, ohne unnötige Zusätze",
-        "description": "Mandeln, Erdnüsse und Kerne, in kleinen Chargen geröstet, um natürlichen Geschmack und Knusprigkeit zu bewahren."
+        "description": "Mandeln, Erdnüsse und Kerne, in kleinen Chargen geröstet, um natürlichen Geschmack und Knusprigkeit zu bewahren.",
+        "seo_title": "Nüsse und Snacks aus Zentralasien",
+        "seo_html": "<p>Bei Nature Pick findest du Mandeln, Erdnüsse und Kerne, die in kleinen Chargen geröstet werden, damit ihr natürlicher Geschmack und ihr Biss erhalten bleiben – ohne unnötige Zusätze.</p><p>Sie passen als Snack, ins Müsli, in Salate oder zum Backen. Lust auf etwas Süßes dazu? Kombiniere sie mit unseren <a href=\"{{ collections }}/torkad-frukt\">Trockenfrüchten</a>. Die Herkunft ist bei jedem Produkt angegeben.</p>"
       },
       "naturliga_kryddor": {
         "name": "Natürliche Gewürze",
         "tagline": "Intensives Aroma direkt in den Topf",
-        "description": "Gemahlene und getrocknete Gewürze — von süßem Paprika bis Kurkuma — ohne Konservierungsstoffe oder künstliche Füllstoffe."
+        "description": "Gemahlene und getrocknete Gewürze — von süßem Paprika bis Kurkuma — ohne Konservierungsstoffe oder künstliche Füllstoffe.",
+        "seo_title": "Natürliche Gewürze online kaufen",
+        "seo_html": "<p>Gemahlene und getrocknete Gewürze – von süßem Paprika bis Kurkuma – ohne Konservierungsstoffe oder künstliche Füllstoffe. Nature Pick wählt seine Gewürze in Usbekistan und Zentralasien aus, einer Region, die für besonders aromatische Gewürze bekannt ist.</p><p>Verwende sie für Eintöpfe, Plov, Marinaden und Soßen. Für noch mehr Geschmack probiere unser <a href=\"{{ collections }}/soltorkade-gronsaker\">sonnengetrocknetes Gemüse</a>.</p>"
       },
       "torkad_frukt": {
         "name": "Trockenfrüchte",
         "tagline": "Natürliche Süße für einen gesunden Snack",
-        "description": "Goji-Beeren und andere Trockenfrüchte, ohne Zuckerzusatz getrocknet und direkt aus der Packung verzehrfertig."
+        "description": "Goji-Beeren und andere Trockenfrüchte, ohne Zuckerzusatz getrocknet und direkt aus der Packung verzehrfertig.",
+        "seo_title": "Trockenfrüchte ohne Zuckerzusatz",
+        "seo_html": "<p>Gojibeeren und andere Trockenfrüchte, ohne Zuckerzusatz getrocknet und direkt aus der Packung genießbar. Usbekistan ist bekannt für Aprikosen und Trockenfrüchte von außergewöhnlicher Qualität.</p><p>Trockenfrüchte sind ein natürlich süßer Snack, passen in Porridge, Joghurt und Gebäck und harmonieren gut mit unseren <a href=\"{{ collections }}/notter-snacks\">Nüssen</a>.</p>"
       },
       "soltorkade_gronsaker": {
         "name": "Sonnengetrocknetes Gemüse",
         "tagline": "Der konzentrierte Geschmack des Sommers",
-        "description": "Getrocknete Tomaten, Zwiebeln und Paprikaflocken — perfekt für Saucen, Aufstriche und Eintöpfe."
+        "description": "Getrocknete Tomaten, Zwiebeln und Paprikaflocken — perfekt für Saucen, Aufstriche und Eintöpfe.",
+        "seo_title": "Sonnengetrocknetes Gemüse",
+        "seo_html": "<p>Sonnengetrocknete Tomaten, Zwiebeln und Paprikaflocken mit dem konzentrierten Geschmack des Sommers – perfekt für Soßen, Aufstriche und Eintopfgerichte.</p><p>Gib sie direkt ins Essen für einen tieferen Geschmack, am besten zusammen mit unseren <a href=\"{{ collections }}/naturliga-kryddor\">natürlichen Gewürzen</a>.</p>"
       },
       "baljvaxter": {
         "name": "Hülsenfrüchte",
         "tagline": "Pflanzliches Protein für jeden Tag",
-        "description": "Geröstete Kichererbsen und andere Hülsenfrüchte — ein sättigender Snack oder die Basis für hausgemachten Hummus."
+        "description": "Geröstete Kichererbsen und andere Hülsenfrüchte — ein sättigender Snack oder die Basis für hausgemachten Hummus.",
+        "seo_title": "Hülsenfrüchte und geröstete Kichererbsen",
+        "seo_html": "<p>Geröstete Kichererbsen und andere Hülsenfrüchte – pflanzliches Protein für jeden Tag. Ein sättigender Snack direkt aus der Tüte oder die Basis für selbstgemachten Hummus.</p><p>Würze sie mit unseren <a href=\"{{ collections }}/naturliga-kryddor\">natürlichen Gewürzen</a> oder mische sie mit <a href=\"{{ collections }}/notter-snacks\">Nüssen & Snacks</a> zu deinem eigenen Snack-Mix.</p>"
       },
       "ortteer": {
         "name": "Kräutertees",
         "tagline": "Natürliche Mischungen zum Aufbrühen",
-        "description": "Getrocknete Kräuter und Kräutermischungen für den täglichen Aufguss."
+        "description": "Getrocknete Kräuter und Kräutermischungen für den täglichen Aufguss.",
+        "seo_title": "Kräutertees und getrocknete Kräuter",
+        "seo_html": "<p>Getrocknete Kräuter und Kräutermischungen – natürliche Mischungen für den täglichen Aufguss.</p><p>Dazu passt etwas Süßes aus unseren <a href=\"{{ collections }}/sotsaker-delikatesser\">Süßigkeiten & Delikatessen</a> – oder verschenke sie als Teil eines <a href=\"{{ collections }}/gavopaket\">Geschenksets</a>.</p>"
       },
       "sotsaker_delikatesser": {
         "name": "Süßigkeiten & Delikatessen",
         "tagline": "Kleine Freuden aus natürlichen Zutaten",
-        "description": "Ausgewählte Spezialitäten zum Kaffee, als Dessert oder als Geschenk."
+        "description": "Ausgewählte Spezialitäten zum Kaffee, als Dessert oder als Geschenk.",
+        "seo_title": "Süßigkeiten und Delikatessen",
+        "seo_html": "<p>Ausgewählte Spezialitäten aus natürlichen Zutaten – zum Kaffee, zum Dessert oder als Geschenk.</p><p>Suchst du ein Geschenk? Stelle dein eigenes <a href=\"{{ collections }}/gavopaket\">Geschenkset</a> aus mindestens drei Produkten zusammen, die gemeinsam verschickt werden.</p>"
       },
       "gavopaket": {
         "name": "Geschenksets",
@@ -1257,6 +1271,11 @@
       "vat_exempt_note": "Ihr Unternehmen ist von der MwSt. befreit – es wird keine MwSt. berechnet.",
       "other_lines_note": "Artikel ohne B2B-Preis werden zum regulären Preis berechnet.",
       "price_view_hint": "Ändert nur die Anzeige. Im Warenkorb und an der Kasse zahlen Sie immer Ihren B2B-Preis."
+    },
+    "seo": {
+      "home_title": "Gewürze, Nüsse und Trockenfrüchte aus Zentralasien",
+      "home_description": "Gewürze, Nüsse, Trockenfrüchte und sonnengetrocknetes Gemüse aus Usbekistan und Zentralasien. An der Quelle ausgewählt, Versand aus Schweden in ganz Europa.",
+      "product_description": "{{ title }} von Nature Pick. Gewürze, Nüsse und Trockenfrüchte mit klar angegebener Herkunft – Versand aus Schweden in ganz Europa."
     }
   }
 }
