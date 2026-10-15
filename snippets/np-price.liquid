@@ -2,20 +2,15 @@
   Price block. Mirrors the React <Price /> component:
   - normal:   "199 kr"
   - on sale:  struck-through compare-at price + sale price
-  - B2B:      "Ert pris" + wholesale price + "exkl. moms" as THE price, with the regular price below it - smaller,
-              struck through and labelled "Ordinarie pris" with its own VAT label, so it never reads as the price paid
-              (only for an approved B2B customer, see np-b2b-customer; the wholesale price comes from the per-SKU price
-              list in Theme settings > B2B, or the fallback percentage).
-              The header's price-view toggle (naturepick.js, applyPriceView) only swaps which of the two views is
-              shown ([data-price-view]); what Shopify charges never depends on it - the B2B checkout always charges
-              the price list.
+  - B2B:      struck-through retail price + wholesale price + "B2B" badge
+              (only for a logged-in customer who carries the B2B tag; the wholesale price comes
+               from the per-SKU price list in Theme settings > B2B, or the fallback percentage).
 
   Params:
     product   - product (uses selected_or_first_available_variant)
     variant   - optional variant object (overrides product's variant)
     class     - classes for the wrapping <span>
     show_from - true to prefix "From" when the price varies between variants (cards)
-    compact   - true for tight spots (search results): amount + one short label line, no regular price line
 {%- endcomment -%}
 {%- liquid
   if variant
@@ -44,9 +39,7 @@
   endif
 
   assign b2b_active = false
-  assign b2b_listed = false
   assign b2b_shop_cents = nil
-  assign b2b_box = 0
   assign wholesale = price
   if b2b_customer
     capture wholesale_major
@@ -54,22 +47,15 @@
     endcapture
     assign wholesale_major = wholesale_major | strip
     if wholesale_major != ''
-      # the B2B price belongs to one variant, so it is compared with that variant's own regular price
-      assign price = target.price
       assign wholesale = wholesale_major | plus: 0 | times: 100 | round
       assign b2b_active = true
-      assign b2b_listed = true
-      capture b2b_box
-        render 'np-b2b-wholesale-price', sku: target.sku, field: 'box'
-      endcapture
-      assign b2b_box = b2b_box | strip | plus: 0
       # the price list is in the shop's currency (SEK); Liquid has no exchange rate, so in any other
-      # currency naturepick.js converts it with Shopify's live rate (syncShopMoney) - never the retail price as a stand-in
+      # currency naturepick.js converts it with Shopify's live rate and the retail price stands in until then
       if cart.currency.iso_code != shop.currency
         assign b2b_shop_cents = wholesale
+        assign wholesale = price
       endif
     elsif settings.b2b_discount_percent > 0
-      assign price = target.price
       assign multiplier = 100 | minus: settings.b2b_discount_percent
       assign wholesale = price | times: multiplier | divided_by: 100
       assign b2b_active = true
@@ -80,63 +66,24 @@
   assign wholesale_text = wholesale | money_without_trailing_zeros
 -%}
 {%- if b2b_active -%}
-  {%- liquid
-    assign label_yours = 'np.price.your_price' | t
-    assign label_regular = 'np.price.regular_price' | t
-    # the regular price carries the store's own tax setting; the price list is always excluding VAT, a percentage
-    # off the regular price keeps the regular price's VAT status
-    if cart.taxes_included
-      assign retail_vat_text = 'np.price.incl_vat' | t
-    else
-      assign retail_vat_text = 'np.price.excl_vat' | t
-    endif
-    if b2b_listed
-      assign b2b_vat_text = 'np.price.excl_vat' | t
-    else
-      assign b2b_vat_text = retail_vat_text
-    endif
-    assign per_piece_text = ''
-    if b2b_box > 1
-      assign per_piece_text = 'np.price.per_piece' | t
-    endif
-  -%}
-  {%- capture b2b_amount -%}
-    {%- if b2b_shop_cents -%}
-      <span data-shop-cents="{{ b2b_shop_cents }}" data-shop-cents-pending>…</span>
-    {%- else -%}
-      {{- wholesale_text -}}
-    {%- endif -%}
-  {%- endcapture -%}
-  {%- if compact -%}
-    <span class="np-price np-price--b2b np-price--compact {{ class }}" data-np-price data-b2b-price>
-      <span class="np-price__view" data-price-view="b2b">
-        <span class="np-price__amount">{{ b2b_amount }}{{ per_piece_text }}</span>
-        <span class="np-price__note">{{ label_yours }}, {{ b2b_vat_text }}</span>
-      </span>
-      <span class="np-price__view" data-price-view="retail" hidden>
-        <span class="np-price__amount">{{ price_text }}{{ per_piece_text }}</span>
-        <span class="np-price__note">{{ label_regular }}, {{ retail_vat_text }}</span>
-      </span>
+  {%- comment -%}
+    data-retail-text / data-b2b-text let the B2B price-view toggle (naturepick.js, header switch) swap
+    every price on the site between wholesale and retail without a page reload - a display preference
+    only, it never changes what Shopify actually charges at checkout.
+  {%- endcomment -%}
+  {%- if b2b_shop_cents -%}
+    {%- comment -%} data-b2b-text is filled in by naturepick.js from data-b2b-shop-cents (see above) {%- endcomment -%}
+    <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-shop-cents="{{ b2b_shop_cents }}">
+      <span hidden data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
+      <span data-price-main>{{ price_text }}</span>
+      <span hidden data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-paprika)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-[var(--color-charcoal)]">{{ 'np.common.b2b_badge' | t }}</span>
     </span>
   {%- else -%}
-    <span class="np-price np-price--b2b {{ class }}" data-np-price data-b2b-price>
-      <span class="np-price__view" data-price-view="b2b">
-        <span class="np-price__label">{{ label_yours }}</span>
-        <span class="np-price__row">
-          <span class="np-price__amount">{{ b2b_amount }}{{ per_piece_text }}</span>
-          <span class="np-price__vat">{{ b2b_vat_text }}</span>
-        </span>
-        <span class="np-price__ref">{{ label_regular }} <s>{{ price_text }}{{ per_piece_text }}</s> {{ retail_vat_text }}</span>
-      </span>
-      <span class="np-price__view" data-price-view="retail" hidden>
-        <span class="np-price__label">{{ label_regular }}</span>
-        <span class="np-price__row">
-          <span class="np-price__amount">{{ price_text }}{{ per_piece_text }}</span>
-          <span class="np-price__vat">{{ retail_vat_text }}</span>
-        </span>
-        <span class="np-price__ref np-price__ref--yours">{{ label_yours }} {{ b2b_amount }}{{ per_piece_text }} {{ b2b_vat_text }}</span>
-      </span>
-    </span>
+  <span class="{{ class }}" data-np-price data-b2b-price data-retail-text="{{ price_text }}" data-b2b-text="{{ wholesale_text }}" aria-label="{{ 'np.common.b2b_price_aria' | t: wholesale: wholesale_text, retail: price_text | strip_html }}">
+    <span aria-hidden="true" data-price-strike class="mr-2 align-middle text-[0.6em] font-normal text-[var(--color-charcoal-soft)] line-through">{{ price_text }}</span>
+    <span aria-hidden="true" data-price-main>{{ wholesale_text }}</span>
+    <span aria-hidden="true" data-price-badge class="ml-2 inline-block align-middle rounded-full bg-[var(--color-paprika)] px-2 py-0.5 text-[0.55em] font-bold uppercase tracking-wide text-[var(--color-charcoal)]">{{ 'np.common.b2b_badge' | t }}</span>
+  </span>
   {%- endif -%}
 {%- elsif compare_at > price -%}
   <span class="{{ class }}" data-np-price>

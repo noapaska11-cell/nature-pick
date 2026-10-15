@@ -1159,32 +1159,6 @@
       "yes": "DA",
       "no": "NE"
     },
-    "price": {
-      "your_price": "Vaša cijena",
-      "regular_price": "Redovna cijena",
-      "excl_vat": "bez PDV-a",
-      "incl_vat": "s PDV-om",
-      "per_piece": "/kom.",
-      "unit_price": "Cijena po kom.",
-      "quantity": "Količina",
-      "qty_pieces": "{{ count }} kom.",
-      "qty_cartons": {
-        "one": "{{ count }} kutija ({{ pcs }} kom.)",
-        "few": "{{ count }} kutije ({{ pcs }} kom.)",
-        "other": "{{ count }} kutija ({{ pcs }} kom.)"
-      },
-      "subtotal_b2b": "Međuzbroj, vaša cijena",
-      "vat": "PDV",
-      "vat_at_checkout": "Dodaje se na blagajni",
-      "total_excl_vat": "Ukupno bez PDV-a",
-      "total_due": "Ukupno za plaćanje",
-      "plus_shipping": "+ dostava",
-      "vat_note": "PDV se dodaje na blagajni.",
-      "vat_note_gross": "PDV se dodaje na blagajni, gdje su svi iznosi prikazani s PDV-om.",
-      "vat_exempt_note": "Vaša je tvrtka oslobođena PDV-a – PDV se ne dodaje.",
-      "other_lines_note": "Proizvodi bez B2B cijene naplaćuju se po redovnoj cijeni.",
-      "price_view_hint": "Mijenja samo prikaz. U košarici i na blagajni uvijek plaćate svoju B2B cijenu."
-    },
     "seo": {
       "home_title": "Začini, orašasti plodovi i suho voće iz Srednje Azije",
       "home_description": "Začini, orašasti plodovi, suho voće i povrće sušeno na suncu iz Uzbekistana i Srednje Azije. Odabrano na izvoru, šaljemo iz Švedske diljem Europe.",

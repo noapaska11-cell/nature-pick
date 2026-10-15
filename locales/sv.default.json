@@ -897,31 +897,6 @@
       "yes": "JA",
       "no": "NEJ"
     },
-    "price": {
-      "your_price": "Ert pris",
-      "regular_price": "Ordinarie pris",
-      "excl_vat": "exkl. moms",
-      "incl_vat": "inkl. moms",
-      "per_piece": "/st",
-      "unit_price": "Pris per st",
-      "quantity": "Antal",
-      "qty_pieces": "{{ count }} st",
-      "qty_cartons": {
-        "one": "{{ count }} kartong ({{ pcs }} st)",
-        "other": "{{ count }} kartonger ({{ pcs }} st)"
-      },
-      "subtotal_b2b": "Delsumma, ert pris",
-      "vat": "Moms",
-      "vat_at_checkout": "Läggs till i kassan",
-      "total_excl_vat": "Att betala exkl. moms",
-      "total_due": "Att betala",
-      "plus_shipping": "+ frakt",
-      "vat_note": "Momsen läggs till i kassan.",
-      "vat_note_gross": "Momsen läggs till i kassan, där visas alla belopp inklusive moms.",
-      "vat_exempt_note": "Ert företag är momsbefriat – ingen moms tillkommer.",
-      "other_lines_note": "Varor utan B2B-pris debiteras till ordinarie pris.",
-      "price_view_hint": "Ändrar bara visningen. I varukorgen och kassan betalar ni alltid ert B2B-pris."
-    },
     "seo": {
       "home_title": "Kryddor, nötter och torkad frukt från Centralasien",
       "home_description": "Köp kryddor, nötter, torkad frukt och soltorkade grönsaker från Uzbekistan och Centralasien. Utvalda vid källan, skickas från Sverige till hela Europa.",
