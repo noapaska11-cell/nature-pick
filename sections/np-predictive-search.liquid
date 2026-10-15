@@ -2,6 +2,17 @@
   Predictive search results (React <SearchModal /> list). Rendered by the Section Rendering API
   (/search/suggest?section_id=np-predictive-search) and injected into the search modal.
 {%- endcomment -%}
+{%- liquid
+  assign ps_b2b = false
+  if customer
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
+      assign ps_b2b = true
+    endif
+  endif
+-%}
 <div id="np-predictive-search-results">
   {%- if predictive_search.performed -%}
     {%- assign found_products = predictive_search.resources.products -%}
@@ -23,7 +34,12 @@
                   <p class="text-xs text-[var(--color-charcoal-soft)]">{{ weight_label }}</p>
                 {%- endif -%}
               </div>
-              <span class="flex-shrink-0 text-sm font-semibold text-[var(--color-charcoal)]">{{ product.price | money_without_trailing_zeros }}</span>
+              {%- if ps_b2b -%}
+                {%- comment -%} a B2B customer sees the B2B price with its labels (np-price), everybody else the same price as before {%- endcomment -%}
+                {% render 'np-price', product: product, compact: true, class: 'flex-shrink-0 text-right text-sm font-semibold text-[var(--color-charcoal)]' %}
+              {%- else -%}
+                <span class="flex-shrink-0 text-sm font-semibold text-[var(--color-charcoal)]">{{ product.price | money_without_trailing_zeros }}</span>
+              {%- endif -%}
             </a>
           </li>
         {%- endfor -%}

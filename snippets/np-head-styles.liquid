@@ -55,6 +55,8 @@
 </style>
 
 <link rel="stylesheet" href="{{ 'naturepick.css' | asset_url }}">
+{%- comment -%} hand-written components outside the Tailwind build (B2B price block, cart lines and summary) {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'np-price.css' | asset_url }}">
 <style>
   /* Phones: iOS Safari zooms the page when a focused field's text is under 16px. */
   @media (max-width: 767px) {
@@ -116,7 +118,8 @@
     {%- assign np_b2b_endpoint = settings.b2b_endpoint | strip -%}
     {%- if np_b2b_endpoint != blank -%}
       {%- comment -%} pallet price in the visitor's currency (100 EUR at the service's daily rate - the checkout charges the same) {%- endcomment -%}
-      <script>window.NP.palletPriceUrl = {{ np_b2b_endpoint | replace: '/register', '/pallet-price' | json }};</script>
+      {%- comment -%} b2bCheckout: this customer pays the price list at the B2B checkout, not Shopify's cart prices {%- endcomment -%}
+      <script>window.NP.palletPriceUrl = {{ np_b2b_endpoint | replace: '/register', '/pallet-price' | json }}; window.NP.b2bCheckout = true;</script>
     {%- endif -%}
     <script src="{{ 'np-pallets.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
