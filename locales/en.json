@@ -1215,31 +1215,6 @@
       "yes": "YES",
       "no": "NO"
     },
-    "price": {
-      "your_price": "Your price",
-      "regular_price": "Regular price",
-      "excl_vat": "excl. VAT",
-      "incl_vat": "incl. VAT",
-      "per_piece": "/pc",
-      "unit_price": "Price per pc",
-      "quantity": "Quantity",
-      "qty_pieces": "{{ count }} pcs",
-      "qty_cartons": {
-        "one": "{{ count }} carton ({{ pcs }} pcs)",
-        "other": "{{ count }} cartons ({{ pcs }} pcs)"
-      },
-      "subtotal_b2b": "Subtotal, your price",
-      "vat": "VAT",
-      "vat_at_checkout": "Added at checkout",
-      "total_excl_vat": "Total excl. VAT",
-      "total_due": "Total to pay",
-      "plus_shipping": "+ shipping",
-      "vat_note": "VAT is added at checkout.",
-      "vat_note_gross": "VAT is added at checkout, where all amounts are shown including VAT.",
-      "vat_exempt_note": "Your company is VAT exempt – no VAT is added.",
-      "other_lines_note": "Items without a B2B price are charged at the regular price.",
-      "price_view_hint": "Changes the display only. In the cart and at checkout you always pay your B2B price."
-    },
     "seo": {
       "home_title": "Spices, nuts and dried fruit from Central Asia",
       "home_description": "Buy spices, nuts, dried fruit and sun-dried vegetables from Uzbekistan and Central Asia. Selected at the source, shipped from Sweden across Europe.",
