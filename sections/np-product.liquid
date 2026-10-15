@@ -62,7 +62,6 @@
     endif
   endif
   assign b2b_active = false
-  assign b2b_listed = false
   assign unit_shop_cents = nil
   assign unit_cents = current_variant.price
   if b2b_customer
@@ -73,9 +72,7 @@
     if wholesale_major != ''
       assign unit_cents = wholesale_major | plus: 0 | times: 100 | round
       assign b2b_active = true
-      assign b2b_listed = true
-      # price list is in the shop's currency: naturepick.js converts it (data-unit-price-shop) - until then the
-      # totals show a placeholder, never the retail price
+      # price list is in the shop's currency: naturepick.js converts it (data-unit-price-shop), retail until then
       if cart.currency.iso_code != shop.currency
         assign unit_shop_cents = unit_cents
         assign unit_cents = current_variant.price
@@ -98,20 +95,6 @@
   if box_size > 1
     assign unit_price_text = unit_cents | times: box_size | money_without_trailing_zeros
   endif
-  if unit_shop_cents
-    assign unit_price_text = '…'
-  endif
-  # VAT label next to every B2B total: the price list is excl. VAT, a percentage off keeps the regular price's status
-  assign b2b_vat_text = ''
-  if b2b_active
-    if b2b_listed
-      assign b2b_vat_text = 'np.price.excl_vat' | t
-    elsif cart.taxes_included
-      assign b2b_vat_text = 'np.price.incl_vat' | t
-    else
-      assign b2b_vat_text = 'np.price.excl_vat' | t
-    endif
-  endif
 
   capture weight_label
     render 'np-weight', grams: current_variant.weight
@@ -129,24 +112,6 @@
   elsif current_variant.weight > 0
     assign per_kg_cents = current_variant.price | times: 1000 | divided_by: current_variant.weight
     assign per_kg = per_kg_cents | money_without_trailing_zeros | append: ' / kg'
-  endif
-  # a B2B customer's price per kg comes from the B2B price (net weight per piece from the price list, else the
-  # variant weight); in another currency the price list still needs converting, so it is left out there
-  if b2b_active
-    assign per_kg = ''
-    unless unit_shop_cents
-      capture b2b_piece_grams
-        render 'np-b2b-wholesale-price', sku: current_variant.sku, field: 'grams'
-      endcapture
-      assign b2b_piece_grams = b2b_piece_grams | strip | plus: 0
-      if b2b_piece_grams < 1
-        assign b2b_piece_grams = current_variant.weight
-      endif
-      if b2b_piece_grams > 0
-        assign per_kg_cents = unit_cents | times: 1000 | divided_by: b2b_piece_grams
-        assign per_kg = per_kg_cents | money_without_trailing_zeros | append: ' / kg ' | append: b2b_vat_text
-      endif
-    endunless
   endif
 
   assign how_to_use = product.metafields.custom.how_to_use.value
@@ -347,7 +312,6 @@
                   <span data-add-label>{{ 'np.common.add_to_cart' | t }}</span>
                   <span data-add-separator aria-hidden="true">·</span>
                   <span data-add-total>{{ unit_price_text }}</span>
-                  {%- if b2b_vat_text != '' %} <span class="np-add-vat">{{ b2b_vat_text }}</span>{% endif -%}
                 </button>
               </div>
               {%- if box_size > 1 -%}
@@ -459,7 +423,7 @@
         <div class="fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] lg:hidden">
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium text-[var(--color-charcoal)]">{{ product_title }}</p>
-            <p class="text-sm font-semibold text-[var(--color-paprika-dark)]"><span data-sticky-total>{{ unit_price_text }}</span>{% if b2b_vat_text != '' %} <span class="np-add-vat">{{ b2b_vat_text }}</span>{% endif %}</p>
+            <p class="text-sm font-semibold text-[var(--color-paprika-dark)]" data-sticky-total>{{ unit_price_text }}</p>
           </div>
           <button type="submit" form="{{ product_form_id }}" name="add" data-add-button data-label-added="{{ 'np.common.added' | t }}" class="btn-primary flex-shrink-0">
             <span data-add-icon>{% render 'icon', name: 'cart', class: 'h-4 w-4' %}</span>
