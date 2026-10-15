@@ -57,6 +57,8 @@
 <link rel="stylesheet" href="{{ 'naturepick.css' | asset_url }}">
 {%- comment -%} hand-written components outside the Tailwind build (B2B price block, cart lines and summary) {%- endcomment -%}
 <link rel="stylesheet" href="{{ 'np-price.css' | asset_url }}">
+{%- comment -%} the "Rishtan glaze" design layer over the compiled Tailwind file (see the header of np-design.css) {%- endcomment -%}
+<link rel="stylesheet" href="{{ 'np-design.css' | asset_url }}">
 <style>
   /* Phones: iOS Safari zooms the page when a focused field's text is under 16px. */
   @media (max-width: 767px) {
@@ -125,3 +127,5 @@
   {%- endif -%}
 {%- endif -%}
 <script src="{{ 'naturepick.js' | asset_url }}" defer="defer"></script>
+{%- comment -%} motion layer: reveals, word-by-word headings, depth, header on scroll - visual only (see its header) {%- endcomment -%}
+<script src="{{ 'np-motion.js' | asset_url }}" defer="defer"></script>
