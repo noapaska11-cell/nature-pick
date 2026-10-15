@@ -1698,3 +1698,28 @@ body {
     animation-direction: reverse;
   }
 }
+
+/* side cart: the cart total as one highlighted line right above the button - the number to read first */
+#np-app .np-cart-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 1rem;
+  background: var(--color-olive);
+  color: #fff;
+  padding: 0.875rem 1.125rem;
+}
+#np-app .np-cart-total__label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+#np-app .np-cart-total__amount {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-gold-on-dark);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
