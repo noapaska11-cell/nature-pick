@@ -40,7 +40,8 @@
         <div class="mt-4 flex flex-col gap-2">
           {%- for product in recipe_products -%}
             <a href="{{ product.url }}" class="flex items-center justify-between rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 hover:border-[var(--color-paprika)]">
-              <span class="text-sm font-medium text-[var(--color-charcoal)]">{{ product.title | escape }}</span>
+              {%- capture recipe_product_title -%}{% render 'np-title', title: product.title %}{%- endcapture -%}
+              <span class="text-sm font-medium text-[var(--color-charcoal)]">{{ recipe_product_title | escape }}</span>
               <span class="flex items-center gap-1 text-sm font-semibold text-[var(--color-paprika-dark)]">
                 {% render 'np-price', product: product, class: '' %} {% render 'icon', name: 'arrow-right', class: 'h-3.5 w-3.5' %}
               </span>
@@ -61,17 +62,53 @@
   </div>
 </article>
 
+{%- liquid
+  # Google shows a recipe as a rich result only with a photo, so a recipe without one is described as an article
+  assign ld_recipe = false
+  if is_recipe and article.image != blank
+    assign ld_recipe = true
+  endif
+  if settings.logo != blank
+    assign ld_logo = settings.logo | image_url: width: 600 | prepend: 'https:'
+  else
+    assign ld_logo = 'np-logo.webp' | asset_url | prepend: 'https:'
+  endif
+-%}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "{% if is_recipe %}Recipe{% else %}Article{% endif %}",
-    "{% if is_recipe %}name{% else %}headline{% endif %}": {{ article.title | json }},
-    "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+    "@type": "{% if ld_recipe %}Recipe{% else %}Article{% endif %}",
+    "{% if ld_recipe %}name{% else %}headline{% endif %}": {{ article.title | json }},
+    "mainEntityOfPage": {{ canonical_url | json }},
+    "inLanguage": {{ request.locale.iso_code | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},
+    "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},
     {%- if article.image != blank -%}
     "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},
     {%- endif -%}
+    {%- if ld_recipe -%}
+      {%- if recipe_servings != blank -%}
+    "recipeYield": {{ recipe_servings | append: '' | json }},
+      {%- endif -%}
+      {%- if recipe_products != blank -%}
+    "recipeIngredient": [
+        {%- for product in recipe_products -%}
+          {%- capture ld_ingredient -%}{% render 'np-title', title: product.title %}{%- endcapture -%}
+          {{ ld_ingredient | json }}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+    ],
+      {%- endif -%}
+    {%- endif -%}
+    {%- if article.tags.size > 0 -%}
+    "keywords": {{ article.tags | join: ', ' | json }},
+    {%- endif -%}
     "author": { "@type": "Person", "name": {{ article.author | default: shop.name | json }} },
-    "description": {{ article.excerpt_or_content | strip_html | truncate: 200 | json }}
+    "publisher": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "logo": { "@type": "ImageObject", "url": {{ ld_logo | json }} }
+    },
+    "description": {{ article.excerpt_or_content | strip_html | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip | truncate: 200 | json }}
   }
 </script>
 
