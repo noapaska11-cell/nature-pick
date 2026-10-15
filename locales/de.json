@@ -1232,6 +1232,31 @@
       "title": "Möchten Sie mit dem Kauf fortfahren?",
       "yes": "JA",
       "no": "NEIN"
+    },
+    "price": {
+      "your_price": "Ihr Preis",
+      "regular_price": "Regulärer Preis",
+      "excl_vat": "zzgl. MwSt.",
+      "incl_vat": "inkl. MwSt.",
+      "per_piece": "/Stk.",
+      "unit_price": "Preis pro Stk.",
+      "quantity": "Menge",
+      "qty_pieces": "{{ count }} Stk.",
+      "qty_cartons": {
+        "one": "{{ count }} Karton ({{ pcs }} Stk.)",
+        "other": "{{ count }} Kartons ({{ pcs }} Stk.)"
+      },
+      "subtotal_b2b": "Zwischensumme, Ihr Preis",
+      "vat": "MwSt.",
+      "vat_at_checkout": "Wird an der Kasse hinzugefügt",
+      "total_excl_vat": "Gesamt zzgl. MwSt.",
+      "total_due": "Zu zahlen",
+      "plus_shipping": "+ Versand",
+      "vat_note": "Die MwSt. wird an der Kasse hinzugefügt.",
+      "vat_note_gross": "Die MwSt. wird an der Kasse hinzugefügt, dort werden alle Beträge inkl. MwSt. angezeigt.",
+      "vat_exempt_note": "Ihr Unternehmen ist von der MwSt. befreit – es wird keine MwSt. berechnet.",
+      "other_lines_note": "Artikel ohne B2B-Preis werden zum regulären Preis berechnet.",
+      "price_view_hint": "Ändert nur die Anzeige. Im Warenkorb und an der Kasse zahlen Sie immer Ihren B2B-Preis."
     }
   }
 }
