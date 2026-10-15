@@ -1266,6 +1266,33 @@
       "title": "Czy chcesz kontynuować zakup?",
       "yes": "TAK",
       "no": "NIE"
+    },
+    "price": {
+      "your_price": "Twoja cena",
+      "regular_price": "Cena regularna",
+      "excl_vat": "bez VAT",
+      "incl_vat": "z VAT",
+      "per_piece": "/szt.",
+      "unit_price": "Cena za szt.",
+      "quantity": "Ilość",
+      "qty_pieces": "{{ count }} szt.",
+      "qty_cartons": {
+        "one": "{{ count }} karton ({{ pcs }} szt.)",
+        "few": "{{ count }} kartony ({{ pcs }} szt.)",
+        "many": "{{ count }} kartonów ({{ pcs }} szt.)",
+        "other": "{{ count }} kartonów ({{ pcs }} szt.)"
+      },
+      "subtotal_b2b": "Suma częściowa, Twoja cena",
+      "vat": "VAT",
+      "vat_at_checkout": "Doliczany przy kasie",
+      "total_excl_vat": "Razem bez VAT",
+      "total_due": "Do zapłaty",
+      "plus_shipping": "+ dostawa",
+      "vat_note": "VAT zostanie doliczony przy kasie.",
+      "vat_note_gross": "VAT zostanie doliczony przy kasie, gdzie wszystkie kwoty są podane z VAT.",
+      "vat_exempt_note": "Twoja firma jest zwolniona z VAT – VAT nie jest doliczany.",
+      "other_lines_note": "Produkty bez ceny B2B są rozliczane po cenie regularnej.",
+      "price_view_hint": "Zmienia tylko sposób wyświetlania. W koszyku i przy kasie zawsze płacisz swoją cenę B2B."
     }
   }
 }
