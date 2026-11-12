@@ -285,6 +285,7 @@
     "common": {
       "skip_link": "Hoppa till huvudinnehåll",
       "free_shipping_bar": "Fri frakt från {{ amount }}",
+      "retail_minimum_bar": "Minsta orderbelopp {{ minimum }}",
       "add_to_cart": "Lägg i varukorgen",
       "added": "Tillagd i varukorgen",
       "out_of_stock": "Inte tillgänglig just nu",
@@ -534,6 +535,8 @@
       "remove_aria": "Ta bort från varukorgen",
       "calculated_at_checkout": "Beräknas i kassan",
       "note_label": "Ordermeddelande (valfritt)",
+      "retail_minimum_met": "Minsta orderbelopp ({{ minimum }}) uppnått - du kan gå till kassan.",
+      "retail_minimum_not_met": "Minsta orderbelopp är {{ minimum }}. Lägg till {{ remaining }} till för att kunna beställa.",
       "b2b_minimum_met": "B2B-minimiorder ({{ minimum }}) uppnådd - du kan gå till kassan.",
       "b2b_minimum_not_met": "Lägg till {{ remaining }} till för att nå B2B-minimiordern på {{ minimum }}.",
       "b2b_total": "Grossistpris exkl. moms (B2B-kassan)",

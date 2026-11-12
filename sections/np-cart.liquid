@@ -21,6 +21,19 @@
     endif
   endif
   assign b2b_minimum_met = true
+  # minimum order for regular customers (snippet np-retail-minimum-cents); never applies to a B2B customer
+  assign retail_minimum_cents = 0
+  assign retail_minimum_met = true
+  unless b2b_active
+    capture retail_minimum_parts
+      render 'np-retail-minimum-cents', cart: cart
+    endcapture
+    assign retail_minimum_parts = retail_minimum_parts | strip | split: ':'
+    assign retail_minimum_cents = retail_minimum_parts[0] | plus: 0
+    if retail_minimum_parts[2] == 'false'
+      assign retail_minimum_met = false
+    endif
+  endunless
   # HoReCa products are for approved business customers only (snippet np-horeca-gate)
   assign np_horeca_block = false
   unless b2b_active
@@ -202,6 +215,8 @@
             the price-view toggle (header, B2B customers only) is set to "B2B" - switched to "regular prices"
             there is no minimum, so the button becomes clickable again without a page reload.
           {%- endcomment -%}
+          {%- comment -%} regular customers only (renders nothing for B2B): naturepick.js re-checks it in a foreign currency {%- endcomment -%}
+          {% render 'np-retail-minimum', cart: cart, style: 'cart' %}
           {%- if np_horeca_block -%}
             <p role="alert" class="mt-5 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]">{% render 'np-horeca-text', key: 'cart' %} <a href="{{ pages.b2b.url | default: routes.account_login_url }}" class="font-semibold underline">{% render 'np-horeca-text', key: 'cta' %}</a></p>
           {%- endif -%}
@@ -211,6 +226,8 @@
             data-checkout-button
             data-checkout-confirm-trigger
             {% if b2b_active %}data-b2b-minimum-met="{{ b2b_minimum_met }}"{% endif %}
+            {% if retail_minimum_cents > 0 %}data-retail-minimum-met="{{ retail_minimum_met }}"{% endif %}
+            {% if np_horeca_block %}data-horeca-block{% endif %}
             {% if b2b_checkout_endpoint != blank %}
               data-b2b-checkout="{{ b2b_checkout_endpoint }}"
               data-b2b-page-url="{{ pages.b2b.url | default: routes.root_url }}"
@@ -221,8 +238,8 @@
               data-msg-error="{{ 'np.cart.b2b_checkout_error' | t }}"
               data-label-busy="{{ 'np.cart.b2b_checkout_busy' | t }}"
             {% endif %}
-            {% if b2b_minimum_met == false or np_horeca_block %}disabled aria-disabled="true"{% endif %}
-            class="btn-primary mt-5 w-full{% if b2b_minimum_met == false or np_horeca_block %} pointer-events-none opacity-50{% endif %}"
+            {% if b2b_minimum_met == false or retail_minimum_met == false or np_horeca_block %}disabled aria-disabled="true"{% endif %}
+            class="btn-primary mt-5 w-full{% if b2b_minimum_met == false or retail_minimum_met == false or np_horeca_block %} pointer-events-none opacity-50{% endif %}"
           >{{ 'np.cart.checkout' | t }}</button>
           {%- if b2b_checkout_endpoint != blank -%}
             <p data-b2b-checkout-message hidden role="alert" class="mt-3 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]"></p>

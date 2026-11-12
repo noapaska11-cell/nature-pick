@@ -39,6 +39,8 @@
         {%- if b2b_active -%}
           <div class="border-b border-[var(--color-line)] px-5 py-3">{% render 'np-b2b-minimum-order', cart: cart %}</div>
         {%- endif -%}
+        {%- comment -%} minimum order for regular customers (renders nothing for B2B) {%- endcomment -%}
+        {% render 'np-retail-minimum', cart: cart, style: 'drawer' %}
       {%- endif -%}
 
       <div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">

@@ -205,6 +205,19 @@
         "default": "SE:599:SEK\nDE:59:EUR\nPL:59:EUR\nDK:90:EUR\nNO:90:EUR\nBE:150:EUR\nFI:150:EUR\nFR:150:EUR\nLU:150:EUR\nNL:150:EUR\nIT:150:EUR\nAT:150:EUR\nPT:150:EUR\nCH:150:EUR\nSI:150:EUR\nCZ:150:EUR\nHU:150:EUR\nES:150:EUR"
       },
       {
+        "type": "number",
+        "id": "retail_minimum_order",
+        "label": "Minimum order for regular customers (not B2B)",
+        "default": 99,
+        "info": "Regular customers cannot check out below this cart value; shown in the announcement bar, the cart page and the cart drawer. Major units in the shop's currency (SEK), e.g. 99. Carts in another currency use this amount converted with Shopify's live exchange rate, unless a fixed amount is set below. 0 = no minimum. Does not apply to B2B customers."
+      },
+      {
+        "type": "textarea",
+        "id": "retail_minimum_by_currency",
+        "label": "Minimum order per currency (not B2B)",
+        "info": "Optional, one line per currency: CURRENCY:AMOUNT, e.g. EUR:9. A cart in that currency must reach exactly this amount instead of the converted one. Leave empty to convert automatically."
+      },
+      {
         "type": "checkbox",
         "id": "enable_cart_note",
         "label": "Cart note on the cart page",

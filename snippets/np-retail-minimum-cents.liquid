@@ -1,0 +1,33 @@
+{%- comment -%}
+  The minimum order for REGULAR (non-B2B) customers, as "CENTS:IN_CART_CURRENCY:MET":
+  - a line "CURRENCY:AMOUNT" in Theme settings > Cart & shipping > "Minimum order per currency" that matches the
+    cart's currency wins, e.g. EUR:9 -> "900:true:..." (a fixed amount, no exchange-rate drift);
+  - otherwise "Minimum order for regular customers" in the shop's currency (SEK) -> "9900:false:true" when the cart is
+    in another currency (naturepick.js converts it with Shopify's live rate), "9900:true:..." in the shop's currency.
+  MET is "false" only when the cart is in the currency the minimum is known in AND its total is under the minimum;
+  for a converted minimum the server cannot decide, so it stays "true" and naturepick.js decides.
+  0 cents = no minimum. The callers skip this for B2B customers - this minimum never applies to them.
+  Usage: {%- capture parts -%}{%- render 'np-retail-minimum-cents', cart: cart -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign minimum_cents = settings.retail_minimum_order | times: 100 | round
+  assign in_cart_currency = false
+  if cart.currency.iso_code == shop.currency
+    assign in_cart_currency = true
+  endif
+  assign minimum_lines = settings.retail_minimum_by_currency | newline_to_br | split: '<br />'
+  for minimum_line in minimum_lines
+    assign parts = minimum_line | strip | split: ':'
+    assign line_currency = parts[0] | strip | upcase
+    if line_currency == cart.currency.iso_code and parts[1] != blank
+      assign minimum_cents = parts[1] | strip | plus: 0 | times: 100 | round
+      assign in_cart_currency = true
+      break
+    endif
+  endfor
+  assign minimum_met = true
+  if in_cart_currency and minimum_cents > 0 and cart.total_price < minimum_cents
+    assign minimum_met = false
+  endif
+  echo minimum_cents | append: ':' | append: in_cart_currency | append: ':' | append: minimum_met
+-%}
