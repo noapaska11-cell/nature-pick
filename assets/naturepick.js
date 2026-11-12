@@ -1664,6 +1664,49 @@
     });
   }
 
+  /* Minimum order for REGULAR customers (snippets/np-retail-minimum.liquid; never rendered for a B2B customer, so
+     none of this touches B2B). The minimum is set in the shop's currency (SEK): in another currency Liquid cannot
+     convert it, so the notice arrives hidden and is converted here with Shopify's live rate (fromShopCents), unless
+     a fixed amount for that currency is configured (data-minimum-in-cart-currency="true"). Without a rate it stays
+     as the server rendered it (hidden, checkout not blocked) rather than showing or enforcing a wrong number.
+     The cart notices carry data-cart-total (cents in the cart's currency); the announcement-bar one has none. */
+  function syncRetailMinimum(el) {
+    const minimum = el.dataset.minimumInCartCurrency === 'true' ? Number(el.dataset.minimumCents) : fromShopCents(el.dataset.minimumCents);
+    if (minimum === null || !Number.isFinite(minimum) || minimum <= 0) return;
+    const hasTotal = el.dataset.cartTotal !== undefined;
+    const total = hasTotal ? Number(el.dataset.cartTotal) : 0;
+    const met = hasTotal ? total >= minimum : true;
+    if (hasTotal) {
+      el.dataset.minimumMet = String(met);
+      $$('[data-minimum-state]', el).forEach((state) => {
+        state.hidden = state.dataset.minimumState !== (met ? 'met' : 'not-met');
+      });
+    }
+    $$('[data-minimum-text]', el).forEach((text) => {
+      text.textContent = (text.dataset.template || '')
+        .replace('%MINIMUM%', formatMoney(minimum))
+        .replace('%REMAINING%', formatMoney(Math.max(0, minimum - total)));
+    });
+    el.hidden = false;
+  }
+
+  /* Re-checks every retail minimum notice and (re)applies the verdict to the cart page's checkout button.
+     Called with the B2B gate: on load, on the price-view toggle and after every cart change. */
+  function applyRetailMinimum() {
+    $$('[data-retail-minimum]').forEach(syncRetailMinimum);
+    $$('[data-checkout-button][data-retail-minimum-met]').forEach((button) => {
+      const page = button.closest('[data-cart-page]');
+      const notice = page && $('[data-retail-minimum][data-minimum-met]', page);
+      if (notice) button.dataset.retailMinimumMet = notice.dataset.minimumMet;
+      // HoReCa-only carts stay blocked for their own reason (data-horeca-block, set by np-cart.liquid)
+      const blocked = button.dataset.retailMinimumMet === 'false' || button.hasAttribute('data-horeca-block');
+      button.disabled = blocked;
+      button.setAttribute('aria-disabled', String(blocked));
+      button.classList.toggle('pointer-events-none', blocked);
+      button.classList.toggle('opacity-50', blocked);
+    });
+  }
+
   /* B2B cart lines (snippets/np-b2b-cart-line.liquid): in a currency other than the shop's the wholesale breakdown
      is left empty by Liquid and filled in here with Shopify's live rate; hidden while viewing regular prices. */
   function syncB2bCartLines(retailView) {
@@ -1894,6 +1937,10 @@
     const form = event.target;
     const button = event.submitter;
     if (!button || !button.matches || !button.matches('[data-checkout-confirm-trigger]')) return;
+    if (button.dataset.retailMinimumMet === 'false') {
+      event.preventDefault(); // regular customer under the minimum order: no checkout (the button is disabled too)
+      return;
+    }
     if (form.dataset.checkoutConfirmed) {
       delete form.dataset.checkoutConfirmed;
       return;
@@ -1939,6 +1986,7 @@
       button.classList.toggle('pointer-events-none', blocked);
       button.classList.toggle('opacity-50', blocked);
     });
+    applyRetailMinimum();
   }
 
   function setPriceView(view) {

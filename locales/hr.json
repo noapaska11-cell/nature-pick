@@ -543,6 +543,7 @@
     "common": {
       "skip_link": "Preskoči na glavni sadržaj",
       "free_shipping_bar": "Besplatna dostava od {{ amount }}",
+      "retail_minimum_bar": "Minimalna narudžba {{ minimum }}",
       "add_to_cart": "Dodaj u košaricu",
       "added": "Dodano u košaricu",
       "out_of_stock": "Trenutno nedostupno",
@@ -795,6 +796,8 @@
       "remove_aria": "Ukloni iz košarice",
       "calculated_at_checkout": "Izračunava se pri plaćanju",
       "note_label": "Napomena uz narudžbu (neobavezno)",
+      "retail_minimum_met": "Minimalna narudžba ({{ minimum }}) dosegnuta - možeš na plaćanje.",
+      "retail_minimum_not_met": "Minimalna narudžba je {{ minimum }}. Dodaj još {{ remaining }} da možeš naručiti.",
       "b2b_minimum_met": "Minimalna B2B narudžba ({{ minimum }}) dosegnuta - možeš na plaćanje.",
       "b2b_minimum_not_met": "Dodaj još {{ remaining }} da dosegneš minimalnu B2B narudžbu od {{ minimum }}.",
       "b2b_total": "Veleprodajna cijena bez PDV-a (B2B blagajna)",

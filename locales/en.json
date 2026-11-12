@@ -603,6 +603,7 @@
     "common": {
       "skip_link": "Skip to main content",
       "free_shipping_bar": "Free shipping from {{ amount }}",
+      "retail_minimum_bar": "Minimum order {{ minimum }}",
       "add_to_cart": "Add to cart",
       "added": "Added to cart",
       "out_of_stock": "Currently unavailable",
@@ -852,6 +853,8 @@
       "remove_aria": "Remove from cart",
       "calculated_at_checkout": "Calculated at checkout",
       "note_label": "Order note (optional)",
+      "retail_minimum_met": "Minimum order ({{ minimum }}) reached - you can check out.",
+      "retail_minimum_not_met": "The minimum order is {{ minimum }}. Add {{ remaining }} more to be able to check out.",
       "b2b_minimum_met": "B2B minimum order ({{ minimum }}) reached - you can check out.",
       "b2b_minimum_not_met": "Add {{ remaining }} more to reach the B2B minimum order of {{ minimum }}.",
       "b2b_total": "Wholesale price excl. VAT (B2B checkout)",
