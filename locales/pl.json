@@ -665,6 +665,7 @@
     "common": {
       "skip_link": "Przejdź do treści głównej",
       "free_shipping_bar": "Darmowa dostawa od {{ amount }}",
+      "retail_minimum_bar": "Minimalna wartość zamówienia {{ minimum }}",
       "add_to_cart": "Dodaj do koszyka",
       "added": "Dodano do koszyka",
       "out_of_stock": "Obecnie niedostępny",
@@ -917,6 +918,8 @@
       "remove_aria": "Usuń z koszyka",
       "calculated_at_checkout": "Obliczona przy kasie",
       "note_label": "Uwagi do zamówienia (opcjonalnie)",
+      "retail_minimum_met": "Minimalna wartość zamówienia ({{ minimum }}) osiągnięta - możesz przejść do kasy.",
+      "retail_minimum_not_met": "Minimalna wartość zamówienia to {{ minimum }}. Dodaj jeszcze {{ remaining }}, aby móc złożyć zamówienie.",
       "b2b_minimum_met": "Minimalne zamówienie B2B ({{ minimum }}) osiągnięte - możesz przejść do kasy.",
       "b2b_minimum_not_met": "Dodaj jeszcze {{ remaining }}, aby osiągnąć minimalne zamówienie B2B w wysokości {{ minimum }}.",
       "b2b_total": "Cena hurtowa netto (kasa B2B)",

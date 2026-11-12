@@ -635,6 +635,7 @@
     "common": {
       "skip_link": "Zum Hauptinhalt springen",
       "free_shipping_bar": "Kostenloser Versand ab {{ amount }}",
+      "retail_minimum_bar": "Mindestbestellwert {{ minimum }}",
       "add_to_cart": "In den Warenkorb",
       "added": "In den Warenkorb gelegt",
       "out_of_stock": "Derzeit nicht verfügbar",
@@ -884,6 +885,8 @@
       "remove_aria": "Aus dem Warenkorb entfernen",
       "calculated_at_checkout": "Wird an der Kasse berechnet",
       "note_label": "Bestellhinweis (optional)",
+      "retail_minimum_met": "Mindestbestellwert ({{ minimum }}) erreicht - du kannst zur Kasse gehen.",
+      "retail_minimum_not_met": "Der Mindestbestellwert beträgt {{ minimum }}. Füge noch {{ remaining }} hinzu, um bestellen zu können.",
       "b2b_minimum_met": "B2B-Mindestbestellwert ({{ minimum }}) erreicht - du kannst zur Kasse gehen.",
       "b2b_minimum_not_met": "Füge noch {{ remaining }} hinzu, um den B2B-Mindestbestellwert von {{ minimum }} zu erreichen.",
       "b2b_total": "Großhandelspreis zzgl. MwSt. (B2B-Kasse)",

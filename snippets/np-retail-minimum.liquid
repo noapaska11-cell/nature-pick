@@ -1,0 +1,70 @@
+{%- comment -%}
+  Minimum order notice for REGULAR customers (Theme settings > Cart & shipping > "Minimum order for regular
+  customers", 99 SEK). Renders nothing for a signed-in B2B customer (B2B has its own minimum, see
+  np-b2b-minimum-order) or when no minimum is configured.
+  The minimum is in the shop's currency; Liquid has no exchange rate, so for a cart in another currency (without a
+  fixed "CURRENCY:AMOUNT" line) the element is rendered hidden and naturepick.js (syncRetailMinimum) converts it with
+  Shopify's live rate, fills the %MINIMUM% / %REMAINING% placeholders and shows it.
+  Params: cart, style ('bar' = one line for the announcement bar | 'cart' = notice for the cart page |
+          'drawer' = notice strip for the cart drawer)
+{%- endcomment -%}
+{%- liquid
+  assign b2b_active = false
+  if customer
+    capture np_b2b_check
+      render 'np-b2b-customer'
+    endcapture
+    if np_b2b_check contains 'true'
+      assign b2b_active = true
+    endif
+  endif
+  assign minimum_cents = 0
+  unless b2b_active
+    capture minimum_parts
+      render 'np-retail-minimum-cents', cart: cart
+    endcapture
+    assign minimum_parts = minimum_parts | strip | split: ':'
+    assign minimum_cents = minimum_parts[0] | plus: 0
+    assign in_cart_currency = minimum_parts[1]
+    assign minimum_met = minimum_parts[2]
+  endunless
+-%}
+{%- if minimum_cents > 0 -%}
+  {%- liquid
+    assign remaining_cents = minimum_cents | minus: cart.total_price
+    if remaining_cents < 0
+      assign remaining_cents = 0
+    endif
+    assign minimum_text = ''
+    assign remaining_text = ''
+    if in_cart_currency == 'true'
+      assign minimum_text = minimum_cents | money_without_trailing_zeros
+      assign remaining_text = remaining_cents | money_without_trailing_zeros
+    endif
+  -%}
+  {%- if style == 'bar' -%}
+    <span data-retail-minimum data-minimum-cents="{{ minimum_cents }}" data-minimum-in-cart-currency="{{ in_cart_currency }}" {% unless in_cart_currency == 'true' %}hidden{% endunless %} class="font-semibold">
+      <span data-minimum-text data-template="{{ 'np.common.retail_minimum_bar' | t: minimum: '%MINIMUM%' | escape }}">{% if in_cart_currency == 'true' %}{{ 'np.common.retail_minimum_bar' | t: minimum: minimum_text }}{% endif %}</span>
+    </span>
+  {%- else -%}
+    {%- liquid
+      assign met_template = 'np.cart.retail_minimum_met' | t: minimum: '%MINIMUM%'
+      assign not_met_template = 'np.cart.retail_minimum_not_met' | t: remaining: '%REMAINING%', minimum: '%MINIMUM%'
+      if style == 'drawer'
+        assign wrapper_class = 'border-b border-[var(--color-line)] px-5 py-3'
+      else
+        assign wrapper_class = 'mt-5'
+      endif
+    -%}
+    <div data-retail-minimum data-minimum-met="{{ minimum_met }}" data-minimum-cents="{{ minimum_cents }}" data-minimum-in-cart-currency="{{ in_cart_currency }}" data-cart-total="{{ cart.total_price }}" {% unless in_cart_currency == 'true' %}hidden{% endunless %} class="{{ wrapper_class }}">
+      <div data-minimum-state="met" {% unless minimum_met == 'true' %}hidden{% endunless %} class="flex items-center gap-2 rounded-xl bg-[var(--color-olive-light)] px-4 py-3 text-sm text-[var(--color-olive-dark)]">
+        {% render 'icon', name: 'check', class: 'h-4 w-4 flex-shrink-0' %}
+        <span data-minimum-text data-template="{{ met_template | escape }}">{% if in_cart_currency == 'true' %}{{ 'np.cart.retail_minimum_met' | t: minimum: minimum_text }}{% endif %}</span>
+      </div>
+      <div data-minimum-state="not-met" {% if minimum_met == 'true' %}hidden{% endif %} role="status" class="flex items-center gap-2 rounded-xl bg-[var(--color-paprika-light)] px-4 py-3 text-sm text-[var(--color-paprika-dark)]">
+        {% render 'icon', name: 'cart', class: 'h-4 w-4 flex-shrink-0' %}
+        <span data-minimum-text data-template="{{ not_met_template | escape }}">{% if in_cart_currency == 'true' %}{{ 'np.cart.retail_minimum_not_met' | t: remaining: remaining_text, minimum: minimum_text }}{% endif %}</span>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}
